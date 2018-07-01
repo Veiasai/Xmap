@@ -1,0 +1,64 @@
+package xyz.veiasai.neo4j.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import xyz.veiasai.neo4j.domain.Node;
+import xyz.veiasai.neo4j.repositories.AuthorRepository;
+import xyz.veiasai.neo4j.repositories.BuildingRepository;
+import xyz.veiasai.neo4j.repositories.NodeRepository;
+
+import java.util.Collection;
+
+@Service
+@Transactional
+public class NodeService {
+    @Autowired
+    private NodeRepository nodeRepository;
+    @Autowired
+    private BuildingRepository buildingRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    public Node addNode(Node node)
+    {
+        node.setId(null);
+        return nodeRepository.save(node);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByName(String name)
+    {
+        return nodeRepository.findByNameLike(name);
+    }
+
+    @Transactional(readOnly = true)
+    public Node findById(String id) {
+        return nodeRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByBuilding(String building)
+    {
+        return nodeRepository.findByBuildingId(building);
+    }
+
+
+    public Node update(Node node) {return nodeRepository.save(node);};
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByTwoNodeId(String nId1,String nId2, String depth)
+    {
+        return nodeRepository.findByTwoNodeId(nId1, nId2, depth);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByOriginNode(String originId, String name) {
+        return nodeRepository.findByOriginNode(originId, ".*" + name + ".*");
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByAuthorId(String authorId, String name) {
+        return nodeRepository.findByAuthorId(authorId, ".*" + name + ".*");
+    }
+}
