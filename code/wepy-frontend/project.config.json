@@ -1,0 +1,15 @@
+{
+	"description": "Xmap - SJTU",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wxc067744e5e858dce",
+	"projectname": "wepy-frontend",
+	"miniprogramRoot": "./dist",
+	"condition": {}
+}
