@@ -25,7 +25,7 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
     @Query("match (origin:Node {id:{origin}}), (end:Node {id:{end}}), (path: Path {id:{pathId}})" +
             "create (origin)-[:PATH]->(path)-[:PATH]->(end)"
     )
-    public void addRelationOringinAndEnd(@Param("pathId") String pathId,@Param("origin") String origin, @Param("end") String end);
+    public void addRelationOriginAndEnd(@Param("pathId") String pathId, @Param("origin") String origin, @Param("end") String end);
 
     @Query("MATCH (n1:Node {id:{originId}}),(n2:Node {id:{endId}}) ," +
             "p = shortestpath((n1)-[:PATH*..25]->(n2)) RETURN p")

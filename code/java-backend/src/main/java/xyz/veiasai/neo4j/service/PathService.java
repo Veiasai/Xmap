@@ -49,7 +49,7 @@ public class PathService {
 
     public void addRelation(String pathId, String buildingId, String author, String origin, String end) {
         pathRepository.addRelationAuthorAndBuilding(pathId,buildingId,author);
-        pathRepository.addRelationOringinAndEnd(pathId, origin, end);
+        pathRepository.addRelationOriginAndEnd(pathId, origin, end);
     }
 
     @Transactional(readOnly = true)
