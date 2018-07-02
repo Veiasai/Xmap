@@ -1,0 +1,48 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+    <button @tap="selectBuilding">ssss</button>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  var httpHead;
+  export default class Start extends wepy.page {
+    onLoad () {
+      httpHead = this.$parent.globalData.httpHead;
+    }
+    methods = {
+      async selectBuilding() {
+        try {
+          let building = await wepy.chooseLocation();
+          this.$parent.globalData.building = building;
+          wepy.navigateTo({url: 'main'});
+          let res = await wepy.request({
+            url: httpHead + '/building' + '?address=' + building.address,
+              method: 'POST',
+            header: {
+            'content-type': 'application/json'
+          },
+            data: {
+              name: building.name,
+              location: { latitude: building.latitude, longitude: building.longitude }
+            },
+          });
+          let data = res.data;
+          if (data.id)
+            this.$parent.globalData.building.id = data.id;
+        }
+        catch (e)
+        {
+          console.log(e);
+        }
+      }
+    }
+  }
+</script>

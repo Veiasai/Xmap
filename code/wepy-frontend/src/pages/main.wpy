@@ -1,0 +1,24 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  var httpHead;
+  export default class Main extends wepy.page {
+    onLoad() {
+      httpHead = this.$parent.globalData.httpHead;
+    }
+
+    config={
+      navigationBarTitleText: 'test'
+    }
+  }
+</script>

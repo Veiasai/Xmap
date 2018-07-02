@@ -17,7 +17,10 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/main',
+      'pages/start',
+      'pages/index',
+
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -28,7 +31,9 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    building : null, //wx.chooselocation返回的buidling对象
+    userInfo: null,
+    httpHead : "http://202.120.40.109:23384/weixin"
   }
 
   constructor () {
