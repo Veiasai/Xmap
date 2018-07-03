@@ -1,0 +1,36 @@
+<style>
+  .display {
+    height: 65vh;
+    width:90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-style: solid;
+    border-top-style: none;
+    border-color:#C0C0C0;
+  }
+</style>
+
+<template>
+  <scroll-view scroll-y="true" class='display'>
+    <repeat for="{{pathArray}}" key="index" index="index" item="item">
+      <PathInfo :item="item"></PathInfo>
+    </repeat>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import pathInfo from './pathInfo'
+  export default class PathUpload extends wepy.component {
+    props = {
+      pathArray:{
+        type: Array,
+        default:[]
+      }
+    }
+    components = {
+      PathInfo: pathInfo
+    }
+  }
+</script>

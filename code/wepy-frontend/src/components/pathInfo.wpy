@@ -1,0 +1,28 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+    <view wx:if="{{item.type==='img'}}" class='imgview'>
+    <image lazy-load mode='widthFix' class="img" src="{{item.message}}"></image>
+    </view>
+    <view wx:elif="{{item.type==='action'}}" class='item'>
+      <text>step: {{item.message}}</text>
+    </view>
+    <view wx:elif="{{item.type==='comment'}}" class='item'>
+      <text>comment: {{item.message}}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class PathUpload extends wepy.component {
+    props = {
+      item:{}
+    }
+
+  }
+</script>
