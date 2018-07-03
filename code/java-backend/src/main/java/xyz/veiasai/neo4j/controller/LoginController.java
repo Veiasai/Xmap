@@ -1,8 +1,9 @@
 package xyz.veiasai.neo4j.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
+@Api(value = "login-controller")
 @RestController
 @RequestMapping("/")
 public class LoginController {

@@ -28,9 +28,11 @@ public class DataSet {
     @ApiModelProperty(value = "点位组",required = true)
     private Collection<Node> nodes = new HashSet<>();
 
+    @JsonIgnore
     @Relationship(type="AUTHOR")
     private Author author;
 
+    @JsonIgnore
     @Relationship(type="BUILDING")
     private Building building;
 

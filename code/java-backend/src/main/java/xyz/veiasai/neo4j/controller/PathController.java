@@ -1,6 +1,7 @@
 package xyz.veiasai.neo4j.controller;
 
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import xyz.veiasai.neo4j.service.PathService;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Api(value = "path-controller")
 @RestController
 @RequestMapping("/")
 public class PathController {
