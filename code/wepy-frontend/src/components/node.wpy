@@ -1,0 +1,23 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view>
+    <img src={{node.img}}>
+    <text>{{node.name}}</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Path extends wepy.component {
+    props = {
+      node: {
+        type: [Object],
+        default: null
+      }
+    }
+  }
+</script>

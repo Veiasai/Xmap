@@ -1,0 +1,24 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view>
+    <img src={{path.img}}>
+    <text>{{path.name}}</text>
+    <text>{{path.detail}}</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Pathlist extends wepy.component {
+    props = {
+      path: {
+        type: [Object],
+        default: null
+      }
+    }
+  }
+</script>
