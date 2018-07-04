@@ -38,7 +38,7 @@
 <script>
   import wepy from 'wepy';
   import pathDisplay from '../components/pathDisplay'
-  var httpHead;
+  import {httpHead} from '../properties/Const'
   export default class PathUpload extends wepy.page {
     components = {
       PathDisplay: pathDisplay
@@ -288,7 +288,7 @@
       wepy.stopCompass({});
     }
     onLoad() {
-      httpHead = this.$parent.globalData.httpHead;
+
     }
   }
 </script>

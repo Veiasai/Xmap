@@ -21,7 +21,7 @@
 
 <script>
   import wepy from 'wepy';
-  import pathInfo from './pathInfo'
+  import pathInfo from './pathItem'
   export default class PathUpload extends wepy.component {
     props = {
       pathArray:{
