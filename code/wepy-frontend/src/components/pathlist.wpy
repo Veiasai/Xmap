@@ -4,21 +4,21 @@
 
 <template>
   <view>
-    <img src={{path.img}}>
-    <text>{{path.name}}</text>
-    <text>{{path.detail}}</text>
+
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import Path from 'src/components/path.wpy'
 
   export default class Pathlist extends wepy.component {
     props = {
-      path: {
+      pathlist: {
         type: [Object],
         default: null
       }
     }
+
   }
 </script>

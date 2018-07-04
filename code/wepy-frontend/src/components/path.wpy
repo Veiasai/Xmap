@@ -9,13 +9,21 @@
     background-color: rgb(254, 254, 254);
     text-align: center;
   }
-  .pathimg{
-    float: left;
-    left: 46rpx;
 
+  .pathimg{
+    position:relative;
+    width:63px;
+    height:63px;
+    overflow:hidden;
+    border-radius:50%;
+  }
+
+  .pathimg img{
+    width:100%;
+    height:auto;
   }
   .pathname{
-    font-size = 18px;
+    font-size: 18px;
     font-weight: bold;
     color: #111111;
   }
@@ -26,8 +34,10 @@
 </style>
 
 <template>
-  <view class="path {{style}}">
-    <img class="pathimg" src={{path.img}}>
+  <view @tap = "notifi" class="path {{style}}">
+    <view class="pathimg">
+      <img src={{path.img}}>
+    </view>
     <text class="pathname">{{path.name}}</text>
     <text class="pathdetial">{{path.detail}}</text>
   </view>
@@ -41,6 +51,12 @@
       path: {
         type: [Object],
         default: null
+      }
+    }
+
+    method = {
+      notifi () {
+        this.$emit('tap-path',this.path)
       }
     }
   }

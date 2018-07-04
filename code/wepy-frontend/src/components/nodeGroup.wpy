@@ -1,0 +1,23 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Node from 'src/components/node.wpy'
+
+  export default class Nodelist extends wepy.component {
+    props = {
+      nodelist: {
+        type: [Object],
+        default: null
+      }
+    }
+  }
+</script>

@@ -1,11 +1,44 @@
 <style lang="less">
+  .node{
+    left: 20px;
+    top: 152px;
+    width: 147px;
+    height: 66px;
+    line-height: 20px;
+    border-radius: 8px;
+    background-color: rgba(242, 242, 242, 1);
+    text-align: center;
+  }
+
+  .pathimg{
+    left: 10px;
+    position:relative;
+    width:49px;
+    height:49px;
+    overflow:hidden;
+    border-radius:50%;
+  }
+
+  .pathimg img{
+    width:100%;
+    height:auto;
+  }
+
+  .nodename{
+    font-size: 18px;
+    font-weight: bold;
+    color: #111111;
+  }
+
 
 </style>
 
 <template>
-  <view>
-    <img src={{node.img}}>
-    <text>{{node.name}}</text>
+  <view @tap="notifi" class="node">
+    <view class="nodeimg">
+      <img src={{node.img}}>
+    </view>
+    <text class="nodename">{{node.name}}</text>
   </view>
 </template>
 
@@ -17,6 +50,12 @@
       node: {
         type: [Object],
         default: null
+      }
+    }
+
+    method = {
+      notifi () {
+        this.$emit('tap-node',this.node)
       }
     }
   }
