@@ -6,6 +6,7 @@ import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import xyz.veiasai.neo4j.result.Result;
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
+@Api(value = "uploading-controller")
 @RestController
 @RequestMapping("/")
 public class UploadImgController {
