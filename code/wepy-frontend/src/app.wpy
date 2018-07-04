@@ -18,10 +18,11 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        'pages/start',
+        'pages/main',
+        'pages/nodeViewer',
         'pages/pathInfo',
         'pages/pathUpload',
-        'pages/main',
-        'pages/start',
         'pages/index'
       ],
       window: {
@@ -35,7 +36,6 @@
     globalData = {
       building: null, //wx.chooselocation返回的buidling对象
       userInfo: null,
-
     };
 
     constructor() {

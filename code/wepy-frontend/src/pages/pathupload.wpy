@@ -136,13 +136,11 @@
         if (this.origin === "" && this.end === "") {
           content = "该路线未绑定任何点位，是否继续上传？";
         }
-
         try {
           let res = await wepy.showModal({
             title: '上传路线',
             content: content
           })
-
           console.log('用户点击确定')
           wx.showLoading({
             title: '上传中',

@@ -11,10 +11,13 @@
 <script>
   import wepy from 'wepy';
   import {httpHead} from '../properties/Const'
-  export default class NodeGroup extends wepy.component {
+  export default class NodeViewer extends wepy.page {
     onLoad() {
 
     }
 
+    config={
+      navigationBarTitleText: 'NodeView',
+    }
   }
 </script>

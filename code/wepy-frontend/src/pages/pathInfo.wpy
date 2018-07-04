@@ -31,7 +31,9 @@
       originToEnd:[], // 从起点到终点的多段路径数组
       oteIndex:0,     // 多段路径索引
     }
-
+    onLoad (params, data) {
+      this.originToEnd=data.preload.originToEnd;
+    }
   }
 
 </script>

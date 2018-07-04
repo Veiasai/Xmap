@@ -1,24 +1,80 @@
 <style>
+  .pathGroup {
+    border-bottom: 1px solid #ddd;
+    width: 600 rpx;
+  }
 
+  .path {
+    margin-left: 0;
+    display: block;
+    border-top: 1px solid #ddd;
+    padding: 5px;
+  }
 </style>
 
 <template>
   <view>
-
+    <view class="searchInput">
+      <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+    </view>
+    <view>
+      <radio-group class="pathGroup" bindchange="pathChange">
+        <repeat for="{{paths}}" item="item">
+          <text class="path">
+            {{item.name}},步数：{{item.steps}},转弯：{{item.curves}}
+          </text>
+        </repeat>
+      </radio-group>
+    </view>
   </view>
-
 </template>
 
 <script>
   import wepy from 'wepy';
   import {httpHead} from '../properties/Const'
+
   export default class Main extends wepy.page {
     onLoad() {
 
     }
 
-    config={
-      navigationBarTitleText: 'test'
+    config = {
+      navigationBarTitleText: "Main"
+    }
+    data = {
+      paths: []
+    }
+    methods = {
+      searchInput(e) {
+        let value = "";
+        if (e !== null) {
+          value = e.detail.value;
+        }
+        wx.request({
+          url: httpHead + '/paths',
+          data: {
+            name: value,
+            buildingId: this.$parent.globalData.building.id
+          },
+          success: (res) => {
+            console.log(res.data);
+            this.setData({paths: res.data});
+            if (res.data.length === 0) {
+              wx.showToast({
+                title: '没有满足条件的路径',
+                icon: 'none',
+              })
+            }
+          }
+        });
+      }
+    }
+
+    events = {
+      'tap-path': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      }
     }
   }
 </script>
