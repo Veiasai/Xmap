@@ -1,9 +1,12 @@
 <style>
+  .test{
+    margin-left: 34rpx;
+  }
 
 </style>
 
 <template>
-  <view>
+  <view class="test">
     <path :path="path"></path>
   </view>
 </template>
