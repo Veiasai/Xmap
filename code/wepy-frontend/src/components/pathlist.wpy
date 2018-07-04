@@ -10,7 +10,7 @@
 
 <script>
   import wepy from 'wepy';
-  import Path from 'src/components/path.wpy'
+  import Path from './path.wpy'
 
   export default class Pathlist extends wepy.component {
     props = {
