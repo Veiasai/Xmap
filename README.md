@@ -7,6 +7,6 @@
 - 树上的鸟儿成双队
 - 组长：[刘劲锋-Veiasai](http://github.com/Veiasai)
 - 组员：[鄢新-Blindingend](http://github.com/blindingend)
-- 组员：[吴志文Girvanal](http://github.com/GIRVANAL)
+- 组员：[吴志文-Girvanal](http://github.com/GIRVANAL)
 - 组别：13
 - TA：曹峻铭
