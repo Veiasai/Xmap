@@ -1,74 +1,117 @@
 <style lang="less">
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+  import wepy from 'wepy'
+  import {httpHead} from './properties/Const'
+  import 'wepy-async-function'
 
 
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/main',
-      'pages/start',
-      'pages/index',
-
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    }
-  }
-
-  globalData = {
-    building : null, //wx.chooselocation返回的buidling对象
-    userInfo: null,
-    httpHead : "http://202.120.40.109:23384/weixin"
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch() {
-    this.testAsync()
-  }
-
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/pathInfo',
+        'pages/pathUpload',
+        'pages/main',
+        'pages/start',
+        'pages/index'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#fff',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'black'
       }
-    })
+    }
+
+    globalData = {
+      building: null, //wx.chooselocation返回的buidling对象
+      userInfo: null,
+
+    };
+
+    constructor() {
+      super()
+      this.use('requestfix')
+    }
+
+    onLaunch() {
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            //发起网络请求
+            console.log(res.code);
+            wx.request({
+              url: httpHead + '/login',
+              data: {
+                code: res.code
+              },
+              success: (res) => {
+                console.log(res.data);
+                let data = res.data;
+                if (data.openid !== null) {
+                  this.globalData.userInfo = data.openid;
+                }
+                else {
+                  wx.showToast({
+                    title: "登录信息获取失败，部分功能受限",
+                    icon: 'none',
+                  });
+                }
+              },
+              fail: () => {
+                wx.showToast({
+                  title: "登录信息获取失败，部分功能受限",
+                  icon: 'none',
+                });
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
+      /*wx.login({
+        success: async (id) => {
+          if (id.code) {
+            //发起网络请求
+            console.log(id.code);
+            try {
+              let res = await wepy.request({
+                url: httpHead + '/login',
+                data: {
+                  code: id.code
+                }
+              })
+              console.log(res.data);
+              let data = res.data;
+              if (data.openid !== null) {
+                this.globalData.userInfo = data.openid;
+              }
+              else {
+                wx.showToast({
+                  title: "登录信息获取失败，部分功能受限",
+                  icon: 'none',
+                });
+              }
+            }catch (e)
+            {
+              wx.showToast({
+                title: "登录信息获取失败，部分功能受限",
+                icon: 'none',
+              });
+          }
+        }
+      }
+    })*/
+    }
   }
-}
 </script>

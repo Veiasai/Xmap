@@ -12,10 +12,10 @@
 <script>
   import wepy from 'wepy';
 
-  var httpHead;
+  import {httpHead} from '../properties/Const'
   export default class Start extends wepy.page {
     onLoad () {
-      httpHead = this.$parent.globalData.httpHead;
+
     }
     methods = {
       async selectBuilding() {

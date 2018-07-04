@@ -1,0 +1,37 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+    <swiper indicator-dots class="swiper">
+      <repeat for="{{originToEnd}}" item="item">
+        <swiper-item>
+          <scroll-view scroll-y="true" class="modaldisplay">
+            <PathDisplay :pathArray.sync="item.contents" />
+          </scroll-view>
+        </swiper-item>
+      </repeat>
+    </swiper>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {httpHead} from '../properties/Const';
+  import pathDisplay from '../components/pathDisplay';
+
+  export default class Start extends wepy.page {
+    components = {
+      PathDisplay: pathDisplay
+    }
+
+    data = {
+      pathArray:[],   // 当前查看的path的内容
+      originToEnd:[], // 从起点到终点的多段路径数组
+      oteIndex:0,     // 多段路径索引
+    }
+
+  }
+
+</script>
