@@ -23,10 +23,10 @@ public class DataSet {
     @ApiModelProperty(hidden = true)
     private String id;
 
-    @JsonIgnore
-    @Relationship(type="NODE-IN-DATASET")
-    @ApiModelProperty(value = "点位组",required = true)
-    private Collection<Node> nodes = new HashSet<>();
+    private String name;
+
+    @ApiModelProperty(hidden = true)
+    private String type;
 
     @JsonIgnore
     @Relationship(type="AUTHOR")
@@ -36,20 +36,28 @@ public class DataSet {
     @Relationship(type="BUILDING")
     private Building building;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Collection<Node> getNodes() {
-        return nodes;
-    }
-
-    public void setNodes(Collection<Node> nodes) {
-        this.nodes = nodes;
     }
 
     public Author getAuthor() {
