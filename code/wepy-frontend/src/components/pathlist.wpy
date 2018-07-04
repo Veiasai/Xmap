@@ -1,6 +1,5 @@
 <style lang="less">
 
-
 </style>
 
 <template>
@@ -11,19 +10,15 @@
 
 <script>
   import wepy from 'wepy';
-  import {httpHead} from '../properties/Const'
-  import Node from './node'
+  import Path from './path.wpy'
 
-  export default class NodeGroup extends wepy.component {
-    onLoad() {
-
-    }
-
+  export default class Pathlist extends wepy.component {
     props = {
-      nodelist: {
+      pathlist: {
         type: [Object],
         default: null
       }
     }
+
   }
 </script>

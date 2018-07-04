@@ -21,6 +21,7 @@
         'pages/start',
         'pages/main',
         'pages/nodeViewer',
+        'pages/test',
         'pages/pathInfo',
         'pages/pathUpload',
         'pages/index'

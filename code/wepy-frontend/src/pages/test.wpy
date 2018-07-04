@@ -1,0 +1,38 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+    <path :path="path"></path>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Path from '../components/path';
+
+  export default class test extends wepy.page {
+
+    components = {
+      path: Path
+    }
+
+    data = {
+      path:{index:"0",
+        img:"http://www.nhcue.edu.tw/~u9218053/colorpaper.jpg",
+        name:"大局局",
+        steps:"66",
+        curves:"8"}
+
+    }
+
+    onLoad() {
+
+    }
+
+    config={
+      navigationBarTitleText: 'test'
+    }
+  }
+</script>
