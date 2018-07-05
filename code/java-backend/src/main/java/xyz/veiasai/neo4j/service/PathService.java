@@ -24,9 +24,9 @@ public class PathService {
     private AuthorRepository authorRepository;
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByName(String name)
+    public Collection<Path> findByName(String name,Integer skip,Integer limit)
     {
-        return  pathRepository.findByNameLike(name);
+        return  pathRepository.findByNameLike(name,skip,limit);
     }
 
     public Path addPath(Path path)
