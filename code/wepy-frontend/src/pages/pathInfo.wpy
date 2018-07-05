@@ -1,5 +1,8 @@
 <style>
-
+  .swiper {
+    height: 95vh;
+    width: 725 rpx;
+  }
 </style>
 
 <template>
@@ -8,7 +11,7 @@
       <repeat for="{{originToEnd}}" item="item">
         <swiper-item>
           <scroll-view scroll-y="true" class="modaldisplay">
-            <PathDisplay :pathArray.sync="item.contents" />
+            <PathDisplay :pathArray.sync="item.contents"/>
           </scroll-view>
         </swiper-item>
       </repeat>
@@ -18,7 +21,7 @@
 
 <script>
   import wepy from 'wepy';
-  import {httpHead} from '../properties/Const';
+  import {httpHead, imgHead} from '../properties/Const';
   import pathDisplay from '../components/pathDisplay';
 
   export default class Start extends wepy.page {
@@ -27,12 +30,22 @@
     }
 
     data = {
-      pathArray:[],   // 当前查看的path的内容
-      originToEnd:[], // 从起点到终点的多段路径数组
-      oteIndex:0,     // 多段路径索引
+      pathArray: [],   // 当前查看的path的内容
+      originToEnd: [], // 从起点到终点的多段路径数组
+      oteIndex: 0,     // 多段路径索引
     }
-    onLoad (params, data) {
-      this.originToEnd=data.preload.originToEnd;
+
+    onLoad(params, data) {
+      this.originToEnd = data.preload.originToEnd.map((path) => {
+        return {
+          ...path, contents: path.contents.map((item) => {
+            if (item.type === "img")
+              return {...item, message: imgHead + item.message};
+            else
+              return item;
+          })
+        }
+      });
     }
   }
 

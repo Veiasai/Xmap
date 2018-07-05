@@ -59,19 +59,16 @@
       node:{
         type:Object,
         default:{
+          id:"",
           img:"",
           name:""
         }
       },
-      index:{
-        type:Number,
-        default:0
-      }
     }
 
     methods = {
       tapNode () {
-        this.$emit('tap-Node',this.index)
+        this.$emit('tap-Node',this.node)
       }
     }
   }

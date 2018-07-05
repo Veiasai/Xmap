@@ -11,7 +11,7 @@
       <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
     <view class="pathGroup">
-        <repeat for="{{paths}}" item="item">
+        <repeat for="{{paths}}" index="index" item="item">
           <Path :path="item"></Path>
         </repeat>
     </view>
@@ -30,7 +30,7 @@
   import path from '../components/path'
   export default class Main extends wepy.page {
     onLoad() {
-
+      this.paths=this.$parent.globalData.paths
     }
 
     config = {
@@ -56,7 +56,9 @@
           },
           success: (res) => {
             console.log(res.data);
-            this.setData({paths: res.data});
+            this.paths=res.data;
+            this.$parent.globalData.paths=res.data;
+            this.$apply();
             if (res.data.length === 0) {
               wx.showToast({
                 title: '没有满足条件的路径',
@@ -74,9 +76,12 @@
     }
 
     events = {
-      'tap-path': (index, $event) => {
+      'tap-path': (path, $event) => {
         console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
-        console.log("index", index);
+        this.$preload('originToEnd', [path]);
+        wx.navigateTo({
+          url: '/pages/pathInfo',
+        })
       }
     }
   }

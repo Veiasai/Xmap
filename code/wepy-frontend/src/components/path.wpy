@@ -64,6 +64,7 @@
       path:{
         type:Object,
         default:{
+          contents:[],
           img:"",
           name:"",
           steps:0,
@@ -74,7 +75,7 @@
 
     methods = {
       notifi () {
-        this.$emit('tap-path',this.index)
+        this.$emit('tap-path',this.path)
       }
     }
   }

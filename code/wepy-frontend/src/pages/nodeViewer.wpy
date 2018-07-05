@@ -15,7 +15,7 @@
     <view class="nodeGroup">
       <repeat for="{{nodes}}" index="index" item="item">
         <view>
-          <Node :node="item" :index="index"></Node>
+          <Node :node="item"></Node>
         </view>
       </repeat>
     </view>
@@ -54,18 +54,16 @@
             console.log(res.data);
             if (res.data.length > 0) {
               let nodes = res.data.map((item)=>{return {...item, img: imgHead + item.img}});
-              this.setData({
-                nodes : nodes
-              });
               this.nodes = nodes;
+              this.$apply();
             }
             else {
               wx.showToast({
                 title: '该建筑还没有创建任何点位',
                 icon: 'none',
               })
-              this.setData({nodes:[]});
               this.nodes = [];
+              this.$apply();
             }
           }
         })
@@ -73,9 +71,9 @@
     }
 
     events={
-      'tap-Node': (index, $event) => {
+      'tap-Node': (node, $event) => {
         console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
-        console.log("index", index);
+        console.log("node", node);
         //$event.$destroy();
       }
     }
