@@ -1,14 +1,22 @@
 <style>
-
+  .searchInput {
+    margin-top: 3vh;
+    width:80%;
+    border-style: solid;
+    border-color:#C0C0C0;
+  }
 </style>
 
 <template>
   <view>
+    <view class="searchInput">
+      <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+    </view>
     <view class="nodeGroup">
-      <repeat for="{{nodes}}" item="item">
-        <text class="path">
-          {{item.name}}
-        </text>
+      <repeat for="{{nodes}}" index="index" item="item">
+        <view>
+          <Node :node="item" :index="index"></Node>
+        </view>
       </repeat>
     </view>
   </view>
@@ -17,19 +25,20 @@
 <script>
   import wepy from 'wepy';
   import {httpHead, imgHead} from '../properties/Const'
-
+  import node from '../components/node'
   export default class NodeViewer extends wepy.page {
     onLoad() {
 
     }
-
     config = {
       navigationBarTitleText: 'NodeView',
     }
     data = {
       nodes: [],  // 当前选中建筑物中所有的节点（分页查询没做）
     }
-
+    components={
+      Node:node
+    }
     methods = {
       searchInput(e) {
         let value = "";
@@ -44,17 +53,30 @@
           success: (res) => {
             console.log(res.data);
             if (res.data.length > 0) {
-              this.setData({nodes: res.data});
+              let nodes = res.data.map((item)=>{return {...item, img: imgHead + item.img}});
+              this.setData({
+                nodes : nodes
+              });
+              this.nodes = nodes;
             }
             else {
               wx.showToast({
                 title: '该建筑还没有创建任何点位',
                 icon: 'none',
               })
-              this.setData({nodes: []});
+              this.setData({nodes:[]});
+              this.nodes = [];
             }
           }
         })
+      }
+    }
+
+    events={
+      'tap-Node': (index, $event) => {
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
+        console.log("index", index);
+        //$event.$destroy();
       }
     }
   }

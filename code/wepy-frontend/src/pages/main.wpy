@@ -1,14 +1,7 @@
 <style>
   .pathGroup {
     border-bottom: 1px solid #ddd;
-    width: 600 rpx;
-  }
-
-  .path {
-    margin-left: 0;
-    display: block;
-    border-top: 1px solid #ddd;
-    padding: 5px;
+    width: 700 rpx;
   }
 </style>
 
@@ -19,10 +12,11 @@
     </view>
     <view class="pathGroup">
         <repeat for="{{paths}}" item="item">
-          <text class="path">
-            {{item.name}},步数：{{item.steps}},转弯：{{item.curves}}
-          </text>
+          <Path :path="item"></Path>
         </repeat>
+    </view>
+    <view>
+      <button @tap="nodeView">查看点位</button>
     </view>
     <view>
 
@@ -33,7 +27,7 @@
 <script>
   import wepy from 'wepy';
   import {httpHead} from '../properties/Const'
-
+  import path from '../components/path'
   export default class Main extends wepy.page {
     onLoad() {
 
@@ -44,6 +38,9 @@
     }
     data = {
       paths: []
+    }
+    components={
+      Path:path
     }
     methods = {
       searchInput(e) {
@@ -68,13 +65,18 @@
             }
           }
         });
+      },
+      nodeView(){
+        wx.navigateTo({
+          url: '/pages/nodeViewer',
+        })
       }
     }
 
     events = {
-      'tap-path': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      'tap-path': (index, $event) => {
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
+        console.log("index", index);
       }
     }
   }
