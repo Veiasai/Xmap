@@ -24,6 +24,8 @@
   }
 
   .pathimg image{
+    width:126rpx;
+    height:126rpx;
     width:100%;
     height:auto;
   }
@@ -62,6 +64,7 @@
       path:{
         type:Object,
         default:{
+          index:0,
           img:"",
           name:"",
           steps:0,
@@ -73,7 +76,7 @@
     method = {
       notifi () {
         console.log(path.img)
-        this.$emit('tap-path',this.index)
+        this.$emit('tap-path',this.path.index)
       }
     }
   }
