@@ -52,59 +52,49 @@ public class DataSetController {
     public Collection<DataSet> getDataSets(@RequestParam String dataSetName){
         return dataSetService.findDataSetNameLike(dataSetName);
     }
-    @ApiOperation(value="模糊查询点位",notes="查找数据组中包含某名字的点位")
-    @GetMapping("/dataset/node")
+    @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线")
+    @GetMapping("/dataset/some")
     public Result searchNode(@RequestParam String dataSetId,
-                             @RequestParam @ApiParam(name="nodeName",value="查找所需的点位名称")String nodeName){
-        NodeResult result = new NodeResult();
-        if(dataSetService.getDataSet(dataSetId)==null){
+                             @RequestParam @ApiParam(name="Name",value="查找所需的点位/名称")String Name){
+        DataSet dataSet = dataSetService.getDataSet(dataSetId);
+        if(dataSet==null){
+            Result result = new NodeResult();
             result.setMessage("数据组不存在");
             return result;
         }
-        Collection<Node> Nodes = dataSetService.searchNodesByNameLike(dataSetId,nodeName);
-        result.setMessage("查找成功");
-        result.setNodes(Nodes);
-        return result;
-    }
-
-    @ApiOperation(value = "查找所有点位",notes="查找数据组中所有点位")
-    @GetMapping("/dataset/allnodes")
-    public Result searchNode(@RequestParam String dataSetId){
-        NodeResult result =new NodeResult();
-        if(dataSetService.getDataSet(dataSetId)==null){
-            result.setMessage("数据组不存在");
+        if(dataSet.getType().equals("node")){
+            NodeResult result = new NodeResult();
+            Collection<Node> Nodes = dataSetService.searchNodesByNameLike(dataSetId,Name);
+            result.setMessage("查找点位成功");
+            result.setNodes(Nodes);
             return result;
         }
-        Collection<Node> Nodes = dataSetService.searchAllNodes(dataSetId);
-        result.setMessage("查找成功");
-        result.setNodes(Nodes);
-        return result;
-    }
-
-    @ApiOperation(value="查找某个路线",notes="查找数据组中某个路线")
-    @GetMapping("/dataset/path")
-    public Result searchPath(@RequestParam String dataSetId,@RequestParam String pathName){
         PathResult result = new PathResult();
-        if(dataSetService.getDataSet(dataSetId)==null){
-            result.setMessage("数据组不存在");
-            return result;
-        }
-        Collection<Path> Paths = dataSetService.searchPathByNameLike(dataSetId,pathName);
-        result.setMessage("查找成功");
+        Collection<Path> Paths = dataSetService.searchPathByNameLike(dataSetId,Name);
+        result.setMessage("查找路线成功");
         result.setPaths(Paths);
         return result;
     }
 
-    @ApiOperation(value="查找所有路线",notes="查找数据组所有路线")
-    @GetMapping("/dataset/allpaths")
-    public Result searchAllPath(@RequestParam String dataSetId){
-        PathResult result = new PathResult();
-        if(dataSetService.getDataSet(dataSetId)==null){
+    @ApiOperation(value = "查找所有点位/路线",notes="查找数据组中所有点位/路线")
+    @GetMapping("/dataset/all")
+    public Result searchNode(@RequestParam String dataSetId){
+        DataSet dataSet =dataSetService.getDataSet(dataSetId);
+        if(dataSet==null){
+            Result result =new NodeResult();
             result.setMessage("数据组不存在");
             return result;
         }
+        if(dataSet.getType().equals("node")){
+            NodeResult result =new NodeResult();
+            Collection<Node> Nodes = dataSetService.searchAllNodes(dataSetId);
+            result.setMessage("查找点位成功");
+            result.setNodes(Nodes);
+            return result;
+        }
+        PathResult result =new PathResult();
         Collection<Path> Paths = dataSetService.searchAllPaths(dataSetId);
-        result.setMessage("查找成功");
+        result.setMessage("查找路线成功");
         result.setPaths(Paths);
         return result;
     }
@@ -141,12 +131,12 @@ public class DataSetController {
             return result;
         }
         if(dataSet.getType().equals("node")) {
-            result.setMessage("删除成功");
+            result.setMessage("删除点位成功");
             dataSetService.deleteRelationNodes(dataSetId, Ids);
             return result;
         }
         if(dataSet.getType().equals("path")) {
-            result.setMessage("删除成功");
+            result.setMessage("删除路线成功");
             dataSetService.deleteRelationPaths(dataSetId, Ids);
             return result;
         }

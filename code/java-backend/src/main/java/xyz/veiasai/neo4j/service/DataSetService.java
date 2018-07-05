@@ -63,7 +63,7 @@ public class DataSetService {
     }
     @Transactional
     public Collection<Node> searchNodesByNameLike(String dataSetId,String nodeName){
-        return dataSetRepository.SearchNodesByNameLike(dataSetId,".*"+ nodeName + ".*");
+        return dataSetRepository.SearchNodesByNameLike(dataSetId,nodeName);
     }
     @Transactional
     public Collection<Node> searchAllNodes(String dataSetId){
@@ -96,7 +96,7 @@ public class DataSetService {
     }
     @Transactional
     public Collection<Path> searchPathByNameLike(String dataSetId,String pathName){
-        return dataSetRepository.SearchPathsByNameLike(dataSetId,".*"+pathName+".*");
+        return dataSetRepository.SearchPathsByNameLike(dataSetId,pathName);
     }
     @Transactional
     public Collection<Path> searchAllPaths(String dataSetId){
@@ -104,7 +104,7 @@ public class DataSetService {
     }
     @Transactional
     public Collection<DataSet> findDataSetNameLike(String dataSetName){
-        return dataSetRepository.findByNameLike(".*" + dataSetName + ".*");
+        return dataSetRepository.findByNameLike(dataSetName);
     }
 
 

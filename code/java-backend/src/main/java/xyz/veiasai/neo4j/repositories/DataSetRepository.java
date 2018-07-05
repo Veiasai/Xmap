@@ -34,7 +34,7 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     )
     public Node SearchNode(@Param("dataSetId") String dataSetId, @Param("nodeName") String nodeName);
 
-    @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}}) where node.name =~ {nodeName}" +
+    @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}}) where node.name =~ ('.*'+{nodeName}+'.*')" +
             "return node"
     )
     public Collection<Node> SearchNodesByNameLike(@Param("dataSetId") String dataSetId, @Param("nodeName") String nodeName);
@@ -55,7 +55,7 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     )
     public void deleteRelationPathAndDataSet(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
 
-    @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}}) where path.name =~{pathName}" +
+    @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}}) where p.name =~('.*'+{pathName}+'.*')" +
             "return p"
     )
     public Collection<Path> SearchPathsByNameLike(@Param("dataSetId") String dataSetId, @Param("pathName") String pathName);
@@ -68,6 +68,6 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     @Query("Match (d:DataSet {id:{dataSetId}}) Detach Delete d")
     public void deleteDataSetById(@Param("dataSetId") String dataSetId);
 
-    @Query("Match (d:DataSet) where d.name =~ {Name} return d")
+    @Query("Match (d:DataSet) where d.name =~ ('.*'+{Name}+'.*') return d")
     public Collection<DataSet> findByNameLike(@Param("Name") String Name);
 }
