@@ -9,10 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.DataSet;
-import xyz.veiasai.neo4j.domain.Favorite;
 import xyz.veiasai.neo4j.result.*;
 import xyz.veiasai.neo4j.service.AuthorService;
-import xyz.veiasai.neo4j.service.FavoriteService;
 
 import javax.validation.Valid;
 
