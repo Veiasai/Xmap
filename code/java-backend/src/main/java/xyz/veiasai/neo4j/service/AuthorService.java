@@ -1,12 +1,18 @@
 package xyz.veiasai.neo4j.service;
 
+import org.neo4j.driver.v1.types.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.Author;
+import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Favorite;
+import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.repositories.AuthorRepository;
+import xyz.veiasai.neo4j.result.DataSetResult;
 import xyz.veiasai.neo4j.result.FavoriteResult;
+import xyz.veiasai.neo4j.result.NodeResult;
+import xyz.veiasai.neo4j.result.PathResult;
 
 import javax.print.DocFlavor;
 import java.util.List;
@@ -52,11 +58,30 @@ public class AuthorService {
         authorRepository.deleteFavorite(auhtorId,favoriteId);
     }
     @Transactional
-    public FavoriteResult findFavoriteByNameLike(String authorId, String favoriteName){
+    public FavoriteResult findFavoriteByNameLike(String authorId, String favoriteName,Integer skip,Integer limit){
         FavoriteResult favoriteResult= new FavoriteResult();
-        favoriteResult.setDataSets(authorRepository.findDataSetByNameLike(authorId,favoriteName));
-        favoriteResult.setNodes(authorRepository.findNodeByNameLike(authorId,favoriteName));
-        favoriteResult.setPaths(authorRepository.findPathByNameLike(authorId,favoriteName));
+        favoriteResult.setDataSets(authorRepository.findDataSetByNameLike(authorId,favoriteName,skip,limit));
+        favoriteResult.setNodes(authorRepository.findNodeByNameLike(authorId,favoriteName,skip,limit));
+        favoriteResult.setPaths(authorRepository.findPathByNameLike(authorId,favoriteName,skip,limit));
         return favoriteResult;
+    }
+    @Transactional
+    public NodeResult findfavorNodeByNameLike(String authorId, String nodeName,Integer skip,Integer limit){
+        NodeResult nodeResult = new NodeResult();
+        nodeResult.setNodes(authorRepository.findNodeByNameLike(authorId,nodeName,skip,limit));
+        return nodeResult;
+    }
+
+    @Transactional
+    public PathResult findfavorPathByNameLike(String authorId, String pathName, Integer skip, Integer limit){
+        PathResult pathResult = new PathResult();
+        pathResult.setPaths(authorRepository.findPathByNameLike(authorId,pathName,skip,limit));
+        return pathResult;
+    }
+    @Transactional
+    public DataSetResult findfavorDataSetByNameLike(String authorId, String dataSetName, Integer skip, Integer limit){
+        DataSetResult dataSetResult = new DataSetResult();
+        dataSetResult.setDataSets(authorRepository.findDataSetByNameLike(authorId,dataSetName,skip,limit));
+        return dataSetResult;
     }
 }

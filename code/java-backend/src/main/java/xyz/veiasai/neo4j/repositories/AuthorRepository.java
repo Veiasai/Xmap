@@ -24,14 +24,26 @@ public interface AuthorRepository extends Neo4jRepository<Author, String> {
     @Query("Match (a:Author{id:{authorId}}) return a")
     public Author getAuthorById(@Param("authorId")String authorId);
 
-    @Query("Match (a:Author {id:{authorId}})-[:COLLECT]->(n:Node) where n.name =~ ('.*'+{nodeName}+'.*') return n")
-    public Collection<Node> findNodeByNameLike(@Param("authorId")String authorId, @Param("nodeName") String nodeName);
+    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:Node) WHERE n.name =~ ('.*'+{nodeName}+'.*')"+
+            "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
+    public Collection<Node> findNodeByNameLike(@Param("authorId")String authorId,
+                                               @Param("nodeName") String nodeName,
+                                               @Param("skip")Integer skip,
+                                               @Param("limit")Integer limit);
 
-    @Query("Match (a:Author {id:{authorId}})-[:COLLECT]->(n:Path) where n.name =~ ('.*'+{pathName}+'.*') return n")
-    public Collection<Path> findPathByNameLike(@Param("authorId")String authorId, @Param("pathName") String pathName);
+    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:Path) WHERE n.name =~ ('.*'+{pathName}+'.*') "+
+            "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
+    public Collection<Path> findPathByNameLike(@Param("authorId")String authorId,
+                                               @Param("pathName") String pathName,
+                                               @Param("skip")Integer skip,
+                                               @Param("limit")Integer limit);
 
-    @Query("Match (a:Author {id:{authorId}})-[:COLLECT]->(n:DataSet) where n.name =~ ('.*'+{datasetName}+'.*') return n")
-    public Collection<DataSet> findDataSetByNameLike(@Param("authorId")String authorId, @Param("datasetName") String datasetName);
+    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:DataSet) WHERE n.name =~ ('.*'+{datasetName}+'.*')"+
+            "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
+    public Collection<DataSet> findDataSetByNameLike(@Param("authorId")String authorId,
+                                                     @Param("datasetName") String datasetName,
+                                                     @Param("skip")Integer skip,
+                                                     @Param("limit")Integer limit);
 
 
 }

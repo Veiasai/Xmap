@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Author;
+import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Favorite;
-import xyz.veiasai.neo4j.result.FavoriteResult;
-import xyz.veiasai.neo4j.result.Result;
+import xyz.veiasai.neo4j.result.*;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.FavoriteService;
 
@@ -48,12 +48,47 @@ public class AuthorController {
         return result;
     }
 
-    @ApiOperation(value="查询收藏",notes="通过名字模糊查询收藏")
+    @ApiOperation(value="查询收藏",notes="通过名字模糊查询所有收藏")
     @GetMapping("/favorite/some")
     public Result getFavorite(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
-                                    @RequestParam @ApiParam(name = "favoriteName",value = "收藏事物的名称") String favoriteName){
+                              @RequestParam @ApiParam(name = "favoriteName",value = "收藏事物的名称") String favoriteName,
+                              @RequestParam @ApiParam(name = "skip",value = "指定查询收藏偏移量") Integer skip,
+                              @RequestParam @ApiParam(name = "limit",value = "指定查询收藏结果数")Integer limit){
 
-        FavoriteResult result = authorService.findFavoriteByNameLike(authorId,favoriteName);
+        FavoriteResult result = authorService.findFavoriteByNameLike(authorId,favoriteName,skip,limit);
+        return result;
+    }
+
+    @ApiOperation(value="查询收藏中点位",notes="通过名字模糊查询收藏里的点位")
+    @GetMapping("/favorite/nodes")
+    public Result getFavoriteNodes(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
+                              @RequestParam @ApiParam(name = "nodeName",value = "收藏事物的名称") String nodeName,
+                              @RequestParam @ApiParam(name = "skip",value = "指定查询收藏偏移量") Integer skip,
+                              @RequestParam @ApiParam(name = "limit",value = "指定查询收藏结果数")Integer limit){
+
+        NodeResult result = authorService.findfavorNodeByNameLike(authorId,nodeName,skip,limit);
+        return result;
+    }
+
+    @ApiOperation(value="查询收藏中路线",notes="通过名字模糊查询收藏里的路线")
+    @GetMapping("/favorite/path")
+    public Result getFavoritePaths(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
+                              @RequestParam @ApiParam(name = "pathName",value = "收藏事物的名称") String pathName,
+                              @RequestParam @ApiParam(name = "skip",value = "指定查询收藏偏移量") Integer skip,
+                              @RequestParam @ApiParam(name = "limit",value = "指定查询收藏结果数")Integer limit){
+
+        PathResult result = authorService.findfavorPathByNameLike(authorId,pathName,skip,limit);
+        return result;
+    }
+
+    @ApiOperation(value="查询收藏中数据组",notes="通过名字模糊查询收藏的数据组")
+    @GetMapping("/favorite/dataset")
+    public Result getFavoriteDataSets(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
+                              @RequestParam @ApiParam(name = "dataSetName",value = "收藏事物的名称") String dataSetName,
+                              @RequestParam @ApiParam(name = "skip",value = "指定查询收藏偏移量") Integer skip,
+                              @RequestParam @ApiParam(name = "limit",value = "指定查询收藏结果数")Integer limit){
+
+        DataSetResult result = authorService.findfavorDataSetByNameLike(authorId,dataSetName,skip,limit);
         return result;
     }
 
