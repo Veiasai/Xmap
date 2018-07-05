@@ -4,20 +4,58 @@
 
 <template>
   <view>
-
+    <view class="nodeGroup">
+      <repeat for="{{nodes}}" item="item">
+        <text class="path">
+          {{item.name}}
+        </text>
+      </repeat>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import {httpHead} from '../properties/Const'
+  import {httpHead, imgHead} from '../properties/Const'
+
   export default class NodeViewer extends wepy.page {
     onLoad() {
 
     }
 
-    config={
+    config = {
       navigationBarTitleText: 'NodeView',
+    }
+    data = {
+      nodes: [],  // 当前选中建筑物中所有的节点（分页查询没做）
+    }
+
+    methods = {
+      searchInput(e) {
+        let value = "";
+        if (e !== null) {
+          value = e.detail.value;
+        }
+        wepy.request({
+          url: httpHead + '/nodes',
+          data: {
+            building: this.$parent.globalData.building.id,
+          },
+          success: (res) => {
+            console.log(res.data);
+            if (res.data.length > 0) {
+              this.setData({nodes: res.data});
+            }
+            else {
+              wx.showToast({
+                title: '该建筑还没有创建任何点位',
+                icon: 'none',
+              })
+              this.setData({nodes: []});
+            }
+          }
+        })
+      }
     }
   }
 </script>

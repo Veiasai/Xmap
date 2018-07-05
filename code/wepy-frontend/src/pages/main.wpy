@@ -17,14 +17,15 @@
     <view class="searchInput">
       <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
-    <view>
-      <radio-group class="pathGroup" bindchange="pathChange">
+    <view class="pathGroup">
         <repeat for="{{paths}}" item="item">
           <text class="path">
             {{item.name}},步数：{{item.steps}},转弯：{{item.curves}}
           </text>
         </repeat>
-      </radio-group>
+    </view>
+    <view>
+
     </view>
   </view>
 </template>
@@ -50,7 +51,7 @@
         if (e !== null) {
           value = e.detail.value;
         }
-        wx.request({
+        wepy.request({
           url: httpHead + '/paths',
           data: {
             name: value,

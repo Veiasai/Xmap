@@ -18,13 +18,13 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        'pages/nodeUpload',
         'pages/start',
         'pages/main',
         'pages/nodeViewer',
         'pages/test',
         'pages/pathInfo',
         'pages/pathUpload',
-        'pages/index'
       ],
       window: {
         backgroundTextStyle: 'light',
