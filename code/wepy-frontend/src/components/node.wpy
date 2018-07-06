@@ -1,5 +1,7 @@
 <style lang="less">
   .node{
+    margin-left: 71rpx;
+    margin-top: 1vh;
     left: 40rpx;
     top: 304rpx;
     width: 608rpx;
@@ -25,8 +27,6 @@
   .nodeimg img{
     width:100rpx;
     height:100rpx;
-    width:100%;
-    height:auto;
   }
 
   .nodename{
@@ -45,7 +45,7 @@
 <template>
   <view @tap="notifi" class="node">
     <view class="nodeimg">
-      <image mode="widthFix" src="{{node.img}}" />
+      <image mode="aspectFill" src="{{node.img}}" />
     </view>
     <view class="nodename" >{{node.name}}</view>
   </view>
