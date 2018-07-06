@@ -9,7 +9,9 @@ import xyz.veiasai.neo4j.domain.Path;
 import java.util.Collection;
 
 public interface PathRepository extends Neo4jRepository<Path, String> {
-    public Collection<Path> findByNameLike(String name);
+    @Query("MATCH (p:Path) where p.name =~ ('.*'+{Name}+'.*') return p"+
+            "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}")
+    public Collection<Path> findByNameLike(@Param("Name") String Name,@Param("skip") Integer skip,@Param("limit")Integer limit);
 
     @Query("MATCH (:Node {id: {nodeId}})-[PATH]->(n:Path) RETURN n")
     public Collection<Path> findByOrigin(@Param("nodeId") String nodeId);

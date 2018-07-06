@@ -15,6 +15,9 @@ public interface AuthorRepository extends Neo4jRepository<Author, String> {
     @Query("Match (n),(a:Author {id:{authorId}}) where n.id={favoriteId} merge (a)-[:COLLECT]->(n)")
     public void addFavorite(@Param("authorId")String authorId,@Param("favoriteId")String favoriteId);
 
+
+    @Query("Match (n) where n.id =~ ('.*'+{favoriteId}+'.*') return count(n)")
+    public int FavorExistInDb(@Param("favortiteId")String favoriteId);
     @Query("Match (a:Author {id:{authorId}})-[:COLLECT]->(n) where n.id={favoriteId} return count(n) ")
     public int findFavoriteById(@Param("authorId")String authorId,@Param("favoriteId")String favoriteId);
 

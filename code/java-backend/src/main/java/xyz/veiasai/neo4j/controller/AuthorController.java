@@ -38,7 +38,7 @@ public class AuthorController {
             result.setMessage("用户不存在");
             return result;
         }
-        if(authorService.FavoriteIsExist(authorId,favoriteId)==false){
+        if(authorService.FavoriteIsExistInAuthor(authorId,favoriteId)==false){
             authorService.addFavorite(authorId,favoriteId);
             result.setMessage("收藏成功（可能favoriteId不存在");
             return result;
@@ -46,6 +46,14 @@ public class AuthorController {
         result.setMessage("取消收藏");
         authorService.deleteFavorite(authorId,favoriteId);
         return result;
+    }
+    @ApiOperation(value = "判断用户是否收藏",notes = "如果authorId和favoriteId无效也会返回false")
+    @GetMapping("/favorexist")
+    public boolean favorIsexist(String authorId,String favoriteId){
+        if(authorService.getAuthorById(authorId)==null || authorService.FavoriteIsExistInDb(favoriteId)==false) {
+            return false;
+        }
+        return authorService.FavoriteIsExistInAuthor(authorId, favoriteId);
     }
 
     @ApiOperation(value="查询收藏",notes="通过名字模糊查询所有收藏")

@@ -27,9 +27,9 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByName(String name)
+    public Collection<Node> findByName(String name,Integer skip,Integer limit)
     {
-        return nodeRepository.findByNameLike(name);
+        return nodeRepository.findByNameLike(name,skip,limit);
     }
 
     @Transactional(readOnly = true)

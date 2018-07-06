@@ -43,8 +43,15 @@ public class AuthorService {
     }
 
     @Transactional
-    public  boolean FavoriteIsExist(String authorId,String favouriteId){
-        if(authorRepository.findFavoriteById(authorId,favouriteId)!=0){
+    public boolean FavoriteIsExistInDb(String favoriteId){
+        if(authorRepository.FavorExistInDb(favoriteId)!=0){
+            return true;
+        }
+        return false;
+    }
+    @Transactional
+    public boolean FavoriteIsExistInAuthor(String authorId,String favoriteId){
+        if(authorRepository.findFavoriteById(authorId,favoriteId)!=0){
             return true;
         }
         return false;

@@ -103,8 +103,8 @@ public class DataSetService {
         return dataSetRepository.SearchAllPaths(dataSetId);
     }
     @Transactional
-    public Collection<DataSet> findDataSetNameLike(String dataSetName){
-        return dataSetRepository.findByNameLike(dataSetName);
+    public Collection<DataSet> findDataSetNameLike(String dataSetName,Integer skip,Integer limit){
+        return dataSetRepository.findByNameLike(dataSetName,skip,limit);
     }
 
 
