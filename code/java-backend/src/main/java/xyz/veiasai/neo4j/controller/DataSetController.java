@@ -36,7 +36,7 @@ public class DataSetController {
         dataSet = dataSetService.addDataSet(dataSet,buildingId,authorId,type);
         return dataSet;
     }
-    @ApiOperation(value = "删除数据组",notes="删除数据组及其相关联系;/n404:不存在;/n200:删除成功")
+    @ApiOperation(value = "删除数据组",notes="删除数据组及其相关联系;\r\n404:不存在;\r\n200:删除成功")
     @DeleteMapping("/dataset")
     public Result deleteDataSet(@RequestParam String dataSetId){
         Result result = new Result();
@@ -67,7 +67,7 @@ public class DataSetController {
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线;" +
             "通过Name设默认值为空的字符串，可以查询所有;" +
-            "skip 0 limit 100;/n404:不存在;/n200:删除成功")
+            "skip 0 limit 100;\r\n404:不存在;\r\n200:删除成功")
     @GetMapping("/dataset/some")
     public Result searchNodeOrPath(@RequestParam String dataSetId,
                              @RequestParam(required = false,defaultValue = "") @ApiParam(name="Name",value="查找所需的点位/名称")String Name,
@@ -127,7 +127,7 @@ public class DataSetController {
         return result;
     }*/
 
-    @ApiOperation(value = "增加点位/路线",notes="批量增加数据组中点位/路线;/n404:不存在;/n200:添加成功")
+    @ApiOperation(value = "增加点位/路线",notes="批量增加数据组中点位/路线;\r\n404:不存在;\r\n200:添加成功")
     @PostMapping("/dataset/add")
     public Result addNodes(@RequestParam String dataSetId,@RequestBody @ApiParam(name="NodeIds",value="增加所需的点位/路线id List")List<String>NodeIds){
         Result result =new Result();
@@ -152,7 +152,7 @@ public class DataSetController {
         return result;
     }
 
-    @ApiOperation(value = "删除点位/路线",notes = "批量删除数据组中点位/路线;/n404:不存在;/n200:删除成功")
+    @ApiOperation(value = "删除点位/路线",notes = "批量删除数据组中点位/路线;\r\n404:不存在;\r\n200:删除成功")
     @PutMapping("/dataset")
     public Result deleteNodes(@RequestParam String dataSetId,@RequestBody @ApiParam(name="NodeIds",value="删除所需的点位id List") List<String>Ids){
         Result result =new Result();

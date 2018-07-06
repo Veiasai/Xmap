@@ -28,7 +28,7 @@ public class AuthorController {
     {
         return authorService.addAuthor(author);
     }
-    @ApiOperation(value = "收藏/取消收藏",notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等,已存在则取消收藏;/n404:不存在;/n200:删除成功")
+    @ApiOperation(value = "收藏/取消收藏",notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等,已存在则取消收藏;\r\n404:不存在;\r\n200:删除成功")
     @PutMapping("/favorite")
     public Result postFavorite(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
                                @RequestParam @ApiParam(name = "favoriteId",value = "收藏事物的Id") String favoriteId){
