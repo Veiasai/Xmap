@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Building;
 import xyz.veiasai.neo4j.domain.Node;
+import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingService;
 import xyz.veiasai.neo4j.service.NodeService;
@@ -27,39 +28,67 @@ public class NodeController {
 
     @ApiOperation(value = "上传点位", notes="上传点位信息")
     @PostMapping("/node")
-    public Node nodePost(@RequestBody @Valid Node node,
-                         @RequestParam @ApiParam(name="buildingId", value = "点位所在建筑的id") String buildingId,
-                         @RequestParam @ApiParam(name="author", value = "上传者的open-id") String author,
-                         BindingResult bindingResult)
+    public NodeResult nodePost(@RequestBody @Valid Node node,
+                               @RequestParam @ApiParam(name="buildingId", value = "点位所在建筑的id") String buildingId,
+                               @RequestParam @ApiParam(name="author", value = "上传者的open-id") String author,
+                               BindingResult bindingResult)
     {
         node.setBuilding(buildingService.findById(buildingId));
         node.setAuthor(authorService.findById(author));
-        return nodeService.addNode(node);
+        node = nodeService.addNode(node);
+        NodeResult result = new NodeResult();
+        result.setNode(node);
+        return result;
     }
 
     @GetMapping("/nodes")
-    public Collection<Node> nodeGet(@RequestParam(required = false) String name,
-                                    @RequestParam(required = false) String building,
-                                    @RequestParam(required = false) String author,
-                                    @RequestParam(required = false) String originId,
-                                    @RequestParam(required = false) String depth)
+    public NodeResult nodeGet(@RequestParam(required = false) String name,
+                              @RequestParam(required = false) String building,
+                              @RequestParam(required = false) String author,
+                              @RequestParam(required = false) String originId,
+                              @RequestParam(required = false) String depth)
     {
+        NodeResult result =new NodeResult();
         if (originId != null && name != null)
         {
-            return nodeService.findByOriginNode(originId, name);
+            result.setNodes(nodeService.findByOriginNode(originId, name));
+            return result;
         }
-        if (building != null)
-            return nodeService.findByBuilding(building);
-        return null;
+        if (building != null){
+            result.setNodes(nodeService.findByBuilding(building));
+            return result;
+        }
+        return result;
     }
     @GetMapping("/nodes/author")
-    public Collection<Node> nodeGetByAuthor(@RequestParam String authorId, @RequestParam String name) {
-        return nodeService.findByAuthorId(authorId, name);
+    public NodeResult nodeGetByAuthor(@RequestParam String authorId,
+                                            @RequestParam(required = false,defaultValue = "")String name,
+                                            @RequestParam(required = false) Integer skip,
+                                            @RequestParam(required = false)Integer limit) {
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 100;
+        }
+        NodeResult result =new NodeResult();
+        result.setNodes(nodeService.findByAuthorId(authorId, name,skip,limit));
+        return result;
     }
     @GetMapping("/nodes/name")
-    public Collection<Node> nodeGetByName(@RequestParam String name,
-                                          @RequestParam Integer skip,
-                                          @RequestParam Integer limit){
-        return nodeService.findByName(name,skip,limit);
+    public NodeResult nodeGetByName(@RequestParam(required = false,defaultValue = "") String name,
+                                          @RequestParam(required = false) Integer skip,
+                                          @RequestParam(required = false)Integer limit){
+
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 100;
+        }
+        NodeResult result =new NodeResult();
+        result.setNodes(nodeService.findByName(name,skip,limit));
+        return result;
+
     }
 }

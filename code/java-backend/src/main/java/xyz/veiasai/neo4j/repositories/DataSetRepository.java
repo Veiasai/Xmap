@@ -35,9 +35,12 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     public Node SearchNode(@Param("dataSetId") String dataSetId, @Param("nodeName") String nodeName);
 
     @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}}) where node.name =~ ('.*'+{nodeName}+'.*')" +
-            "return node"
+            "RETURN node ORDER BY node.name SKIP {skip} LIMIT {limit}"
     )
-    public Collection<Node> SearchNodesByNameLike(@Param("dataSetId") String dataSetId, @Param("nodeName") String nodeName);
+    public Collection<Node> SearchNodesByNameLike(@Param("dataSetId") String dataSetId,
+                                                  @Param("nodeName") String nodeName,
+                                                  @Param("skip")Integer skip,
+                                                  @Param("limit")Integer limit);
 
     @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}})" +
             "return node"
@@ -56,9 +59,12 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     public void deleteRelationPathAndDataSet(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
 
     @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}}) where p.name =~('.*'+{pathName}+'.*')" +
-            "return p"
+            "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}"
     )
-    public Collection<Path> SearchPathsByNameLike(@Param("dataSetId") String dataSetId, @Param("pathName") String pathName);
+    public Collection<Path> SearchPathsByNameLike(@Param("dataSetId") String dataSetId,
+                                                  @Param("pathName") String pathName,
+                                                  @Param("skip")Integer skip,
+                                                  @Param("limit")Integer limit);
 
     @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}})" +
             "return p"

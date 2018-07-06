@@ -2,6 +2,7 @@ package xyz.veiasai.neo4j.controller;
 
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -46,26 +47,59 @@ public class PathController {
     }
 
     @GetMapping("/paths")
-    public Collection<Path> pathGet(@RequestParam String name, @RequestParam String buildingId) {
-        return pathService.findByBuildingAndName(buildingId, name);
+    public PathResult pathGet(@RequestParam String buildingId,
+                                    @RequestParam(required = false,defaultValue = "") String name,
+                                    @RequestParam(required = false) Integer skip,
+                                    @RequestParam(required = false)Integer limit) {
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 100;
+        }
+        PathResult result =new PathResult();
+        result.setPaths(pathService.findByBuildingAndName(buildingId, name,skip,limit));
+        return result;
     }
 
     @GetMapping("/paths/origin")
-    public Collection<Path> pathGetByOrigin(@RequestParam String originId, @RequestParam String endId) {
+    public PathResult pathGetByOrigin(@RequestParam String originId, @RequestParam String endId) {
+        PathResult result =new PathResult();
         if (originId.equals(endId))
-            return null;
-        return pathService.findByOriginAndEnd(originId, endId);
+            return result;
+        result.setPaths(pathService.findByOriginAndEnd(originId, endId));
+        return result;
     }
 
     @GetMapping("/paths/author")
-    public Collection<Path> pathGetByAuthor(@RequestParam String authorId, @RequestParam String name) {
-        return pathService.findByAuthorId(authorId, name);
+    public PathResult pathGetByAuthor(@RequestParam String authorId,
+                                            @RequestParam(required = false,defaultValue = "") String name,
+                                            @RequestParam(required = false) Integer skip,
+                                            @RequestParam(required = false)Integer limit) {
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 100;
+        }
+        PathResult result =new PathResult();
+        result.setPaths(pathService.findByAuthorId(authorId, name,skip,limit));
+        return result;
     }
 
+    @ApiOperation(value = "查询路线",notes="name设为空，则可查询所有")
     @GetMapping("paths/name")
-    public  Collection<Path> pathGetByName(@RequestParam String name,
-                                           @RequestParam Integer skip,
-                                           @RequestParam Integer limit){
-        return pathService.findByName(name,skip,limit);
+    public  PathResult pathGetByName(@RequestParam(required = false,defaultValue = "") String name,
+                                           @RequestParam(required = false) Integer skip,
+                                           @RequestParam(required = false) Integer limit){
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 100;
+        }
+        PathResult result =new PathResult();
+        result.setPaths(pathService.findByName(name,skip,limit));
+        return result;
     }
 }
