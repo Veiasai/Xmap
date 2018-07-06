@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.DataSet;
-import xyz.veiasai.neo4j.domain.Favorite;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.repositories.AuthorRepository;
 import xyz.veiasai.neo4j.result.DataSetResult;

@@ -1,13 +1,26 @@
 <style>
+  .functional {
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 5vh;
+  }
 
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 </style>
 
 <template>
-  <view>
-    <PathDisplay :pathArray.sync="pathArray">
-
-    </PathDisplay>
-
+  <view class="container">
+    <PathDisplay :pathArray.sync="pathArray"/>
+    <view>
+      <text>步数：{{steps}}</text>
+      <text>方向：{{direction == null ? 0 : direction}}</text>
+    </view>
     <view class='functional'>
       <button bindtap='record' class='Button'>
         {{recordButton}}
@@ -15,10 +28,10 @@
       <button bindtap='takephoto' class='Button'>
         拍照
       </button>
-      <button bindtap='comment'  class='Button'>
+      <button bindtap='comment' class='Button'>
         注释
       </button>
-      <button bindtap='done'  class='Button'>
+      <button bindtap='done' class='Button'>
         结束
       </button>
     </view>
@@ -39,6 +52,7 @@
   import wepy from 'wepy';
   import pathDisplay from '../components/pathDisplay'
   import {httpHead} from '../properties/Const'
+
   export default class PathUpload extends wepy.page {
     components = {
       PathDisplay: pathDisplay
@@ -52,7 +66,7 @@
       steps: 0,
       allsteps: 0,
       xyz: [1, 1],
-
+      tempFilePath: "",
       comment: "",
       hiddenComment: true,
 
@@ -62,7 +76,28 @@
       origin: "",
       end: "",
     }
-
+    watch = {
+      tempFilePath(newValue, oldValue) {
+        wepy.uploadFile({
+          url: httpHead + '/upload',
+          filePath: newValue,
+          name: 'file',
+          formData: {
+            'user': 'woshiqiangmima'
+          },
+          success: (uploadres) => {
+            console.log(uploadres)
+            let data = JSON.parse(uploadres.data);
+            if (data.code === 200) {
+              this.imgArray.push(data.message);
+            }
+            else {
+              this.imgArray.push("");
+            }
+          }
+        });
+      }
+    }
     methods = {
       record() {
         if (this.recordButton === "暂停记录") {
@@ -79,40 +114,22 @@
         }
       },
 
-      async takephoto () {
+      takephoto() {
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});
-        try {
-          let imgres = await wepy.chooseImage({
-            count: 1, // 默认9
-            sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有}
-          });
-          let tempFilePaths = imgres.tempFilePaths;
-          this.pathArray.push({"type": 'action', "message": "直行" + steps + "步"})
-          this.pathArray.push({"type": 'img', "message": tempFilePaths[0]});
-          this.allsteps += this.steps;
-          this.steps = 0;
-
-          let uploadres = await wepy.uploadFile({
-            url: httpHead + '/upload',
-            filePath: tempFilePaths[0],
-            name: 'file',
-            formData: {
-              'user': 'woshiqiangmima'
-            }
-          });
-          let data = JSON.parse(uploadres.data);
-          if (data.code === 200) {
-            this.imgArray.push(data.message);
+        wepy.chooseImage({
+          count: 1, // 默认9
+          sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有}
+          success: (imgres) => {
+            this.tempFilePath = imgres.tempFilePaths[0];
+            this.pathArray.push({"type": 'action', "message": "直行" + this.steps + "步"})
+            this.pathArray.push({"type": 'img', "message": this.tempFilePath});
+            this.allsteps += this.steps;
+            this.steps = 0;
+            this.$apply();
           }
-          else {
-            this.imgArray.push("");
-          }
-        }
-        catch (e) {
-
-        }
+        });
       },
 
       //点击注释按钮
@@ -131,80 +148,13 @@
         this.hiddenPathName = false;
         this.pathName = "";
       },
-      async uploadPath(pathName, that) {
-        let content = "请确认路线制作完成，点击确定上传"
-        if (this.origin === "" && this.end === "") {
-          content = "该路线未绑定任何点位，是否继续上传？";
-        }
-        try {
-          let res = await wepy.showModal({
-            title: '上传路线',
-            content: content
-          })
-          console.log('用户点击确定')
-          wx.showLoading({
-            title: '上传中',
-          })
-
-          let pathContent = [];
-          let rawContent = this.pathArray;
-          let imgArray = this.imgArray;
-          let j = 0;
-          for (let i = 0; i < rawContent.length; i++) {
-            if (rawContent[i].type === 'img') {
-              if (imgArray[j] === "") {
-                wx.hideLoading();
-                wx.showToast({
-                  title: '网络异常',
-                  icon: 'none',
-                });
-                return;
-              }
-              let imgPath = imgArray[j];
-              j++;
-              pathContent.push({type: "img", message: imgPath});
-            }
-            else {
-              pathContent.push(rawContent[i]);
-            }
-          }
-
-          let upres = await wepy.request({
-            url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
-            + '&buildingId=' + this.buildingId +
-            '&origin=' + this.origin
-            + '&end=' + this.end,
-            method: 'POST',
-            header: {
-              'content-type': 'application/json'
-            },
-            data: {
-              name: pathName,
-              steps: this.allsteps,
-              curves: this.curves,
-              contents: pathContent
-            }
-          })
-          wx.hideLoading();
-          wx.showToast({
-            title: '上传成功',
-            icon: 'none',
-          });
-          this.pathArray = [];
-          this.imgArray = [];
-          this.steps = 0;
-          this.direction = null;
-          this.curves = 0;
-          this.allsteps = 0;
-        }
-        catch (e) {
-
-        }
-      },
 
       bindPathNameInput(e) {
         this.pathName = e.detail.value;
-      },
+      }
+
+      ,
+
       //取消路线名字输入（取消上传）
       pathNameCancel() {
         this.hiddenPathName = true;
@@ -220,20 +170,105 @@
           });
           return;
         }
+        let pathName = this.pathName;
         this.hiddenPathName = true;
-        this.uploadPath(this.pathName, this);
+        let content = "请确认路线制作完成，点击确定上传"
+        if (this.origin === "" && this.end === "") {
+          content = "该路线未绑定任何点位，是否继续上传？";
+        }
+        wepy.showModal({
+          title: '上传路线',
+          content: content,
+          success:  (res)=>{
+            if (res.confirm) {
+              console.log('用户点击确定')
+              wx.showLoading({
+                title: '上传中',
+              })
+
+              let pathContent = [];
+              let rawContent = this.pathArray;
+              let imgArray = this.imgArray;
+              let j = 0;
+              for (let i = 0; i < rawContent.length; i++) {
+                if (rawContent[i].type === 'img') {
+                  if (imgArray[j] === "") {
+                    wx.hideLoading();
+                    wx.showToast({
+                      title: '网络异常',
+                      icon: 'none',
+                    });
+                    return;
+                  }
+                  let imgPath = imgArray[j];
+                  j++;
+                  pathContent.push({ type: "img", message: imgPath });
+                }
+                else {
+                  pathContent.push(rawContent[i]);
+                }
+              }
+
+              wepy.request({
+                url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
+                + '&buildingId=' + this.$parent.globalData.buildingId +
+                '&origin=' + this.origin
+                + '&end=' + this.end,
+                method: 'POST',
+                header: {
+                  'content-type': 'application/json'
+                },
+                data: {
+                  name: pathName,
+                  steps: this.allsteps,
+                  curves: this.curves,
+                  contents: pathContent
+                },
+                success: (res) => {
+                  console.log(res);
+                  wx.hideLoading();
+                  wx.showToast({
+                    title: '上传成功',
+                    icon: 'none',
+                  });
+                  this.pathArray = [];
+                  this.imgArray = [];
+                  this.steps = 0;
+                  this.direction = null;
+                  this.curves = 0;
+                  this.allsteps = 0;
+                  this.$apply();
+                },
+                fail: () => {
+                  wx.hideLoading();
+                  wx.showToast({
+                    title: '网络异常',
+                    icon: 'none',
+                  });
+                }
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
         this.pathName = "";
       },
 
       //监听注释输入
       bindCommentInput(e) {
         this.comment = e.detail.value;
-      },
+      }
+
+      ,
+
       //取消注释输入
       commentCancel() {
         this.hiddenComment = true;
         this.comment = "";
-      },
+      }
+
+      ,
 
       //提交注释
       commentConfirm() {
@@ -242,6 +277,7 @@
         this.comment = ""
       }
     }
+
     onReady() {
       wepy.onAccelerometerChange((res) => {
         let first = this.xyz[0];
@@ -251,8 +287,8 @@
         if (second > first + 0.09 && second > third + 0.09) {
           this.steps++;
         }
-        console.log("加速度", res);
         this.xyz = [second, third];
+        this.$apply();
       })
       wepy.onCompassChange((res) => {
         let direction = this.direction;
@@ -270,21 +306,25 @@
         let cal = Math.sin(directionSub);
         if (cal < 0.86 && cal > -0.86)
           return;
+
+        let message;
         if (cal > 0.86) {
-          let message = "走 " + steps + " 步, 左转";
+          message = "走 " + steps + " 步, 左转";
         }
         else if (cal < -0.86) {
-          let message = "走 " + steps + " 步，右转";
+          message = "走 " + steps + " 步，右转";
         }
         this.curves++;
         array.push({"type": 'action', "message": message});
         this.allsteps += steps;
         this.steps = 0;
         this.direction = res.direction;
+        this.$apply();
       })
       wepy.stopAccelerometer({});
       wepy.stopCompass({});
     }
+
     onLoad() {
 
     }

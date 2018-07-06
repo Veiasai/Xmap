@@ -1,32 +1,41 @@
 <style lang="less">
   .node{
-    left: 20px;
-    top: 152px;
-    width: 147px;
-    height: 66px;
-    line-height: 20px;
-    border-radius: 8px;
+    left: 40rpx;
+    top: 304rpx;
+    width: 608rpx;
+    height: 132rpx;
+    line-height: 40rpx;
+    border-radius: 16rpx;
     background-color: rgba(242, 242, 242, 1);
     text-align: center;
+    display: flex;
+    flex-direction: row;
   }
 
-  .pathimg{
-    left: 10px;
+  .nodeimg{
+    margin-top: 16rpx;
+    margin-left: 40rpx;
     position:relative;
-    width:49px;
-    height:49px;
+    width:100rpx;
+    height:100rpx;
     overflow:hidden;
     border-radius:50%;
   }
 
-  .pathimg img{
+  .nodeimg img{
+    width:100rpx;
+    height:100rpx;
     width:100%;
     height:auto;
   }
 
   .nodename{
+    margin-top: 44rpx;
+    margin-left: 22rpx;
+    width: 428rpx;
+    height: ;
+    text-align: center;
     font-size: 18px;
-    font-weight: bold;
     color: #111111;
   }
 
@@ -34,11 +43,11 @@
 </style>
 
 <template>
-  <view @tap="notifi" class="node">
+  <view @tap="tapNode" class="node">
     <view class="nodeimg">
-      <img src={{node.img}}>
+      <image mode="widthFix" src="{{node.img}}" />
     </view>
-    <text class="nodename">{{node.name}}</text>
+    <view class="nodename" >{{node.name}}</view>
   </view>
 </template>
 
@@ -47,15 +56,19 @@
 
   export default class Path extends wepy.component {
     props = {
-      node: {
-        type: [Object],
-        default: null
-      }
+      node:{
+        type:Object,
+        default:{
+          id:"",
+          img:"",
+          name:""
+        }
+      },
     }
 
-    method = {
-      notifi () {
-        this.$emit('tap-node',this.node)
+    methods = {
+      tapNode () {
+        this.$emit('tap-Node',this.node)
       }
     }
   }

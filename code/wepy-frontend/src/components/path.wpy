@@ -1,3 +1,4 @@
+
 <style lang="less">
   .path{
     left: 34rpx;
@@ -13,6 +14,8 @@
   }
 
   .pathimg{
+    margin-top: 40rpx;
+    margin-left: 46rpx;
     position:relative;
     width:126rpx;
     height:126rpx;
@@ -21,15 +24,21 @@
   }
 
   .pathimg image{
+    width:126rpx;
+    height:126rpx;
     width:100%;
     height:auto;
   }
   .pathname{
+    margin-top: 40rpx;
+    margin-left: 100rpx;
     font-size: 18px;
     font-weight: bold;
     color: #111111;
   }
   .pathdetail{
+    margin-top: 40rpx;
+    margin-left: 100rpx;
     font-size: 16px;
     color: #222222;
   }
@@ -38,25 +47,24 @@
 <template>
   <view @tap = "notifi" class="path">
     <view class="pathimg">
-      <image mode="widthFix" src="{{path.img}}" />
+      <image mode="widthFix" src='{{imgHead + path.img}}' />
     </view>
     <view>
-      <text class="pathname">{{path.name}}</text>
-    </view>
-    <view>
-      <text class="pathdetial">步数：{{path.steps}}  转弯数：{{path.curves}}</text>
+      <view class="pathname">{{path.name}}</view>
+      <view class="pathdetail">步数：{{path.steps}}  转弯数：{{path.curves}}</view>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-
+  import {imgHead} from "../properties/Const"
   export default class Path extends wepy.component {
     props = {
       path:{
         type:Object,
         default:{
+          contents:[],
           img:"",
           name:"",
           steps:0,
@@ -65,10 +73,9 @@
       }
     }
 
-    method = {
+    methods = {
       notifi () {
-        console.log(path.img)
-        this.$emit('tap-path',this.index)
+        this.$emit('tap-path',this.path)
       }
     }
   }

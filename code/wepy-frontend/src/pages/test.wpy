@@ -1,29 +1,37 @@
 <style>
+  .test{
+    margin-left: 34rpx;
+  }
 
 </style>
 
 <template>
-  <view>
-    <path :path="path"></path>
+  <view class="test">
+    <node :node="node"></node>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import Path from '../components/path';
+  import Node from '../components/node';
+
 
   export default class test extends wepy.page {
 
     components = {
-      path: Path
+      node: Node
+
     }
 
     data = {
-      path:{index:"0",
-        img:"http://www.nhcue.edu.tw/~u9218053/colorpaper.jpg",
-        name:"大局局",
-        steps:"66",
-        curves:"8"}
+      node:{
+        index:"0",
+        img:"../images/test-image.jpg",
+        name:"大居居流口水的解放",
+        // steps:"66",
+        // curves:"8"
+      }
 
     }
 
