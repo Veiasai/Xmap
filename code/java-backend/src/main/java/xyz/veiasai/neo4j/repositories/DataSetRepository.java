@@ -69,6 +69,6 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     public void deleteDataSetById(@Param("dataSetId") String dataSetId);
 
     @Query("Match (d:DataSet) where d.name =~ ('.*'+{Name}+'.*')"+
-            "RETURN d ORDER BY n.name SKIP {skip} LIMIT {limit}")
+            "RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}")
     public Collection<DataSet> findByNameLike(@Param("Name") String Name,@Param("skip")Integer skip,@Param("limit") Integer limit);
 }

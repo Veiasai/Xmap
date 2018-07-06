@@ -8,7 +8,7 @@ import xyz.veiasai.neo4j.domain.Node;
 import java.util.Collection;
 
 public interface NodeRepository extends Neo4jRepository<Node, String> {
-    @Query("MATCH (n:Node) where n.name =~ ('.*'+{Name}+'.*') return n"+
+    @Query("MATCH (n:Node) where n.name =~ ('.*'+{Name}+'.*')"+
     "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
     public Collection<Node> findByNameLike(@Param("Name") String Name,@Param("skip") Integer skip,@Param("limit")Integer limit);
 

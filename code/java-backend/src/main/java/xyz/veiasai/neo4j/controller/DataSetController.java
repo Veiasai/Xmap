@@ -49,13 +49,15 @@ public class DataSetController {
     }
     @ApiOperation(value="查找数据组",notes="查找某名字的数据组")
     @GetMapping("/getdataset")
-    public Collection<DataSet> getDataSets(@RequestParam String dataSetName,Integer skip,Integer limit){
+    public Collection<DataSet> getDataSets(@RequestParam String dataSetName,
+                                           @RequestParam Integer skip,
+                                           @RequestParam Integer limit){
         return dataSetService.findDataSetNameLike(dataSetName,skip,limit);
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线")
     @GetMapping("/dataset/some")
     public Result searchNode(@RequestParam String dataSetId,
-                             @RequestParam @ApiParam(name="Name",value="查找所需的点位/名称")String Name){
+                             @RequestParam(required = false,defaultValue = "") @ApiParam(name="Name",value="查找所需的点位/名称")String Name){
         DataSet dataSet = dataSetService.getDataSet(dataSetId);
         if(dataSet==null){
             Result result = new NodeResult();

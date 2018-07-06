@@ -61,4 +61,11 @@ public class PathController {
     public Collection<Path> pathGetByAuthor(@RequestParam String authorId, @RequestParam String name) {
         return pathService.findByAuthorId(authorId, name);
     }
+
+    @GetMapping("paths/name")
+    public  Collection<Path> pathGetByName(@RequestParam String name,
+                                           @RequestParam Integer skip,
+                                           @RequestParam Integer limit){
+        return pathService.findByName(name,skip,limit);
+    }
 }

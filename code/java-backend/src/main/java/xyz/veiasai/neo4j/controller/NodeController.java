@@ -56,4 +56,10 @@ public class NodeController {
     public Collection<Node> nodeGetByAuthor(@RequestParam String authorId, @RequestParam String name) {
         return nodeService.findByAuthorId(authorId, name);
     }
+    @GetMapping("/nodes/name")
+    public Collection<Node> nodeGetByName(@RequestParam String name,
+                                          @RequestParam Integer skip,
+                                          @RequestParam Integer limit){
+        return nodeService.findByName(name,skip,limit);
+    }
 }
