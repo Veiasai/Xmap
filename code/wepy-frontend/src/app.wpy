@@ -18,15 +18,14 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/main',
         'pages/pathUpload',
+        'pages/nodeUpload',
+
+        'pages/main',
         'pages/nodeViewer',
         'pages/start',
-        'pages/nodeUpload',
         'pages/test',
-
-        'pages/pathInfo',
-
+        'pages/pathInfo'
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -39,83 +38,42 @@
     globalData = {
       building: {id: "d2740bba-aff4-4d91-b729-49526bb6de41"}, //wx.chooselocation返回的buidling对象
       userInfo: null,
-      paths:[],   // main页面的path记录
+      paths: [],   // main页面的path记录
     };
 
     constructor() {
       super()
       this.use('requestfix')
+      this.use('promisify');
     }
 
-    onLaunch() {
-      wx.login({
-        success: (res) => {
-          if (res.code) {
-            //发起网络请求
-            console.log(res.code);
-            wx.request({
-              url: httpHead + '/login',
-              data: {
-                code: res.code
-              },
-              success: (res) => {
-                console.log(res.data);
-                let data = res.data;
-                if (data.openid !== null) {
-                  this.globalData.userInfo = data.openid;
-                }
-                else {
-                  wx.showToast({
-                    title: "登录信息获取失败，部分功能受限",
-                    icon: 'none',
-                  });
-                }
-              },
-              fail: () => {
-                wx.showToast({
-                  title: "登录信息获取失败，部分功能受限",
-                  icon: 'none',
-                });
-              }
-            })
-          } else {
-            console.log('登录失败！' + res.errMsg)
+    async onLaunch() {
+      try {
+        let login = await wepy.login();
+        let res = await wepy.request({
+          url: httpHead + '/login',
+          data: {
+            code: login.code
           }
+        })
+        console.log(res.data);
+        let data = res.data;
+        if (data.openid !== null) {
+          this.globalData.userInfo = data.openid;
         }
-      })
-      /*wx.login({
-        success: async (id) => {
-          if (id.code) {
-            //发起网络请求
-            console.log(id.code);
-            try {
-              let res = await wepy.request({
-                url: httpHead + '/login',
-                data: {
-                  code: id.code
-                }
-              })
-              console.log(res.data);
-              let data = res.data;
-              if (data.openid !== null) {
-                this.globalData.userInfo = data.openid;
-              }
-              else {
-                wx.showToast({
-                  title: "登录信息获取失败，部分功能受限",
-                  icon: 'none',
-                });
-              }
-            }catch (e)
-            {
-              wx.showToast({
-                title: "登录信息获取失败，部分功能受限",
-                icon: 'none',
-              });
-          }
+        else {
+          wx.showToast({
+            title: "登录信息获取失败，部分功能受限",
+            icon: 'none',
+          });
         }
+      } catch (e) {
+        wx.showToast({
+          title: "登录信息获取失败，部分功能受限",
+          icon: 'none',
+        });
+        console.log(e);
       }
-    })*/
     }
   }
 </script>

@@ -98,6 +98,7 @@
         });
       }
     }
+
     methods = {
       record() {
         if (this.recordButton === "暂停记录") {
@@ -162,7 +163,7 @@
       },
 
       //提交路线名字
-      pathNameConfirm() {
+      async pathNameConfirm() {
         if (this.pathName === "") {
           wx.showToast({
             title: '名字不能为空',
@@ -170,105 +171,95 @@
           });
           return;
         }
-        let pathName = this.pathName;
+
         this.hiddenPathName = true;
         let content = "请确认路线制作完成，点击确定上传"
         if (this.origin === "" && this.end === "") {
           content = "该路线未绑定任何点位，是否继续上传？";
         }
-        wepy.showModal({
-          title: '上传路线',
-          content: content,
-          success:  (res)=>{
-            if (res.confirm) {
-              console.log('用户点击确定')
-              wx.showLoading({
-                title: '上传中',
-              })
-
-              let pathContent = [];
-              let rawContent = this.pathArray;
-              let imgArray = this.imgArray;
-              let j = 0;
-              for (let i = 0; i < rawContent.length; i++) {
-                if (rawContent[i].type === 'img') {
-                  if (imgArray[j] === "") {
-                    wx.hideLoading();
-                    wx.showToast({
-                      title: '网络异常',
-                      icon: 'none',
-                    });
-                    return;
-                  }
-                  let imgPath = imgArray[j];
-                  j++;
-                  pathContent.push({ type: "img", message: imgPath });
-                }
-                else {
-                  pathContent.push(rawContent[i]);
-                }
+        try {
+          let modal = await wepy.showModal({
+            title: '上传路线',
+            content: content
+          })
+          if (modal.cancel) {
+            console.log('用户点击取消')
+            return;
+          }
+          wx.showLoading({
+            title: '上传中',
+          })
+          let pathContent = [];
+          let rawContent = this.pathArray;
+          let imgArray = this.imgArray;
+          let j = 0;
+          for (let i = 0; i < rawContent.length; i++) {
+            if (rawContent[i].type === 'img') {
+              if (imgArray[j] === "") {
+                wx.hideLoading();
+                wx.showToast({
+                  title: '网络异常',
+                  icon: 'none',
+                });
+                return;
               }
-
-              wepy.request({
-                url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
-                + '&buildingId=' + this.$parent.globalData.buildingId +
-                '&origin=' + this.origin
-                + '&end=' + this.end,
-                method: 'POST',
-                header: {
-                  'content-type': 'application/json'
-                },
-                data: {
-                  name: pathName,
-                  steps: this.allsteps,
-                  curves: this.curves,
-                  contents: pathContent
-                },
-                success: (res) => {
-                  console.log(res);
-                  wx.hideLoading();
-                  wx.showToast({
-                    title: '上传成功',
-                    icon: 'none',
-                  });
-                  this.pathArray = [];
-                  this.imgArray = [];
-                  this.steps = 0;
-                  this.direction = null;
-                  this.curves = 0;
-                  this.allsteps = 0;
-                  this.$apply();
-                },
-                fail: () => {
-                  wx.hideLoading();
-                  wx.showToast({
-                    title: '网络异常',
-                    icon: 'none',
-                  });
-                }
-              })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
+              let imgPath = imgArray[j];
+              j++;
+              pathContent.push({type: "img", message: imgPath});
+            }
+            else {
+              pathContent.push(rawContent[i]);
             }
           }
-        })
-        this.pathName = "";
+          let res = await wepy.request({
+            url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
+            + '&buildingId=' + this.$parent.globalData.buildingId +
+            '&origin=' + this.origin
+            + '&end=' + this.end,
+            method: 'POST',
+            header: {
+              'content-type': 'application/json'
+            },
+            data: {
+              name: this.pathName,
+              steps: this.allsteps,
+              curves: this.curves,
+              contents: pathContent
+            }
+          })
+          console.log(res);
+          wx.hideLoading();
+          wx.showToast({
+            title: '上传成功',
+            icon: 'none',
+          });
+          this.pathArray = [];
+          this.imgArray = [];
+          this.steps = 0;
+          this.direction = null;
+          this.curves = 0;
+          this.allsteps = 0;
+          this.$apply();
+        } catch (e) {
+          console.log(e);
+          wx.hideLoading();
+          wx.showToast({
+            title: '网络异常',
+            icon: 'none',
+          });
+        }
       },
 
       //监听注释输入
       bindCommentInput(e) {
         this.comment = e.detail.value;
-      }
-
-      ,
+      },
 
       //取消注释输入
       commentCancel() {
         this.hiddenComment = true;
         this.comment = "";
-      }
-
-      ,
+      },
 
       //提交注释
       commentConfirm() {

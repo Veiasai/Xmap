@@ -5,23 +5,26 @@
     width: 80%;
     background-color: #eeeeee;
   }
+
   .point {
-     width:750rpx;
-     height: 100vh;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-   }
+    width: 750 rpx;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .display {
     margin-top: 3vh;
     height: 65vh;
-    width:80%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-style: solid;
-    border-color:#C0C0C0;
+    border-color: #C0C0C0;
   }
+
   .buttonView {
     margin-top: 2vh;
     height: 7vh;
@@ -66,31 +69,35 @@
       hiddenNodeName: true,
       nodeName: "",
     }
+
     methods = {
-      choosePhoto() {
-        wx.chooseImage({
-          count: 1, // 默认9
-          sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
-          success: (res) => {
-            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-            this.src = res.tempFilePaths;
-            wx.uploadFile({
-              url: httpHead + '/upload',
-              filePath: res.tempFilePaths[0],
-              name: 'file',
-              formData: {
-                'user': 'woshiqiangmima'
-              },
-              success: (res) => {
-                let data = JSON.parse(res.data);
-                if (data.code === 200) {
-                  this.cloudsrc = data.message;
-                }
-              }
-            })
+      async choosePhoto() {
+        let res;
+        try {
+          res = await wepy.chooseImage({
+            count: 1,
+            sizeType: ['compressed'],
+            sourceType: ['camera']
+          })
+
+          console.log("ok", res);
+          this.src = res.tempFilePaths[0];
+          this.$apply();
+          res = await wepy.uploadFile({
+            url: httpHead + '/upload',
+            filePath: this.src,
+            name: 'file',
+            formData: {
+              'user': 'woshiqiangmima'
+            }
+          })
+          let data = JSON.parse(res.data);
+          if (data.code === 200) {
+            this.cloudsrc = data.message;
           }
-        })
+        } catch (e) {
+          console.log(e);
+        }
       },
 
       submit(e) {
@@ -101,7 +108,6 @@
           })
           return;
         }
-
         this.hiddenNodeName = false;
       },
 
@@ -118,7 +124,7 @@
       },
 
       //提交点位名字
-      nodeNameConfirm() {
+      async nodeNameConfirm() {
         let nodeName = this.nodeName;
         if (nodeName === "") {
           wx.showToast({
@@ -141,31 +147,32 @@
           });
           return;
         }
-        wx.request({
-          url: httpHead + '/node' + '?author=' + this.$parent.globalData.userInfo.openid
-          + '&buildingId=' + this.$parent.globalData.building.id,
-          method: 'POST',
-          header: {
-            'content-type': 'application/json'
-          },
-          data: {name: nodeName, img: this.cloudsrc},
-          success: (res) => {
-            wx.hideLoading();
-            wx.showToast({
-              title: '上传成功',
-              icon: 'none',
-            });
-            this.src = "";
-            this.cloudsrc="";
-          },
-          fail: () => {
-            wx.hideLoading();
-            wx.showToast({
-              title: '网络异常',
-              icon: 'none',
-            });
-          }
-        })
+        try {
+          let res = await wepy.request({
+            url: httpHead + '/node' + '?author=' + this.$parent.globalData.userInfo.openid
+            + '&buildingId=' + this.$parent.globalData.building.id,
+            method: 'POST',
+            header: {
+              'content-type': 'application/json'
+            },
+            data: {name: nodeName, img: this.cloudsrc}
+          })
+          wx.hideLoading();
+          wx.showToast({
+            title: '上传成功',
+            icon: 'none',
+          });
+          this.src = "";
+          this.cloudsrc = "";
+
+          wx.hideLoading();
+          wx.showToast({
+            title: '网络异常',
+            icon: 'none',
+          });
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   }

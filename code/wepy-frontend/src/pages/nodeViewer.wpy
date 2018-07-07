@@ -40,7 +40,7 @@
       Node:node
     }
     methods = {
-      searchInput(e) {
+      searchInput: function (e) {
         let value = "";
         if (e !== null) {
           value = e.detail.value;
@@ -53,8 +53,9 @@
           success: (res) => {
             console.log(res.data);
             if (res.data.length > 0) {
-              let nodes = res.data.map((item)=>{return {...item, img: imgHead + item.img}});
-              this.nodes = nodes;
+              this.nodes = res.data.map((item) => {
+                return {...item, img: imgHead + item.img}
+              });
               this.$apply();
             }
             else {
