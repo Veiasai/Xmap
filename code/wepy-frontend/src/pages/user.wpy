@@ -121,7 +121,7 @@
         </view>
       </view>
       <scroll-view class="tabcontent {{select === '0' ?'show':'hidden'}}">
-        <NodeGroup :nodeList="nodeList"></NodeGroup>
+        <NodeList :nodeList="nodeList"></NodeList>
       </scroll-view>
       <scroll-view class="tabcontent {{select === '1' ? 'show':'hidden'}}">
         <PathList :pathList="pathList"></PathList>
@@ -134,8 +134,8 @@
   import wepy from 'wepy';
   import Path from '../components/path';
   import Node from '../components/node';
-  import Pathlist from '../components/pathlist'
-  import Nodegroup from '../components/nodeGroup'
+  import Pathlist from '../components/pathList'
+  import Nodegroup from '../components/nodeList'
 
 
   export default class user extends wepy.page {
@@ -144,7 +144,7 @@
       Path: Path,
       Node: Node,
       PathList: Pathlist,
-      NodeGroup: Nodegroup
+      NodeList: Nodelist
     }
 
     data = {
