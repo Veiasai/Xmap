@@ -27,7 +27,7 @@
     data = {
       node:{
         index:"0",
-        img:"../images/test-image.jpg",
+        img:"../images/test1.jpg",
         name:"大居居流口水的解放",
         // steps:"66",
         // curves:"8"

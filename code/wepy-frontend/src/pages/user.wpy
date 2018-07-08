@@ -1,0 +1,177 @@
+<style>
+  .userinfo{
+    margin-top: 1vh;
+    margin-left: ;
+
+  }
+
+  .myfavor{
+    margin-left: 125rpx;
+    margin-top: 1vh;
+    left: 34rpx;
+    top: 180rpx;
+    width: 500rpx;
+    height: 100rpx;
+    line-height: 40rpx;
+    border-radius:16rpx;
+    background-color: rgb(242, 242, 242);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .favortext{
+    width: 400rpx;
+    margin-top: 30rpx;
+    margin-left: rpx;
+    text-align: center;
+
+  }
+
+  .favoricon{
+    width: 72rpx;
+    height: 72rpx;
+    margin-top: 14rpx;
+    margin-left: 10rpx;
+
+  }
+
+  .favoricon image{
+    width:72rpx;
+    height:72rpx;
+  }
+
+  .tab{
+    margin-left: 34rpx;
+    margin-top: 1vh;
+    left: 34rpx;
+    top: 180rpx;
+    width: 682rpx;
+    height: 100rpx;
+    line-height: 40rpx;
+    border-radius:16rpx;
+    background-color: rgb(242, 242, 242);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .mynode{
+    border-radius: 16rpx 0rpx 0rpx 16rpx;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mypath{
+    border-radius: 0rpx 16rpx 16rpx 0rpx;
+  }
+
+  .tabtext{
+    margin-top: 28rpx;
+    color: #fefefe;
+    font-size: 32rpx;
+  }
+
+
+  .selected{
+    width: 341rpx;
+    text-align: center;
+    background-color: #1256be;
+  }
+  .default{
+    width: 341rpx;
+    text-align: center;
+    background-color: #1564de;
+  }
+
+  .tabcontent{
+    margin-top: 1vh;
+    width: 750rpx;
+    height: 70vh;
+  }
+
+  .show{display: block;padding-bottom:42px;}
+
+  .hidden{display: none;padding-bottom:42px;}
+
+
+</style>
+
+<template>
+  <view>
+    <view class="userinfo">
+      <Node :node="user"></Node>
+    </view>
+    <view class="myfavor">
+      <view class="favortext">
+        我的收藏
+      </view>
+      <view class="favoricon">
+        <image src="../images/收藏.png"></image>
+      </view>
+    </view>
+    <view class="mine">
+      <view class="tab">
+        <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
+          <view class="tabtext" id="0" @tap="select">我的点位</view>
+        </view>
+        <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
+          <view class="tabtext" id="1" @tap="select">我的路线</view>
+        </view>
+      </view>
+
+      <scroll-view class="tabcontent {{select === '0' ?'show':'hidden'}}">
+        <image mode="widthFix" src="../images/test1.jpg"></image>
+      </scroll-view>
+
+      <scroll-view class="tabcontent {{select === '1' ? 'show':'hidden'}}">
+        <image mode="widthFix" src="../images/test2.jpg"></image>
+      </scroll-view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Path from '../components/path';
+  import Node from '../components/node';
+  import Pathlist from '../components/pathlist'
+  import Nodegroup from '../components/nodeGroup'
+
+
+  export default class user extends wepy.page {
+
+    components = {
+      Path: Path,
+      Node: Node,
+      Pathlist: Pathlist,
+      Nodegroup: Nodegroup
+    }
+
+    data = {
+      user:{
+        index:0,
+        img:"../images/test1.jpg",
+        name:'吴志文'
+      },
+
+      select:"0",
+    }
+
+    methods = {
+
+      select(e){
+        console.log(e);
+        this.select = e.target.id;
+      }
+    }
+
+    onLoad() {
+
+    }
+
+    config={
+      navigationBarTitleText: 'test'
+    }
+  }
+</script>

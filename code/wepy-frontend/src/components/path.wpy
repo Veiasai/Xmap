@@ -26,8 +26,6 @@
   .pathimg image{
     width:126rpx;
     height:126rpx;
-    width:100%;
-    height:auto;
   }
   .pathname{
     margin-top: 40rpx;
@@ -47,7 +45,7 @@
 <template>
   <view @tap = "notifi" class="path">
     <view class="pathimg">
-      <image mode="widthFix" src='{{imgHead + path.img}}' />
+      <image mode="aspectFill" src="{{path.img}}" />
     </view>
     <view>
       <view class="pathname">{{path.name}}</view>
