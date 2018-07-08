@@ -1,11 +1,19 @@
 <style lang="less">
-
+  .node{
+    margin-top: 1vh;
+  }
 
 </style>
 
 <template>
   <view>
-
+    <radio-group>
+      <repeat for="{{nodelist}}" item="item">
+        <view class="node">
+          <Node :node="item"></Node>
+        </view>
+      </repeat>
+    </radio-group>
   </view>
 </template>
 
@@ -19,10 +27,14 @@
 
     }
 
+    components = {
+      Node: Node
+    }
+
     props = {
-      nodelist: {
-        type: [Object],
-        default: null
+      nodeList: {
+        type: Array,
+        default: []
       }
     }
   }

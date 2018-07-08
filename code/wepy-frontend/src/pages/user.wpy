@@ -56,6 +56,7 @@
     flex-direction: row;
   }
 
+
   .mynode{
     border-radius: 16rpx 0rpx 0rpx 16rpx;
     display: flex;
@@ -119,13 +120,11 @@
           <view class="tabtext" id="1" @tap="select">我的路线</view>
         </view>
       </view>
-
       <scroll-view class="tabcontent {{select === '0' ?'show':'hidden'}}">
-        <image mode="widthFix" src="../images/test1.jpg"></image>
+        <NodeGroup :nodeList="nodeList"></NodeGroup>
       </scroll-view>
-
       <scroll-view class="tabcontent {{select === '1' ? 'show':'hidden'}}">
-        <image mode="widthFix" src="../images/test2.jpg"></image>
+        <PathList :pathList="pathList"></PathList>
       </scroll-view>
     </view>
   </view>
@@ -144,18 +143,22 @@
     components = {
       Path: Path,
       Node: Node,
-      Pathlist: Pathlist,
-      Nodegroup: Nodegroup
+      PathList: Pathlist,
+      NodeGroup: Nodegroup
     }
 
     data = {
+      select:"0",
+
       user:{
         index:0,
         img:"../images/test1.jpg",
         name:'吴志文'
       },
 
-      select:"0",
+      pathList:[],
+      nodeList:[]
+
     }
 
     methods = {
@@ -164,6 +167,8 @@
         console.log(e);
         this.select = e.target.id;
       }
+
+
     }
 
     onLoad() {

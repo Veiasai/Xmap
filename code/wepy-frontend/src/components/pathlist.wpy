@@ -1,24 +1,39 @@
 <style lang="less">
+  .path{
+    margin-top: 1vh;
+  }
 
 </style>
 
 <template>
   <view>
-
-
+    <radio-group class="pathGroup" bindchange="pathChange">
+      <repeat for="{{pathlist}}" item="item">
+        <text class="path">
+          {{item.name}},步数：{{item.steps}},转弯：{{item.curves}}
+        </text>
+        <view class="path">
+          <Path :path="item"></Path>
+        </view>
+      </repeat>
+    </radio-group>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import Path from './path.wpy'
+  import Path from './path'
 
   export default class Pathlist extends wepy.component {
     props = {
-      pathlist: {
-        type: [Object],
-        default: null
+      pathList: {
+        type: Array,
+        default: []
       }
+    }
+
+    components = {
+      Path: Path
     }
 
   }
