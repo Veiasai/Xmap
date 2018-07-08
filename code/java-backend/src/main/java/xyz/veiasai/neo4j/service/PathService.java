@@ -42,9 +42,9 @@ public class PathService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByBuildingAndName(String buildingId, String name)
+    public Collection<Path> findByBuildingAndName(String buildingId, String name,Integer skip,Integer limit)
     {
-        return pathRepository.findByBuildingAndName(buildingId, ".*" + name + ".*");
+        return pathRepository.findByBuildingAndName(buildingId,name,skip,limit);
     }
 
     public void addRelation(String pathId, String buildingId, String author, String origin, String end) {
@@ -58,8 +58,8 @@ public class PathService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByAuthorId(String authorId, String name)
+    public Collection<Path> findByAuthorId(String authorId, String name,Integer skip,Integer limit)
     {
-        return pathRepository.findByAuthorId(authorId, ".*" + name + ".*");
+        return pathRepository.findByAuthorId(authorId,name,skip,limit);
     }
 }

@@ -54,11 +54,11 @@ public class NodeService {
 
     @Transactional(readOnly = true)
     public Collection<Node> findByOriginNode(String originId, String name) {
-        return nodeRepository.findByOriginNode(originId, ".*" + name + ".*");
+        return nodeRepository.findByOriginNode(originId,name);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByAuthorId(String authorId, String name) {
-        return nodeRepository.findByAuthorId(authorId, ".*" + name + ".*");
+    public Collection<Node> findByAuthorId(String authorId, String name,Integer skip,Integer limit) {
+        return nodeRepository.findByAuthorId(authorId,name,skip,limit);
     }
 }
