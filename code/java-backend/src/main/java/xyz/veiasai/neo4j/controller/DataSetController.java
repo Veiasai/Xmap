@@ -59,7 +59,7 @@ public class DataSetController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         DataSetResult result =new DataSetResult();
         result.setDataSets(dataSetService.findDataSetNameLike(dataSetName,skip,limit));
@@ -85,7 +85,7 @@ public class DataSetController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         if(dataSet.getType().equals("node")){
             NodeResult result = new NodeResult();

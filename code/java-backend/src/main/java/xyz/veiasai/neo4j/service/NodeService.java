@@ -27,9 +27,9 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByName(String name,Integer skip,Integer limit)
+    public Collection<Node> findByBuildingAndName(String buildingId,String name,Integer skip,Integer limit)
     {
-        return nodeRepository.findByNameLike(name,skip,limit);
+        return nodeRepository.findByBuildingAndNameLike(buildingId,name,skip,limit);
     }
 
     @Transactional(readOnly = true)
@@ -58,7 +58,12 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByAuthorId(String authorId, String name,Integer skip,Integer limit) {
+    public Collection<Node> findByAuthorAndBuilding(String authorId,String buildingId,Integer skip,Integer limit){
+        return nodeRepository.findByAuthorAndBuilding(authorId,buildingId,skip,limit);
+
+    }
+    @Transactional(readOnly = true)
+    public Collection<Node> findByAuthorAndName(String authorId, String name,Integer skip,Integer limit) {
         return nodeRepository.findByAuthorId(authorId,name,skip,limit);
     }
 }

@@ -43,51 +43,70 @@ public class NodeController {
 
     @GetMapping("/nodes")
     public NodeResult nodeGet(@RequestParam(required = false) String name,
-                              @RequestParam(required = false) String building,
-                              @RequestParam(required = false) String author,
+                              @RequestParam(required = false) String buildingId,
+                              @RequestParam(required = false) String authorId,
                               @RequestParam(required = false) String originId,
-                              @RequestParam(required = false) String depth)
+                              @RequestParam(required = false) Integer skip,
+                              @RequestParam(required = false)Integer limit)
     {
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 5;
+        }
         NodeResult result =new NodeResult();
-        if (originId != null && name != null)
-        {
+        if(authorId != null && buildingId !=null){
+            result.setNodes(nodeService.findByAuthorAndBuilding(authorId,buildingId,skip,limit));
+            return result;
+        }
+        if(authorId !=null && name !=null){
+            result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
+            return result;
+        }
+        if(buildingId !=null && name !=null){
+            result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));
+            return result;
+        }
+        if (originId != null && name != null) {
             result.setNodes(nodeService.findByOriginNode(originId, name));
             return result;
         }
-        if (building != null){
-            result.setNodes(nodeService.findByBuilding(building));
+        if (buildingId != null){
+            result.setNodes(nodeService.findByBuilding(buildingId));
             return result;
         }
         return result;
     }
     @GetMapping("/nodes/author")
     public NodeResult nodeGetByAuthor(@RequestParam String authorId,
-                                            @RequestParam(required = false,defaultValue = "")String name,
-                                            @RequestParam(required = false) Integer skip,
-                                            @RequestParam(required = false)Integer limit) {
+                                      @RequestParam(required = false,defaultValue = "")String name,
+                                      @RequestParam(required = false) Integer skip,
+                                      @RequestParam(required = false)Integer limit) {
         if(skip == null){
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         NodeResult result =new NodeResult();
-        result.setNodes(nodeService.findByAuthorId(authorId, name,skip,limit));
+        result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
         return result;
     }
-    @GetMapping("/nodes/name")
-    public NodeResult nodeGetByName(@RequestParam(required = false,defaultValue = "") String name,
-                                          @RequestParam(required = false) Integer skip,
-                                          @RequestParam(required = false)Integer limit){
+    @GetMapping("/nodes/building")
+    public NodeResult nodeGetByBuilding(@RequestParam String buildingId,
+                                        @RequestParam(required = false,defaultValue = "") String name,
+                                        @RequestParam(required = false) Integer skip,
+                                        @RequestParam(required = false)Integer limit){
 
         if(skip == null){
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         NodeResult result =new NodeResult();
-        result.setNodes(nodeService.findByName(name,skip,limit));
+        result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));
         return result;
 
     }

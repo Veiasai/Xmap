@@ -1,6 +1,7 @@
 package xyz.veiasai.neo4j.domain;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import org.neo4j.ogm.id.UuidStrategy;
@@ -19,7 +20,11 @@ public class Path {
     private String id;
     @NotNull
     private String name;
+
+    private String img;
+    @ApiModelProperty(hidden = true)
     private Integer state;
+
     private Integer steps;
     private Integer curves;
 
@@ -38,6 +43,14 @@ public class Path {
 
     @Relationship(type = "PATH")
     private Node end;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public Path() {
     }

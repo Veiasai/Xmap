@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.DataSet;
-import xyz.veiasai.neo4j.domain.Favorite;
 import xyz.veiasai.neo4j.result.*;
 import xyz.veiasai.neo4j.service.AuthorService;
 
@@ -68,7 +67,7 @@ public class AuthorController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         FavoriteResult result = authorService.findFavoriteByNameLike(authorId,favoriteName,skip,limit);
         return result;
@@ -84,7 +83,7 @@ public class AuthorController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
 
         NodeResult result = authorService.findfavorNodeByNameLike(authorId,nodeName,skip,limit);
@@ -118,7 +117,7 @@ public class AuthorController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
 
         DataSetResult result = authorService.findfavorDataSetByNameLike(authorId,dataSetName,skip,limit);
