@@ -135,8 +135,7 @@
   import Path from '../components/path';
   import Node from '../components/node';
   import Pathlist from '../components/pathList'
-  import Nodegroup from '../components/nodeList'
-
+  import Nodelist from '../components/nodeList'
 
   export default class user extends wepy.page {
 

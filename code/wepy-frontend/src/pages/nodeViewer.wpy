@@ -1,16 +1,31 @@
 <style>
   .searchInput {
+    margin-left: 75rpx;
     margin-top: 3vh;
-    width:80%;
+    width: 600rpx;
     border-style: solid;
-    border-color:#C0C0C0;
+    border-color: #C0C0C0;
   }
+
+  .nodeSelect {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 600rpx;
+    margin-left: 75rpx;
+    height: 100rpx;
+  }
+
 </style>
 
 <template>
   <view>
     <view class="searchInput">
       <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+    </view>
+    <view class="nodeSelect">
+      <view style="width: 50%" wx:if="{{origin !== null}}">{{origin.name}}</view>
+      <view style="width: 50%" wx:if="{{end !== null}}">{{end.name}}</view>
     </view>
     <view class="nodeGroup">
       <repeat for="{{nodes}}" index="index" item="item">
@@ -26,53 +41,78 @@
   import wepy from 'wepy';
   import {httpHead, imgHead} from '../properties/Const'
   import node from '../components/node'
+
   export default class NodeViewer extends wepy.page {
     onLoad() {
 
     }
+
     config = {
       navigationBarTitleText: 'NodeView',
     }
     data = {
       nodes: [],  // 当前选中建筑物中所有的节点（分页查询没做）
+      origin: null,
+      end: null,
+      originSkip:0,
+      endSkip:0,
+      pathSkip:0,
+      limit:5,
     }
-    components={
-      Node:node
+    components = {
+      Node: node
     }
-    methods = {
-      searchInput: function (e) {
-        let value = "";
-        if (e !== null) {
-          value = e.detail.value;
-        }
-        wepy.request({
-          url: httpHead + '/nodes',
-          data: {
-            building: this.$parent.globalData.building.id,
-          },
-          success: (res) => {
-            console.log(res.data);
-            if (res.data.length > 0) {
-              this.nodes = res.data.map((item) => {
-                return {...item, img: imgHead + item.img}
-              });
-              this.$apply();
-            }
-            else {
-              wx.showToast({
-                title: '该建筑还没有创建任何点位',
-                icon: 'none',
-              })
-              this.nodes = [];
-              this.$apply();
-            }
-          }
+
+    async search(data) {
+      let res = await wepy.request({
+        url: httpHead + '/nodes',
+        data: data
+      })
+      console.log(res.data);
+      if (res.data.nodes.length > 0) {
+        this.nodes = res.data.nodes.map((item) => {
+          return {...item, img: imgHead + item.img}
+        });
+        this.$apply();
+      }
+      else {
+        wx.showToast({
+          title: '没有满足条件的点位',
+          icon: 'none',
         })
+        this.nodes = [];
+        this.$apply();
       }
     }
 
-    events={
+    methods = {
+      searchInput(e) {
+        let value = e.detail.value;
+        let data = {
+          building : this.$parent.globalData.building.id,
+          name: value,
+          skip: this.originSkip,
+          limit: this.limit,
+        }
+        this.search(data);
+      }
+    }
+
+    events = {
       'tap-Node': (node, $event) => {
+        if (this.origin === null) {
+          this.origin = node;
+          let data = {
+            building : this.$parent.globalData.building.id,
+            originId: node.id,
+            skip: this.endSkip,
+            limit: this.limit,
+          }
+          this.search(data);
+        }
+        else {
+          this.end = node;
+        }
         console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
         console.log("node", node);
         //$event.$destroy();

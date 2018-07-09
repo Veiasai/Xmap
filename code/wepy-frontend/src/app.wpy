@@ -18,12 +18,13 @@
   export default class extends wepy.app {
     config = {
       pages: [
-
+        'pages/nodeViewer',
+        'pages/main',
+        'pages/user',
         'pages/pathUpload',
         'pages/nodeUpload',
-        'pages/user',
-        'pages/main',
-        'pages/nodeViewer',
+
+
         'pages/start',
         'pages/test',
         'pages/pathInfo'
@@ -51,6 +52,7 @@
     async onLaunch() {
       try {
         let login = await wepy.login();
+        console.log(login);
         let res = await wepy.request({
           url: httpHead + '/login',
           data: {

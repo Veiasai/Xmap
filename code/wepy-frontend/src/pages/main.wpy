@@ -42,31 +42,36 @@
     components={
       Path:path
     }
-    methods = {
-      searchInput(e) {
-        let value = "";
-        if (e !== null) {
-          value = e.detail.value;
-        }
-        wepy.request({
+
+    async search(value){
+      try {
+        let res = await wepy.request({
           url: httpHead + '/paths',
           data: {
             name: value,
             buildingId: this.$parent.globalData.building.id
-          },
-          success: (res) => {
-            console.log(res.data);
-            this.paths=res.data;
-            this.$parent.globalData.paths=res.data;
-            this.$apply();
-            if (res.data.length === 0) {
-              wx.showToast({
-                title: '没有满足条件的路径',
-                icon: 'none',
-              })
-            }
-          }
-        });
+          }})
+
+        console.log(res.data);
+        this.paths=res.data.paths;
+        this.$parent.globalData.paths=res.data.paths;
+        this.$apply();
+        if (res.data.paths.length === 0) {
+          wx.showToast({
+            title: '没有满足条件的路径',
+            icon: 'none',
+          })
+        }
+      }
+      catch (e)
+      {
+        console.log(e);
+      }
+    }
+    methods = {
+      searchInput(e) {
+        let value = e.detail.value;
+        this.search(value);
       },
       nodeView(){
         wx.navigateTo({

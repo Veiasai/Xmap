@@ -13,6 +13,7 @@
           <scroll-view scroll-y="true" class="modaldisplay">
             <PathDisplay :pathArray.sync="item.contents"/>
           </scroll-view>
+          <view @tap="like" id="{{index}}">收藏</view>
         </swiper-item>
       </repeat>
     </swiper>
@@ -33,6 +34,24 @@
       pathArray: [],   // 当前查看的path的内容
       originToEnd: [], // 从起点到终点的多段路径数组
       oteIndex: 0,     // 多段路径索引
+    }
+
+    methods = {
+      async like(e) {
+        console.log(e.target)
+        try{
+          let index = e.target.id;
+          let path = this.originToEnd[index];
+          let res = wepy.request({
+            url: httpHead + "/favorite?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + path.id,
+            method:"PUT"
+          })
+          console.log(res);
+        }catch (e)
+        {
+          console.log(e);
+        }
+      }
     }
 
     onLoad(params, data) {
