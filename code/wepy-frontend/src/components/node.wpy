@@ -1,5 +1,6 @@
 <style lang="less">
   .node{
+    margin-top: 1vh;
     margin-left: 71rpx;
     left: 40rpx;
     top: 304rpx;
@@ -52,6 +53,7 @@
 
 <script>
   import wepy from 'wepy';
+  import {imgHead} from '../properties/Const';
 
   export default class Path extends wepy.component {
     props = {

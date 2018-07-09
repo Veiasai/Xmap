@@ -1,19 +1,13 @@
 <style lang="less">
-  .node{
-    margin-top: 1vh;
-  }
+
 
 </style>
 
 <template>
   <view>
-    <radio-group>
-      <repeat for="{{nodelist}}" item="item">
-        <view class="node">
-          <Node :node="item"></Node>
-        </view>
+      <repeat for="{{nodeList}}" item="item">
+        <Node :node="item"></Node>
       </repeat>
-    </radio-group>
   </view>
 </template>
 
@@ -22,7 +16,7 @@
   import {httpHead} from '../properties/Const'
   import Node from './node'
 
-  export default class NodeGroup extends wepy.component {
+  export default class NodeList extends wepy.component {
     onLoad() {
 
     }

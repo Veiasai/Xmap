@@ -1,13 +1,12 @@
 <style>
   .test{
-    margin-left: 34rpx;
   }
 
 </style>
 
 <template>
-  <view class="test">
-    <node :node="node"></node>
+  <view class="test" @tap="jumpto">
+    <Path :path="node"></Path>
   </view>
 </template>
 
@@ -20,7 +19,8 @@
   export default class test extends wepy.page {
 
     components = {
-      node: Node
+      node: Node,
+      Path: Path,
 
     }
 
@@ -29,10 +29,18 @@
         index:"0",
         img:"../images/test1.jpg",
         name:"大居居流口水的解放",
-        // steps:"66",
-        // curves:"8"
+        steps:"66",
+        curves:"8"
       }
 
+    }
+
+    methods = {
+      jumpto(){
+        wx.navigateTo({
+          url: '/pages/user',
+        })
+      }
     }
 
     onLoad() {

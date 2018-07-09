@@ -1,6 +1,7 @@
 
 <style lang="less">
   .path{
+    margin-top: 1vh;
     margin-left: 34rpx;
     left: 34rpx;
     top: 180rpx;

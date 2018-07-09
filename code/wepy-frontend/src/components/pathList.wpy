@@ -1,22 +1,15 @@
 <style lang="less">
-  .path{
-    margin-top: 1vh;
-  }
+
+
+
 
 </style>
 
 <template>
   <view>
-    <radio-group class="pathGroup" bindchange="pathChange">
-      <repeat for="{{pathlist}}" item="item">
-        <text class="path">
-          {{item.name}},步数：{{item.steps}},转弯：{{item.curves}}
-        </text>
-        <view class="path">
+      <repeat for="{{pathList}}" item="item">
           <Path :path="item"></Path>
-        </view>
       </repeat>
-    </radio-group>
   </view>
 </template>
 
@@ -34,6 +27,10 @@
 
     components = {
       Path: Path
+    }
+
+    methods = {
+
     }
 
   }

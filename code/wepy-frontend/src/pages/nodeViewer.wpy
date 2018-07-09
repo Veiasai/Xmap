@@ -52,8 +52,8 @@
           },
           success: (res) => {
             console.log(res.data);
-            if (res.data.length > 0) {
-              this.nodes = res.data.map((item) => {
+            if (res.data.nodes.length > 0) {
+              this.nodes = res.data.nodes.map((item) => {
                 return {...item, img: imgHead + item.img}
               });
               this.$apply();
