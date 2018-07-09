@@ -1,7 +1,6 @@
 <style lang="less">
   .node{
     margin-left: 71rpx;
-    margin-top: 1vh;
     left: 40rpx;
     top: 304rpx;
     width: 608rpx;
