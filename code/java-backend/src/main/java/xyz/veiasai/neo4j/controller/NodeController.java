@@ -14,6 +14,7 @@ import xyz.veiasai.neo4j.service.NodeService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @Api(value="node-controller")
 @RestController
@@ -42,12 +43,12 @@ public class NodeController {
     }
 
     @GetMapping("/nodes")
-    public NodeResult nodeGet(@RequestParam(required = false) String name,
+    public NodeResult nodeGet(@RequestParam(required = false,defaultValue = "") String name,
                               @RequestParam(required = false) String buildingId,
                               @RequestParam(required = false) String authorId,
                               @RequestParam(required = false) String originId,
                               @RequestParam(required = false) Integer skip,
-                              @RequestParam(required = false)Integer limit)
+                              @RequestParam(required = false) Integer limit)
     {
         if(skip == null){
             skip = 0;
@@ -60,20 +61,20 @@ public class NodeController {
             result.setNodes(nodeService.findByAuthorAndBuilding(authorId,buildingId,skip,limit));
             return result;
         }
-        if(authorId !=null && name !=null){
+        if(authorId !=null){
             result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
             return result;
         }
-        if(buildingId !=null && name !=null){
+        if(buildingId !=null){
             result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));
             return result;
         }
-        if (originId != null && name != null) {
-            result.setNodes(nodeService.findByOriginNode(originId, name));
+        if (originId != null){
+            result.setNodes(nodeService.findByOriginNode(originId, name,skip,limit));
             return result;
         }
         if (buildingId != null){
-            result.setNodes(nodeService.findByBuilding(buildingId));
+            result.setNodes(nodeService.findByBuilding(buildingId,skip,limit));
             return result;
         }
         return result;
@@ -92,6 +93,10 @@ public class NodeController {
         NodeResult result =new NodeResult();
         result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
         return result;
+    }
+    @GetMapping("/nodes/twonodes")
+    public Collection<Collection<Node>> pathGetByTwoNodes(@RequestParam String nId1,@RequestParam String nId2){
+        return nodeService.findAllPathsByTwoNodeId(nId1,nId2);
     }
     @GetMapping("/nodes/building")
     public NodeResult nodeGetByBuilding(@RequestParam String buildingId,

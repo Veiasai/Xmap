@@ -103,9 +103,16 @@ public class DataSetService {
         return dataSetRepository.SearchAllPaths(dataSetId);
     }
     @Transactional
-    public Collection<DataSet> findDataSetNameLike(String dataSetName,Integer skip,Integer limit){
-        return dataSetRepository.findByNameLike(dataSetName,skip,limit);
+    public Collection<DataSet> findDataSetByBuildingAndName(String buildingId,String dataSetName,Integer skip,Integer limit){
+        return dataSetRepository.findByBuildingAndName(buildingId,dataSetName,skip,limit);
     }
-
+    @Transactional
+    public Collection<DataSet> findDataSetByBuildingAndAuthor(String buildingId,String authorId,Integer skip,Integer limit){
+        return dataSetRepository.findByBuildingAndAuthor(buildingId,authorId,skip,limit);
+    }
+    @Transactional
+    public Collection<DataSet> findDataSetByAuthorAndName(String authorId,String dataSetName,Integer skip,Integer limit){
+        return dataSetRepository.findByAuthorAndName(authorId,dataSetName,skip,limit);
+    }
 
 }

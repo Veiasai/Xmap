@@ -50,11 +50,13 @@ public class DataSetController {
         result.setCode(200);
         return result;
     }
-    @ApiOperation(value="查找数据组",notes="查找某名字的数据组")
+    @ApiOperation(value="查找数据组",notes="根据建筑、作者、名称查找的数据组")
     @GetMapping("/dataset")
-    public DataSetResult getDataSets(@RequestParam String dataSetName,
+    public DataSetResult getDataSets(@RequestParam(required = false) String buildingId,
+                                     @RequestParam(required = false) String authorId,
+                                     @RequestParam(required = false) String dataSetName,
                                      @RequestParam(required = false) Integer skip,
-                                     @RequestParam (required = false)Integer limit){
+                                     @RequestParam(required = false) Integer limit){
         if(skip == null){
             skip = 0;
         }
@@ -62,7 +64,24 @@ public class DataSetController {
             limit = 5;
         }
         DataSetResult result =new DataSetResult();
-        result.setDataSets(dataSetService.findDataSetNameLike(dataSetName,skip,limit));
+        if(buildingId != null && authorId !=null){
+            result.setCode(200);
+            result.setMessage("查询成功");
+            result.setDataSets(dataSetService.findDataSetByBuildingAndAuthor(buildingId,authorId,skip,limit));
+        }
+        if(buildingId != null && dataSetName !=null) {
+            result.setCode(200);
+            result.setMessage("查询成功");
+            result.setDataSets(dataSetService.findDataSetByBuildingAndName(buildingId, dataSetName, skip, limit));
+            return result;
+        }
+        if(authorId != null && dataSetName !=null){
+            result.setCode(200);
+            result.setMessage("查询成功");
+            result.setDataSets(dataSetService.findDataSetByAuthorAndName(authorId,dataSetName,skip,limit));
+            return result;
+        }
+        result.setCode(404);
         return result;
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线;" +
