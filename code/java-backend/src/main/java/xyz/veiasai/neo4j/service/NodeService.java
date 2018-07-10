@@ -9,6 +9,7 @@ import xyz.veiasai.neo4j.repositories.BuildingRepository;
 import xyz.veiasai.neo4j.repositories.NodeRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,9 +28,9 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByName(String name,Integer skip,Integer limit)
+    public Collection<Node> findByBuildingAndName(String buildingId,String name,Integer skip,Integer limit)
     {
-        return nodeRepository.findByNameLike(name,skip,limit);
+        return nodeRepository.findByBuildingAndNameLike(buildingId,name,skip,limit);
     }
 
     @Transactional(readOnly = true)
@@ -38,9 +39,9 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByBuilding(String building)
+    public Collection<Node> findByBuilding(String building,Integer skip,Integer limit)
     {
-        return nodeRepository.findByBuildingId(building);
+        return nodeRepository.findByBuildingId(building,skip,limit);
     }
 
 
@@ -51,14 +52,23 @@ public class NodeService {
     {
         return nodeRepository.findByTwoNodeId(nId1, nId2, depth);
     }
-
     @Transactional(readOnly = true)
-    public Collection<Node> findByOriginNode(String originId, String name) {
-        return nodeRepository.findByOriginNode(originId,name);
+    public  Collection<Collection<Node>> findAllPathsByTwoNodeId(String nId1,String nId2){
+        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByAuthorId(String authorId, String name,Integer skip,Integer limit) {
+    public Collection<Node> findByOriginNode(String originId, String name,Integer skip,Integer limit) {
+        return nodeRepository.findByOriginNode(originId,name,skip,limit);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByAuthorAndBuilding(String authorId,String buildingId,Integer skip,Integer limit){
+        return nodeRepository.findByAuthorAndBuilding(authorId,buildingId,skip,limit);
+
+    }
+    @Transactional(readOnly = true)
+    public Collection<Node> findByAuthorAndName(String authorId, String name,Integer skip,Integer limit) {
         return nodeRepository.findByAuthorId(authorId,name,skip,limit);
     }
 }

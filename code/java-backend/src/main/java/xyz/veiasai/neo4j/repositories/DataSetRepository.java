@@ -7,6 +7,7 @@ import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.domain.Path;
 
+import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
@@ -74,7 +75,14 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     @Query("Match (d:DataSet {id:{dataSetId}}) Detach Delete d")
     public void deleteDataSetById(@Param("dataSetId") String dataSetId);
 
-    @Query("Match (d:DataSet) where d.name =~ ('.*'+{Name}+'.*')"+
+    @Query("Match (d:DataSet)-[:BUILDING]-(b:Building {id:{buildingId}}) where d.name =~ ('.*'+{Name}+'.*')"+
             "RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}")
-    public Collection<DataSet> findByNameLike(@Param("Name") String Name,@Param("skip")Integer skip,@Param("limit") Integer limit);
+    public Collection<DataSet> findByBuildingAndName(@Param("buildingId")String buildingId,@Param("Name") String Name,@Param("skip")Integer skip,@Param("limit") Integer limit);
+
+    @Query("Match (d:DataSet)-[:BUILDING]-(b:Building {id:{buildingId}}),(d:DataSet)-[:AUTHOR]-(a:Author {id:{authorId}})" +
+            "RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}")
+    public Collection<DataSet> findByBuildingAndAuthor(@Param("buildingId")String buildingId,@Param("authorId")String authorId,@Param("skip")Integer skip,@Param("limit")Integer limit);
+    @Query("Match (d:DataSet)-[:AUTHOR]-(a:Author {id:{authorId}}) where d.name =~ ('.*'+{Name}+'.*')" +
+            "RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}")
+    public Collection<DataSet> findByAuthorAndName(@Param("authorId")String authorId,@Param("Name")String Name,@Param("skip")Integer skip,@Param("limit")Integer limit);
 }

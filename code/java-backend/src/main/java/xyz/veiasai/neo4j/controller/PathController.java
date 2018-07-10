@@ -34,9 +34,7 @@ public class PathController {
 
     @PostMapping("/path")
     public Path pathPost(@RequestBody Path path, @RequestParam String buildingId, @RequestParam String author,
-                         @RequestParam(required = false) String origin, @RequestParam(required = false) String end, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors())
-            return null;
+                         @RequestParam(required = false) String origin, @RequestParam(required = false) String end) throws Exception {
         path.setState(1);
         path = pathService.addPath(path);
         String id = path.getId();
@@ -55,7 +53,7 @@ public class PathController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         PathResult result =new PathResult();
         result.setPaths(pathService.findByBuildingAndName(buildingId, name,skip,limit));
@@ -80,7 +78,7 @@ public class PathController {
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         PathResult result =new PathResult();
         result.setPaths(pathService.findByAuthorId(authorId, name,skip,limit));
@@ -90,13 +88,13 @@ public class PathController {
     @ApiOperation(value = "查询路线",notes="name设为空，则可查询所有")
     @GetMapping("paths/name")
     public  PathResult pathGetByName(@RequestParam(required = false,defaultValue = "") String name,
-                                           @RequestParam(required = false) Integer skip,
-                                           @RequestParam(required = false) Integer limit){
+                                            @RequestParam(required = false) Integer skip,
+                                            @RequestParam(required = false) Integer limit){
         if(skip == null){
             skip = 0;
         }
         if(limit == null){
-            limit = 100;
+            limit = 5;
         }
         PathResult result =new PathResult();
         result.setPaths(pathService.findByName(name,skip,limit));

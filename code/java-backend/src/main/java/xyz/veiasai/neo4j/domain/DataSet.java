@@ -28,6 +28,8 @@ public class DataSet {
     @ApiModelProperty(hidden = true)
     private String type;
 
+    @ApiModelProperty(hidden = true)
+    private Integer state;
     @JsonIgnore
     @Relationship(type="AUTHOR")
     private Author author;
@@ -35,6 +37,14 @@ public class DataSet {
     @JsonIgnore
     @Relationship(type="BUILDING")
     private Building building;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public String getName() {
         return name;
