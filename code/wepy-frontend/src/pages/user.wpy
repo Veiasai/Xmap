@@ -128,7 +128,7 @@
         <NodeList :nodeList.sync="nodeList"></NodeList>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
-        <scroll-view enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+        <scroll-view scroll-y="true" enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
         <PathList :pathList.sync="pathList"></PathList>
         </scroll-view>
       </view>
@@ -179,10 +179,9 @@
       },
 
       pathTouchEnd(){
-        console.log("pte");
+        console.log("pte")
         return;
       },
-
       nodeTouchEnd(){
         console.log('nte');
         return;
