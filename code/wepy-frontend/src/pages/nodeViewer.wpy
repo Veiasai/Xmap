@@ -24,8 +24,8 @@
       <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
     <view class="nodeSelect">
-      <view style="width: 50%" wx:if="{{origin !== null}}">{{origin.name}}</view>
-      <view style="width: 50%" wx:if="{{end !== null}}">{{end.name}}</view>
+      <view style="width: 50%" wx:if="{{origin !== null}}">起点:{{origin.name}}<view @tap="nodeCancel" id="1">X</view></view>
+      <view style="width: 50%" wx:if="{{end !== null}}">终点:{{end.name}}<view @tap="nodeCancel" id="2">X</view></view>
     </view>
     <view class="nodeGroup">
       <repeat for="{{nodes}}" index="index" item="item">
@@ -34,6 +34,7 @@
         </view>
       </repeat>
     </view>
+
   </view>
 </template>
 
@@ -51,37 +52,71 @@
       navigationBarTitleText: 'NodeView',
     }
     data = {
-      nodes: [],  // 当前选中建筑物中所有的节点（分页查询没做）
+      nodes: [],  // 查找到的点位
       origin: null,
       end: null,
       originSkip:0,
       endSkip:0,
       pathSkip:0,
       limit:5,
+
     }
     components = {
       Node: node
     }
 
-    async search(data) {
-      let res = await wepy.request({
-        url: httpHead + '/nodes',
-        data: data
-      })
-      console.log(res.data);
-      if (res.data.nodes.length > 0) {
-        this.nodes = res.data.nodes.map((item) => {
-          return {...item, img: imgHead + item.img}
-        });
-        this.$apply();
-      }
-      else {
-        wx.showToast({
-          title: '没有满足条件的点位',
-          icon: 'none',
+    async searchNode(data) {
+      try{
+        let res = await wepy.request({
+          url: httpHead + '/nodes',
+          data: data
         })
-        this.nodes = [];
-        this.$apply();
+        console.log(res.data);
+        if (res.data.nodes.length > 0) {
+          this.nodes = res.data.nodes.map((item) => {
+            return {...item, img: imgHead + item.img}
+          });
+          this.$apply();
+        }
+        else {
+          wx.showToast({
+            title: '没有满足条件的点位',
+            icon: 'none',
+          })
+          this.nodes = [];
+          this.$apply();
+        }
+      }catch (e)
+      {
+        console.log(e);
+      }
+    }
+
+    async searchPath(data) {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/paths',
+          data: data
+        })
+        console.log(res.data);
+        if (res.data.paths.length > 0) {
+          this.nodes = res.data.nodes.map((item) => {
+            return {...item, img: imgHead + item.img}
+          });
+          this.$apply();
+        }
+        else {
+          wx.showToast({
+            title: '没有满足条件的点位',
+            icon: 'none',
+          })
+          this.nodes = [];
+          this.$apply();
+        }
+      }
+      catch (e)
+      {
+        console.log(e);
       }
     }
 
@@ -89,12 +124,33 @@
       searchInput(e) {
         let value = e.detail.value;
         let data = {
-          building : this.$parent.globalData.building.id,
           name: value,
           skip: this.originSkip,
           limit: this.limit,
         }
-        this.search(data);
+        if (this.origin !== null)
+        {
+          data.originId=this.origin.id
+        }
+        else
+        {
+          data.buildingId = this.$parent.globalData.building.id
+        }
+        this.searchNode(data);
+      },
+
+      nodeCancel(e) {
+        let id = e.target.id;
+        if (id === "1")
+        {
+          this.origin = null;
+          this.end = null;
+        }
+        else
+        {
+          this.end = null;
+
+        }
       }
     }
 
@@ -103,15 +159,24 @@
         if (this.origin === null) {
           this.origin = node;
           let data = {
-            building : this.$parent.globalData.building.id,
             originId: node.id,
             skip: this.endSkip,
             limit: this.limit,
           }
-          this.search(data);
+          this.searchNode(data);
         }
         else {
-          this.end = node;
+          if (this.origin.id !== node.id)
+          {
+            this.end = node;
+          }
+          else
+          {
+            wx.showToast({
+              title: '起点终点不能相同',
+              icon: 'none',
+            })
+          }
         }
         console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
         console.log("node", node);

@@ -1,0 +1,173 @@
+<style>
+  .tab{
+    margin-left: 34rpx;
+    margin-top: 1vh;
+    left: 34rpx;
+    top: 180rpx;
+    width: 682rpx;
+    height: 100rpx;
+    line-height: 40rpx;
+    border-radius:16rpx;
+    background-color: rgb(242, 242, 242);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+
+  .mynode{
+    border-radius: 16rpx 0rpx 0rpx 16rpx;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mypath{
+    border-radius: 0rpx 16rpx 16rpx 0rpx;
+  }
+
+  .tabtext{
+    margin-top: 28rpx;
+    color: #fefefe;
+    font-size: 32rpx;
+  }
+
+
+  .selected{
+    width: 341rpx;
+    text-align: center;
+    background-color: #1256be;
+  }
+  .default{
+    width: 341rpx;
+    text-align: center;
+    background-color: #1564de;
+  }
+
+  .tabcontent{
+    margin-top: 1vh;
+    width: 750rpx;
+    height: 70vh;
+  }
+</style>
+
+<template>
+  <view class="mine">
+    <view class="tab">
+      <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
+        <view class="tabtext" id="0" >收藏点位</view>
+      </view>
+      <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
+        <view class="tabtext" id="1" >收藏路线</view>
+      </view>
+    </view>
+    <scroll-view class="tabcontent {{select === '0' ?'show':'hidden'}}">
+      <NodeList :nodeList.sync="nodeList"></NodeList>
+    </scroll-view>
+    <scroll-view class="tabcontent {{select === '1' ? 'show':'hidden'}}">
+      <PathList :pathList.sync="pathList"></PathList>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {httpHead} from '../properties/Const'
+  import Path from '../components/path';
+  import Node from '../components/node';
+  import Pathlist from '../components/pathList'
+  import Nodelist from '../components/nodeList'
+
+  export default class Collection extends wepy.page {
+    onLoad() {
+
+    }
+
+    config = {
+      navigationBarTitleText: "Collection"
+    }
+    data = {
+      select:"0",
+      pathList:[],
+      nodeList:[],
+      nodeSkip: 0,
+      pathSkip: 0,
+      limit: 5,
+    }
+
+    async searchNode(skip, limit)
+    {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/favorite/nodes',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            skip: skip,
+            limit: limit,
+          }})
+
+        console.log(res.data);
+        this.nodeList=res.data.nodes;
+        this.$apply();
+        if (res.data.nodes.length === 0) {
+          wx.showToast({
+            title: '没有收藏点位',
+            icon: 'none',
+          })
+        }
+      }
+      catch (e)
+      {
+        console.log(e);
+      }
+    }
+
+    async searchPath(skip, limit)
+    {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/favorite/path',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            skip: skip,
+            limit: limit,
+          }})
+        console.log(res.data);
+        this.pathList=res.data.paths;
+        this.$apply();
+        if (res.data.paths.length === 0) {
+          wx.showToast({
+            title: '没有收藏路线',
+            icon: 'none',
+          })
+        }
+      }
+      catch (e)
+      {
+        console.log(e);
+      }
+    }
+
+
+    components = {
+      Path: Path,
+      Node: Node,
+      PathList: Pathlist,
+      NodeList: Nodelist
+    }
+
+    methods = {
+      select(e){
+        console.log(e);
+        this.select = e.target.id;
+        if (e.target.id === "0")
+        {
+          this.searchNode(this.nodeSkip, this.limit)
+        }
+        else
+        {
+          this.searchPath(this.pathSkip, this.limit)
+        }
+      }
+    }
+  }
+</script>

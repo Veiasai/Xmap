@@ -19,7 +19,6 @@
       <button @tap="nodeView">查看点位</button>
     </view>
     <view>
-
     </view>
   </view>
 </template>
