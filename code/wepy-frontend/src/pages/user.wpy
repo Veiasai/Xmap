@@ -6,11 +6,11 @@
   }
 
   .myfavor{
-    margin-left: 125rpx;
+    margin-left: 71rpx;
     margin-top: 1vh;
     left: 34rpx;
     top: 180rpx;
-    width: 500rpx;
+    width: 608rpx;
     height: 100rpx;
     line-height: 40rpx;
     border-radius:16rpx;
@@ -95,6 +95,10 @@
 
   .hidden{display: none;padding-bottom:42px;}
 
+  .pathView{
+    width: 750rpx;
+    height: 50vh;
+  }
 
 </style>
 
@@ -114,41 +118,48 @@
     <view class="mine">
       <view class="tab">
         <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
-          <view class="tabtext" id="0" @tap="select">我的点位</view>
+          <view class="tabtext" id="0">我的点位</view>
         </view>
         <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
-          <view class="tabtext" id="1" @tap="select">我的路线</view>
+          <view class="tabtext" id="1">我的路线</view>
         </view>
       </view>
-      <scroll-view class="tabcontent {{select === '0' ?'show':'hidden'}}">
-        <NodeList :nodeList="nodeList"></NodeList>
-      </scroll-view>
-      <scroll-view class="tabcontent {{select === '1' ? 'show':'hidden'}}">
-        <PathList :pathList="pathList"></PathList>
-      </scroll-view>
+      <view class="tabcontent" wx:if="{{select === '0'}}">
+        <NodeList :nodeList.sync="nodeList"></NodeList>
+      </view>
+      <view class="tabcontent" wx:if="{{select === '1'}}">
+        <scroll-view scroll-y="true" enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+        <PathList :pathList.sync="pathList"></PathList>
+        </scroll-view>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import {httpHead, imgHead} from '../properties/Const'
   import Path from '../components/path';
   import Node from '../components/node';
-  import Pathlist from '../components/pathList'
-  import Nodelist from '../components/nodeList'
+  import PathList from '../components/pathList'
+  import NodeList from '../components/nodeList'
+
 
   export default class user extends wepy.page {
 
     components = {
       Path: Path,
       Node: Node,
-      PathList: Pathlist,
-      NodeList: Nodelist
+      PathList: PathList,
+      NodeList: NodeList
     }
 
     data = {
       select:"0",
-
+      pathSkip:0,
+      pathLimit:5,
+      nodeSkip:0,
+      nodeLimit:5,
       user:{
         index:0,
         img:"../images/test1.jpg",
@@ -165,12 +176,56 @@
       select(e){
         console.log(e);
         this.select = e.target.id;
-      }
+      },
+
+      pathTouchEnd(){
+        console.log("pte")
+        return;
+      },
+      nodeTouchEnd(){
+        console.log('nte');
+        return;
+      },
+
+
+
 
 
     }
 
-    onLoad() {
+    async onLoad() {
+
+      try{
+        let res = await wepy.request({
+          url: httpHead + '/paths/author?authorId=' + this.$parent.globalData.userInfo +
+          "&skip=" + this.pathSkip + "&limit=" + this.pathLimit,
+          method: 'GET'
+        });
+        console.log(res.data.paths);
+        this.pathList = res.data.paths;
+        this.$apply()
+
+      }catch (e) {
+        console.log(e);
+      }
+
+      try{
+        let res = await wepy.request({
+          url: httpHead + '/nodes/author?authorId=' + this.$parent.globalData.userInfo +
+          "&skip=" + this.nodeSkip + "&limit=" + this.nodeLimit,
+          method: 'GET'
+        });
+        console.log(res.data.nodes);
+        this.nodeList = res.data.nodes.map((item) => {
+          return {...item, img: imgHead + item.img}
+        });
+        this.$apply()
+
+      }catch (e) {
+        console.log(e);
+      }
+
+
 
     }
 

@@ -1,38 +1,55 @@
 <style>
   .test{
-    margin-left: 34rpx;
   }
 
 </style>
 
 <template>
-  <view class="test">
-    <node :node="node"></node>
+
+  <view style="height: 200rpx">
+    <SlideDelete :manage="manage">
+      <view class="test" @tap="jumpto">
+        <Path :path="node"></Path>
+      </view>
+    </SlideDelete>
   </view>
+
+
 </template>
 
 <script>
   import wepy from 'wepy';
   import Path from '../components/path';
   import Node from '../components/node';
+  import SlideDelete from '../components/slideDelete'
 
 
   export default class test extends wepy.page {
 
     components = {
-      node: Node
-
+      node: Node,
+      Path: Path,
+      SlideDelete: SlideDelete
     }
 
     data = {
       node:{
         index:"0",
         img:"../images/test1.jpg",
-        name:"大居居流口水的解放",
-        // steps:"66",
-        // curves:"8"
-      }
+        name:"软件学院",
+        steps:"66",
+        curves:"8"
+      },
+      manage:true
 
+    }
+
+    methods = {
+      jumpto(){
+        wx.navigateTo({
+          url: '/pages/user',
+        })
+      }
     }
 
     onLoad() {

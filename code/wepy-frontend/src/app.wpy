@@ -25,7 +25,6 @@
         'pages/pathUpload',
         'pages/nodeUpload',
         'pages/start',
-        'pages/test',
         'pages/pathInfo'
       ],
       window: {
