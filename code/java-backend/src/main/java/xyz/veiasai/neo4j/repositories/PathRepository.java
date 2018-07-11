@@ -24,12 +24,12 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
                                                   @Param("limit")Integer limit);
 
     @Query("match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (path: Path {id:{pathId}})" +
-            "create (author)-[:AUTHOR]->(path), (building)-[:BUILDING]->(path)"
+            "merge (author)-[:AUTHOR]->(path)<-[:BUILDING]->(building)"
     )
     public void addRelationAuthorAndBuilding(@Param("pathId") String pathId, @Param("buildingId") String buildingId, @Param("author") String author);
 
     @Query("match (origin:Node {id:{origin}}), (end:Node {id:{end}}), (path: Path {id:{pathId}})" +
-            "create (origin)-[:PATH]->(path)-[:PATH]->(end)"
+            "merge (origin)-[:PATH {node:{origin}, path:{pathId}}]->(path)-[:PATH {node:{end},path:{pathId}}]->(end)"
     )
     public void addRelationOriginAndEnd(@Param("pathId") String pathId, @Param("origin") String origin, @Param("end") String end);
 

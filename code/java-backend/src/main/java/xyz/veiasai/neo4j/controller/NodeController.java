@@ -2,19 +2,16 @@ package xyz.veiasai.neo4j.controller;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import xyz.veiasai.neo4j.domain.Building;
 import xyz.veiasai.neo4j.domain.Node;
+import xyz.veiasai.neo4j.repositories.TestRepository;
 import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingService;
 import xyz.veiasai.neo4j.service.NodeService;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.List;
 
 @Api(value="node-controller")
 @RestController
@@ -95,8 +92,9 @@ public class NodeController {
         return result;
     }
     @GetMapping("/nodes/twonodes")
-    public Collection<Collection<Node>> pathGetByTwoNodes(@RequestParam String nId1,@RequestParam String nId2){
-        return nodeService.findAllPathsByTwoNodeId(nId1,nId2);
+    public TestRepository.RelaData pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2){
+        TestRepository.RelaData temp = nodeService.findAllPathsByTwoNodeId(nId1,nId2);
+        return temp;
     }
     @GetMapping("/nodes/building")
     public NodeResult nodeGetByBuilding(@RequestParam String buildingId,

@@ -1,12 +1,14 @@
 package xyz.veiasai.neo4j.repositories;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
 import xyz.veiasai.neo4j.domain.Node;
+import xyz.veiasai.neo4j.domain.Path;
+import xyz.veiasai.neo4j.domain.relation.PATH;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public interface NodeRepository extends Neo4jRepository<Node, String> {
     @Query("MATCH (b:Building {id:{buildingId}})-[:BUILDING]->(n:Node) where n.name =~ ('.*'+{Name}+'.*')"+
@@ -20,8 +22,7 @@ public interface NodeRepository extends Neo4jRepository<Node, String> {
     @Query("match (n1:Node {id:{nId1}}),(n2:Node {id:{nId2}}), p=allshortestpaths((n1)-[:PATH*..10]-(n2)) return p; ")
     public Collection<Node> findByTwoNodeId(@Param("nId1") String nId1, @Param("nId2") String nId2, @Param("depth") String depth);
 
-    @Query("Match (n1:Node {id:{nId1}}),(n2:Node {id:{nId2}}), p=((n1)-[:PATH*..10]-(n2)) return p; ")
-    public Collection<Collection<Node>> findAllPathsByTwoNodeId(@Param("nId1") String nId1, @Param("nId2") String nId2);
+
 
     @Query("match (n1:Node {id:{nodeId}}),(n2:Node) where n1.id<>n2.id AND n2.name CONTAINS {nodeName}, p=allshortestpaths((n1)-[:PATH*..10]-(n2)) return p; ")
     public Collection<Node> findByTwoNodeIdAndName(@Param("nodeId") String nId1, @Param("nodeName") String nId2, @Param("depth") String depth);

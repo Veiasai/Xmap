@@ -32,15 +32,19 @@ public class Path {
     @Convert(ContentConverter.class)
     private List<Content> contents;
 
+    @JsonIgnore
     @Relationship(type = "AUTHOR", direction = Relationship.INCOMING)
     private Author author;
 
+    @JsonIgnore
     @Relationship(type = "BUILDING", direction = Relationship.INCOMING)
     private Building building;
 
+    @JsonIgnore
     @Relationship(type = "PATH", direction = Relationship.INCOMING)
     private Node origin;
 
+    @JsonIgnore
     @Relationship(type = "PATH")
     private Node end;
 

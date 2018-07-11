@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.repositories.AuthorRepository;
-import xyz.veiasai.neo4j.repositories.BuildingRepository;
 import xyz.veiasai.neo4j.repositories.NodeRepository;
+import xyz.veiasai.neo4j.repositories.TestRepository;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -17,9 +15,7 @@ public class NodeService {
     @Autowired
     private NodeRepository nodeRepository;
     @Autowired
-    private BuildingRepository buildingRepository;
-    @Autowired
-    private AuthorRepository authorRepository;
+    private TestRepository testRepository;
 
     public Node addNode(Node node)
     {
@@ -53,8 +49,8 @@ public class NodeService {
         return nodeRepository.findByTwoNodeId(nId1, nId2, depth);
     }
     @Transactional(readOnly = true)
-    public  Collection<Collection<Node>> findAllPathsByTwoNodeId(String nId1,String nId2){
-        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2);
+    public TestRepository.RelaData findAllPathsByTwoNodeId(String nId1, String nId2){
+        return testRepository.findAllPathsByTwoNodeId(nId1,nId2);
     }
 
     @Transactional(readOnly = true)
