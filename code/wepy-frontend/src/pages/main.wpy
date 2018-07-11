@@ -10,72 +10,97 @@
     <view class="searchInput">
       <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
-    <view class="pathGroup">
-        <repeat for="{{paths}}" index="index" item="item">
-          <Path :path="item"></Path>
-        </repeat>
-    </view>
-    <view>
-      <button @tap="nodeView">查看点位</button>
-    </view>
-    <view>
-    </view>
+    <scroll-view style="height: 80vh" scroll-y bindscrolltolower="touchLow" class="pathGroup">
+      <repeat for="{{paths}}" index="index" item="item">
+        <Path :path="item"></Path>
+      </repeat>
+    </scroll-view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import {httpHead} from '../properties/Const'
+  import {httpHead, imgHead} from '../properties/Const'
   import path from '../components/path'
+
   export default class Main extends wepy.page {
     onLoad() {
-      this.paths=this.$parent.globalData.paths
+      this.paths = this.$parent.globalData.paths
     }
 
     config = {
       navigationBarTitleText: "Main"
     }
     data = {
-      paths: []
+      paths: [],
+      name: "",
+      skip: 0,
+      limit: 5
     }
-    components={
-      Path:path
+    components = {
+      Path: path
     }
 
-    async search(value){
+    async search(data) {
       try {
+        console.log(data);
         let res = await wepy.request({
           url: httpHead + '/paths',
           data: {
-            name: value,
-            buildingId: this.$parent.globalData.building.id
-          }})
-
+            ...data,
+            buildingId: this.$parent.globalData.building.id,
+            limit: this.limit,
+          }
+        })
         console.log(res.data);
-        this.paths=res.data.paths;
-        this.$parent.globalData.paths=res.data.paths;
-        this.$apply();
-        if (res.data.paths.length === 0) {
-          wx.showToast({
-            title: '没有满足条件的路径',
-            icon: 'none',
-          })
+
+        if (res.data.paths.length > 0) {
+          let paths = res.data.paths.map((item) => {
+            return {...item, img: imgHead + item.img}
+          });
+          if (this.skip === 0) {
+            this.paths = paths;
+          }
+          else {
+            this.paths = [...this.paths, ...paths];
+          }
+          this.skip += 5;
+
         }
+        if (res.data.paths.length === 0) {
+          if (this.skip === 0) {
+            this.paths = [];
+            wx.showToast({
+              title: '没有满足条件的路径',
+              icon: 'none',
+            })
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+
+        this.$parent.globalData.paths = this.paths;
+        this.$apply();
       }
-      catch (e)
-      {
+      catch (e) {
         console.log(e);
       }
     }
+
     methods = {
       searchInput(e) {
-        let value = e.detail.value;
-        this.search(value);
+        let name = e.detail.value;
+        this.name = name;
+        this.skip = 0;
+        this.search({name: name, skip: 0});
       },
-      nodeView(){
-        wx.navigateTo({
-          url: '/pages/nodeViewer',
-        })
+
+      touchLow() {
+        this.search({name: this.name, skip: this.skip});
       }
     }
 

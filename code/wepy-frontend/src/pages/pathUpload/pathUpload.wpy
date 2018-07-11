@@ -50,8 +50,8 @@
 
 <script>
   import wepy from 'wepy';
-  import pathDisplay from '../components/pathDisplay'
-  import {httpHead} from '../properties/Const'
+  import pathDisplay from '../../components/pathDisplay'
+  import {httpHead} from '../../properties/Const'
 
   export default class PathUpload extends wepy.page {
     components = {
@@ -75,6 +75,7 @@
 
       origin: "",
       end: "",
+      img: "",
     }
     watch = {
       tempFilePath(newValue, oldValue) {
@@ -213,14 +214,15 @@
           }
           let res = await wepy.request({
             url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
-            + '&buildingId=' + this.$parent.globalData.buildingId +
-            '&origin=' + this.origin
-            + '&end=' + this.end,
+            + '&buildingId=' + this.$parent.globalData.building.id +
+            '&origin=' + this.origin.id
+            + '&end=' + this.end.id,
             method: 'POST',
             header: {
               'content-type': 'application/json'
             },
             data: {
+              img: this.img,
               name: this.pathName,
               steps: this.allsteps,
               curves: this.curves,
@@ -316,8 +318,30 @@
       wepy.stopCompass({});
     }
 
-    onLoad() {
-
+    onLoad(params, data) {
+      try {
+        let img = data.preload.img;
+        this.origin = data.preload.origin;
+        this.end = data.preload.end;
+        console.log(img, this.origin, this.end)
+        wx.uploadFile({
+          url: httpHead + '/upload',
+          filePath: img,
+          name: 'file',
+          formData: {
+            'user': 'woshiqiangmima'
+          },
+          success: (res)=>{
+            let data = JSON.parse(res.data);
+            if (data.code === 200) {
+              this.img = data.message;
+            }
+          }
+        })
+      }catch (e)
+      {
+        console.log(e);
+      }
     }
   }
 </script>

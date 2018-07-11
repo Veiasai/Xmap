@@ -19,10 +19,11 @@
 </style>
 
 <template>
-  <view>
+  <view style="text-align: center">
     <view class="searchInput">
       <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
+    <view>上传路线的起点终点（可选）</view>
     <view class="nodeSelect">
       <view style="width: 50%" wx:if="{{origin !== null}}">起点:{{origin.name}}
         <view @tap="nodeCancel" id="1">X</view>
@@ -36,31 +37,40 @@
         <Node :node="item"></Node>
       </repeat>
     </scroll-view>
+    <view @tap="confirm">确认选择</view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import {httpHead, imgHead} from '../properties/Const'
-  import node from '../components/node'
+  import {httpHead, imgHead} from '../../properties/Const'
+  import node from '../../components/node'
 
   export default class NodeViewer extends wepy.page {
     onLoad() {
 
     }
 
+    onReady() {
+      let data = {
+        buildingId: this.$parent.globalData.building.id,
+        name: "",
+        skip: 0,
+        limit: 5,
+      }
+      this.searchNode(data);
+    }
+
     config = {
-      navigationBarTitleText: 'NodeView',
+      navigationBarTitleText: 'NodeSelect',
     }
     data = {
       nodes: [],  // 查找到的点位
       origin: null,
       end: null,
-      originSkip: 0,
-      endSkip: 0,
-      pathSkip: 0,
+      skip: 0,
       limit: 5,
-
+      name: "",
     }
     components = {
       Node: node
@@ -77,74 +87,78 @@
           let nodes = res.data.nodes.map((item) => {
             return {...item, img: imgHead + item.img}
           });
-
           if (data.skip === 0) {
             this.nodes = nodes;
           }
           else if (this.nodes.length === data.skip) {
             this.nodes = [...this.nodes, ...nodes];
           }
-          if (data.originId) {
-            this.originSkip += 5;
-          }
-          else {
-            this.endSkip += 5;
-          }
+          this.skip += 5;
           this.$apply();
         }
         else {
-          wx.showToast({
-            title: '没有满足条件的点位',
-            icon: 'none',
-          })
-          this.nodes = [];
-          this.$apply();
+          if (data.skip === 0) {
+            wx.showToast({
+              title: '没有满足条件的点位',
+              icon: 'none',
+            })
+            this.nodes = [];
+            this.$apply();
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
         }
       } catch (e) {
         console.log(e);
       }
     }
 
-    async searchPath(data) {
-      try {
-        let res = await wepy.request({
-          url: httpHead + '/paths',
-          data: data
-        })
-        console.log(res.data);
-        if (res.data.paths.length > 0) {
-          this.nodes = res.data.nodes.map((item) => {
-            return {...item, img: imgHead + item.img}
-          });
-          this.$apply();
-        }
-        else {
-          wx.showToast({
-            title: '没有满足条件的点位',
-            icon: 'none',
-          })
-          this.nodes = [];
-          this.$apply();
-        }
-      }
-      catch (e) {
-        console.log(e);
-      }
-    }
-
     methods = {
-      searchInput(e) {
-        let value = e.detail.value;
+      async confirm() {
+        try {
+          wx.showToast({
+            title: '拍摄路线照片',
+            icon: 'none',
+          });
+          let res = await wepy.chooseImage({
+            count: 1,
+            sizeType: ['compressed'],
+            sourceType: ['camera']
+          })
+          console.log("ok", res);
+          this.$preload("img", res.tempFilePaths[0]);
+          this.$preload("origin", this.origin);
+          this.$preload("end", this.end);
+          wx.navigateTo({
+            url: '/pages/pathUpload/pathUpload',
+          })
+        } catch (e) {
+          console.log(e);
+        }
+      },
+
+      touchLow() {
         let data = {
-          name: value,
-          skip: this.originSkip,
+          buildingId: this.$parent.globalData.building.id,
+          name: this.name,
+          skip: this.skip,
           limit: this.limit,
         }
-        if (this.origin !== null) {
-          data.originId = this.origin.id
-        }
-        else {
-          data.buildingId = this.$parent.globalData.building.id
+        this.searchNode(data);
+      },
+      searchInput(e) {
+        let value = e.detail.value;
+        this.name = value;
+        this.skip = 0;
+        let data = {
+          buildingId: this.$parent.globalData.building.id,
+          name: value,
+          skip: this.skip,
+          limit: this.limit,
         }
         this.searchNode(data);
       },
@@ -157,31 +171,14 @@
         }
         else {
           this.end = null;
-
         }
-      },
-
-      touchLow() {
-        let data = {
-          buildingId: this.$parent.globalData.building.id,
-          name: this.name,
-          skip: this.origin === null ? this.originSkip : this.endSkip,
-          limit: this.limit,
-        }
-        this.searchNode(data);
-      },
+      }
     }
 
     events = {
       'tap-Node': (node, $event) => {
         if (this.origin === null) {
           this.origin = node;
-          let data = {
-            originId: node.id,
-            skip: this.endSkip,
-            limit: this.limit,
-          }
-          this.searchNode(data);
         }
         else {
           if (this.origin.id !== node.id) {

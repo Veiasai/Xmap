@@ -12,6 +12,9 @@
         <Path :path="node"></Path>
       </view>
     </SlideDelete>
+    <view @tap="addPath">
+      上传路线
+    </view>
   </view>
 
 
@@ -48,6 +51,12 @@
       jumpto(){
         wx.navigateTo({
           url: '/pages/user',
+        })
+      },
+
+      addPath() {
+        wx.navigateTo({
+          url: '/pages/pathUpload/nodeSelect',
         })
       }
     }

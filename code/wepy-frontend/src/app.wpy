@@ -18,11 +18,13 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/collection',
         'pages/main',
+        'pages/test',
+        'pages/collection',
         'pages/nodeViewer',
         'pages/user',
-        'pages/pathUpload',
+        'pages/pathUpload/pathUpload',
+        'pages/pathUpload/nodeSelect',
         'pages/nodeUpload',
         'pages/start',
         'pages/pathInfo'
@@ -36,7 +38,7 @@
     }
 
     globalData = {
-      building: {id: "d2740bba-aff4-4d91-b729-49526bb6de41"}, //wx.chooselocation返回的buidling对象
+      building: {id: "8c7bfad7-6de6-4b70-a7f8-d9da59cb9a6c"}, //wx.chooselocation返回的buidling对象
       userInfo: null,
       paths: [],   // main页面的path记录
     };
