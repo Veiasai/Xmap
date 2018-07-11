@@ -6,8 +6,10 @@
 
 <template>
 
-  <view style="height: 200rpx" @tap="jumpto">
-    test
+  <view style="height: 132rpx">
+    <SlideDelete :manage="manage">
+        <Node :node.sync="node"></Node>
+    </SlideDelete>
   </view>
 
 
@@ -15,7 +17,6 @@
 
 <script>
   import wepy from 'wepy';
-  import Path from '../components/path';
   import Node from '../components/node';
   import SlideDelete from '../components/slideDelete'
 
@@ -24,28 +25,22 @@
 
     components = {
       node: Node,
-      Path: Path,
       SlideDelete: SlideDelete
     }
 
-    data = {
-      node:{
-        index:"0",
-        img:"../images/test1.jpg",
-        name:"软件学院",
-        steps:"66",
-        curves:"8"
+    props = {
+      node{
+        type:Object,
+        default:null
       },
-      manage:true
+      manage:false
+    }
 
+
+    data = {
     }
 
     methods = {
-      jumpto(){
-        wx.navigateTo({
-          url: '/pages/user',
-        })
-      }
     }
 
     onLoad() {
@@ -53,7 +48,6 @@
     }
 
     config={
-      navigationBarTitleText: 'test'
     }
   }
 </script>

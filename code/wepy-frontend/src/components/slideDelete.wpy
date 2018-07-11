@@ -34,11 +34,9 @@
     background: #FF8407;
     border-radius: 16rpx 0rpx 0rpx 16rpx;
     height: 100%;
-    margin-top: 1vh;
   }
   .slide-cont{
     width: 100%;
-    min-height: 180rpx;
     display: flex;
     background: #ffffff;
     position: absolute;
@@ -50,14 +48,12 @@
     background: #ff4549;
     border-radius: 16rpx;
     height: 100%;
-    margin-top: 1vh;
   }
 
   .deleteManageOn{
     background: #ff4549;
     border-radius:  0rpx 16rpx 16rpx 0rpx;
     height: 100%;
-    margin-top: 1vh;
   }
 
 
@@ -68,7 +64,7 @@
 </style>
 
 <template>
-  <view class='slide'>
+  <view class='slide' >
     <view class='slide-cont' style="transform: translateX({{offset}}rpx)" bind:touchstart="handstart" bind:touchmove="handmove" bind:touchend="handend">
       <slot></slot>
     </view>
@@ -81,6 +77,8 @@
 
 <script>
   import wepy from 'wepy';
+  import Node from './node'
+  import Path from './path'
   const winW = wx.getSystemInfoSync().screenWidth; // 屏幕宽度
   const ratio = 750 / winW //px && rpx 单位转换 (乘于 这个属性是 px 转换成 rpx)
 
@@ -90,7 +88,8 @@
 
 
     components = {
-
+        Node: Node,
+        Path: Path,
     }
 
     props = {
@@ -102,8 +101,7 @@
 
       id: {
         type:String,
-      }
-
+      },
     }
 
 
