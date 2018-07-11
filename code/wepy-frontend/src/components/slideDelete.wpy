@@ -22,15 +22,17 @@
     align-items: center;
     justify-content: center;
   }
-  .slide-btn view:nth-child(1){
-    background: #ff4549;
-    border-radius: 16rpx;
-    height: 100%;
-    margin-top: 1vh;
-  }
-  .slide-btn view:nth-child(2){
+
+  /*.slide-btn view:nth-child(1){*/
+    /*background: #ff4549;*/
+    /*border-radius: 16rpx;*/
+    /*height: 100%;*/
+    /*margin-top: 1vh;*/
+  /*}*/
+
+  .manageClass{
     background: #FF8407;
-    border-radius: 16rpx;
+    border-radius: 16rpx 0rpx 0rpx 16rpx;
     height: 100%;
     margin-top: 1vh;
   }
@@ -53,10 +55,11 @@
 
   .deleteManageOn{
     background: #ff4549;
-    border-radius:  0rpx,16rpx, 16rpx, 0rpx,;
+    border-radius:  0rpx 16rpx 16rpx 0rpx;
     height: 100%;
     margin-top: 1vh;
   }
+
 
 
 
@@ -70,8 +73,8 @@
       <slot></slot>
     </view>
     <view class='slide-btn'>
-      <view class= "manage? deleteManageOn:deleteMangeOff" id="del" catchtap='_del' >删除</view>
-      <view wx:if="{{manage}}" class='manage-class' id="manage" catchtap='_manage'>管理</view>
+      <view class= "{{manage ? 'deleteManageOn' : 'deleteManageOff'}}" id="del" catchtap='del' >删除</view>
+      <view wx:if="{{manage}}" class='manageClass' id="manage" catchtap='manage'>管理</view>
     </view>
   </view>
 </template>
@@ -95,7 +98,12 @@
       manage: {           // 属性名
         type: Boolean,  // 类型（必填）,String, Number, Boolean, Object, Array, null（表示任意类型）
         value: false  // 属性初始值（可选），如果未指定则会根据类型选择一个
+      },
+
+      id: {
+        type:String,
       }
+
     }
 
 
@@ -158,15 +166,15 @@
       },
 
       // 删除
-      _del () {
-        this.triggerEvent('delete') //触发删除回调
+      del () {
+        this.$emit("tapDelete",this.id) //触发删除回调
         this.offset=0          //为了让模块内容部分滑动到原点
 
       },
 
-      // 喜欢
-      _manage () {
-        this.triggerEvent('manage') //触发删除回调
+      // 管理
+      manage () {
+        this.$emit("tapManage",this.id) //触发管理回调
         this.offset=0            //为了让模块内容部分滑动到原点
       },
     }

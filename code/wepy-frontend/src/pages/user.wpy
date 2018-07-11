@@ -97,7 +97,12 @@
 
   .pathView{
     width: 750rpx;
-    height: 50vh;
+    height: 70vh;
+  }
+
+  .nodeView{
+    width: 750rpx;
+    height: 70vh;
   }
 
 </style>
@@ -125,7 +130,9 @@
         </view>
       </view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
-        <NodeList :nodeList.sync="nodeList"></NodeList>
+        <scroll-view scroll-y="true" enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
+          <NodeList :nodeList.sync="nodeList"></NodeList>
+        </scroll-view>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
         <scroll-view scroll-y="true" enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
@@ -151,7 +158,7 @@
       Path: Path,
       Node: Node,
       PathList: PathList,
-      NodeList: NodeList
+      NodeList: NodeList,
     }
 
     data = {

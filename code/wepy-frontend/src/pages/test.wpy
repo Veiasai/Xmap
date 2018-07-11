@@ -9,7 +9,7 @@
   <view style="height: 200rpx">
     <SlideDelete :manage="manage">
       <view class="test" @tap="jumpto">
-        <Path :path="node"></Path>
+        <Path :path.sync="node"></Path>
       </view>
     </SlideDelete>
   </view>
@@ -40,7 +40,7 @@
         steps:"66",
         curves:"8"
       },
-      manage:true
+      manage:false
 
     }
 
