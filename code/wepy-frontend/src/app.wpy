@@ -34,6 +34,25 @@
         navigationBarBackgroundColor: '#fff',
         navigationBarTitleText: 'WeChat',
         navigationBarTextStyle: 'black'
+      },
+      tabBar:{
+        "color": "#a9b7b7",
+        "selectedColor": "#1296db",
+        "borderStyle":"white",
+        "list": [{
+          "selectedIconPath": "./icons/mainselected.png",
+          "iconPath": "./icons/maindefault.png",
+          "pagePath": "pages/main",
+          "text": "首页"
+        },
+          {
+            "selectedIconPath": "./icons/userselected.png",
+            "iconPath": "./icons/userdefault.png",
+            "pagePath": "pages/user",
+            "text": "用户"
+          }
+        ]
+
       }
     }
 

@@ -1,7 +1,6 @@
 <style>
   .userinfo{
     margin-top: 1vh;
-    margin-left: ;
 
   }
 
@@ -97,7 +96,12 @@
 
   .pathView{
     width: 750rpx;
-    height: 50vh;
+    height: 70vh;
+  }
+
+  .nodeView{
+    width: 750rpx;
+    height: 70vh;
   }
 
 </style>
@@ -125,11 +129,38 @@
         </view>
       </view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
-        <NodeList :nodeList.sync="nodeList"></NodeList>
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
+          <repeat for="{{nodeList}}" key="index" item="item" index="index">
+            <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
+              <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem">
+                <view  class="node">
+                  <view class="nodeimg">
+                    <image mode="aspectFill" src="{{item.img}}" />
+                  </view>
+                  <view class="nodename" >{{item.name}}</view>
+                </view>
+              </SwipeDelete>
+            </view>
+          </repeat>
+        </scroll-view>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
-        <scroll-view scroll-y="true" enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
-        <PathList :pathList.sync="pathList"></PathList>
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+          <repeat for="{{pathList}}" key="index" item="item" index="index">
+            <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
+              <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
+                <view @tap = "notifi" class="path">
+                <view class="pathimg">
+                  <image mode="aspectFill" src="{{item.img}}" />
+                </view>
+                <view>
+                  <view class="pathname">{{item.name}}</view>
+                  <view class="pathdetail">步数：{{item.steps}}  转弯数：{{item.curves}}</view>
+                </view>
+              </view>
+              </SwipeDelete1>
+            </view>
+          </repeat>
         </scroll-view>
       </view>
     </view>
@@ -143,6 +174,9 @@
   import Node from '../components/node';
   import PathList from '../components/pathList'
   import NodeList from '../components/nodeList'
+  import slideDelete from '../components/slideDelete'
+  import swipeDelete from '../components/swipe-delete'
+
 
 
   export default class user extends wepy.page {
@@ -151,7 +185,10 @@
       Path: Path,
       Node: Node,
       PathList: PathList,
-      NodeList: NodeList
+      NodeList: NodeList,
+      Deletable: slideDelete,
+      SwipeDelete: swipeDelete,
+      SwipeDelete1: swipeDelete
     }
 
     data = {
@@ -167,12 +204,15 @@
       },
 
       pathList:[],
-      nodeList:[]
+      nodeList:[],
+      manage:true
 
     }
 
     methods = {
-
+      handleDelItem (itemData) {
+        console.log(itemData)
+      },
       select(e){
         console.log(e);
         this.select = e.target.id;
@@ -217,7 +257,14 @@
         });
         console.log(res.data.nodes);
         this.nodeList = res.data.nodes.map((item) => {
-          return {...item, img: imgHead + item.img}
+          return {...item, img: imgHead + item.img, state: {
+              offset: 0, // 内容区域滑动的位移
+              start: 0,  // 手指触屏的开始位置
+              move: 0,   // 手指移动的位置
+              btnWidth: 140,  // 按钮的宽度
+              lock: false,   // 限制模块右滑
+              now: 0         //为标记滑动位置设置的变量
+            }}
         });
         this.$apply()
 

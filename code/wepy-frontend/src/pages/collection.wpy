@@ -48,6 +48,11 @@
     width: 750rpx;
     height: 70vh;
   }
+
+  .show{display: block;padding-bottom:42px;}
+
+  .hidden{display: none;padding-bottom:42px;}
+
 </style>
 
 <template>
@@ -60,10 +65,10 @@
         <view class="tabtext" id="1" >收藏路线</view>
       </view>
     </view>
-    <scroll-view class="tabcontent {{select === '0' ?'show':'hidden'}}">
+    <scroll-view class="tabcontent" wx:if="{{select === '0'}}">
       <NodeList :nodeList.sync="nodeList"></NodeList>
     </scroll-view>
-    <scroll-view class="tabcontent {{select === '1' ? 'show':'hidden'}}">
+    <scroll-view class="tabcontent" wx:if="{{select === '1'}}">
       <PathList :pathList.sync="pathList"></PathList>
     </scroll-view>
   </view>
