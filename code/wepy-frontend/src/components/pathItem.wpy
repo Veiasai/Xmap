@@ -15,7 +15,7 @@
     height: 150rpx;
     border-radius: 16rpx;
     background-color: #F2F2F2;
-    font-size: 32rpx;
+    font-size: 40rpx;
     text-align: center;
     align-items: center;
     display: flex;
@@ -36,9 +36,9 @@
   }
 
   .icon image{
-    padding-top: 10rpx;
-    width: 100rpx;
-    height: 100rpx;
+    padding-top: 15rpx;
+    width: 90rpx;
+    height: 90rpx;
 
   }
 
@@ -55,7 +55,8 @@
       <view class="icon">
         <image mode="aspectFill" src = "../icons/{{item.turn}}.png"></image>
       </view>
-      <view style="margin-left: 22rpx;">step: {{item.steps}}</view>
+      <view style="margin-left: 33rpx;">{{item.steps}} 步后 </view>
+      <view style="margin-left: 33rpx">{{item.turntext}}</view>
     </view>
     <view wx:elif="{{item.type==='comment'}}" class='item'>
       <view>comment: {{item.message}}</view>
@@ -78,8 +79,14 @@
       let mes = this.item.message.split(",",2);
       this.item.steps = mes[0];
       this.item.turn = mes[1];
+      if(mes[1]==='left')
+        this.item.turntext = "左转"
+      else if(mes[1]==='right')
+        this.tiem.turntext = "右转"
+      else
+        this.tiem.turntext = "无效"
       console.log(this.item.steps);
-      console.log(this.item.turn)
+      console.log(this.item.turntext)
   }
 
   }

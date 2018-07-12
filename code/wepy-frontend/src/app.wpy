@@ -18,9 +18,10 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/test',
+        // 'pages/test',
         'pages/main',
         'pages/pathInfo',
+        'pages/uploadSelect',
         'pages/collection',
         'pages/nodeViewer',
         'pages/user',
@@ -46,11 +47,25 @@
           "text": "首页"
         },
           {
+            "selectedIconPath": "./icons/guideselected.png",
+            "iconPath": "./icons/guidedefault.png",
+            "pagePath": "pages/nodeViewer",
+            "text": "点位查找"
+          },
+          {
+            "selectedIconPath": "./icons/addselected.png",
+            "iconPath": "./icons/adddefault.png",
+            "pagePath": "pages/uploadSelect",
+            "text": "添加"
+          },
+          {
             "selectedIconPath": "./icons/userselected.png",
             "iconPath": "./icons/userdefault.png",
             "pagePath": "pages/user",
             "text": "用户"
           }
+
+
         ]
 
       }

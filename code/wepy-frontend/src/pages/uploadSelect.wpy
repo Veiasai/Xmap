@@ -1,0 +1,82 @@
+<style>
+  .uploadSelect{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .button{
+    width: 680rpx;
+    height: 45vh;
+    border-radius: 20rpx;
+    background-color: rgba(155, 193, 223, 0.91);
+    margin-left: 35rpx;
+    margin-top: 2vh;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .button image{
+    width: 200rpx;
+    height: 200rpx;
+    margin-left: 150rpx;
+  }
+
+
+  .buttonText{
+    text-align: center;
+    color: #FFFFFF;
+  }
+
+</style>
+
+<template>
+  <view class="uploadSelect">
+    <view class="button" @tap="jumpToAddNode">
+      <image src="../icons/addNode.svg"></image>
+      <view class="buttonText">添加节点</view>
+    </view>
+    <viewn class="button" @tap="jumpToAddPath">
+      <image src="../icons/addPath.svg"></image>
+      <view class="buttonText">添加路线</view>
+    </viewn>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+
+
+  export default class uploadSelect extends wepy.page {
+
+    components = {
+
+    }
+
+    data = {
+
+    }
+
+    methods = {
+      jumpToAddNode(){
+        wx.navigateTo({
+          url: '/pages/nodeUpload',
+        })
+      },
+      jumpToAddPath(){
+        wx.navigateTo({
+          url: '/pages/pathUpload/pathUpload',
+        })
+      }
+    }
+
+    onLoad() {
+
+    }
+
+    config={
+    }
+  }
+</script>
