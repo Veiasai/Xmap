@@ -76,8 +76,8 @@
       <slot></slot>
     </view>
     <view class="swipe-actions actions-right">
-      <view class="swipe-btn edit" wx:if={{manage}}>管理</view>
-      <view class="swipe-btn {{manage? 'del':'delonly'}}" @tap.stop="handleRightBtnTap({{swipeData}})">删除</view>
+      <view class="swipe-btn edit" wx:if="{{manage}}" @tap.stop="handleManageBtnTap('{{swipeData}}')">管理</view>
+      <view class="swipe-btn {{manage? 'del':'delonly'}}" @tap.stop="handleRightBtnTap('{{swipeData}}')">删除</view>
     </view>
   </view>
 </template>
@@ -102,7 +102,12 @@
     }
 
     onLoad () {
-      this.swipeData.style = 0
+      //this.swipeData.style = 0;
+    }
+
+    onReady()
+    {
+      this.swipeData.style = 0;
     }
 
     methods = {
@@ -149,7 +154,13 @@
         item = JSON.parse(JSON.stringify(item))
         delete item.style
         this.$emit('delItem', item)
+      },
+      handleManageBtnTap (item) {
+        item = JSON.parse(JSON.stringify(item))
+        delete item.style
+        this.$emit('manItem', item)
       }
+
     }
   }
 </script>

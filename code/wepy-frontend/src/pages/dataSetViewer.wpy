@@ -1,0 +1,29 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {httpHead, imgHead} from '../properties/Const'
+
+  export default class NodeViewer extends wepy.page {
+    onLoad() {
+
+    }
+
+    config = {
+      navigationBarTitleText: 'DataSetView',
+    }
+
+    data = {
+      dataSet: [],
+
+    }
+  }
+</script>

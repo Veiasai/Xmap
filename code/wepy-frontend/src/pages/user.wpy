@@ -72,7 +72,6 @@
     font-size: 32rpx;
   }
 
-
   .selected{
     width: 341rpx;
     text-align: center;
@@ -112,7 +111,7 @@
       <Node :node="user"></Node>
     </view>
     <view class="myfavor">
-      <view class="favortext">
+      <view class="favortext" @tap="toCollection">
         我的收藏
       </view>
       <view class="favoricon">
@@ -132,7 +131,7 @@
         <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
             <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
-              <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem">
+              <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem" @manItem.user="handleManItem">
                 <view  class="node">
                   <view class="nodeimg">
                     <image mode="aspectFill" src="{{item.img}}" />
@@ -172,21 +171,23 @@
   import {httpHead, imgHead} from '../properties/Const'
   import Path from '../components/path';
   import Node from '../components/node';
-  import PathList from '../components/pathList'
-  import NodeList from '../components/nodeList'
-  import slideDelete from '../components/slideDelete'
   import swipeDelete from '../components/swipe-delete'
 
 
 
   export default class user extends wepy.page {
+    onLoad() {
+      this.searchPath(0);
+      this.searchNode(0);
+    }
+
+    config={
+      navigationBarTitleText: 'test'
+    }
 
     components = {
       Path: Path,
       Node: Node,
-      PathList: PathList,
-      NodeList: NodeList,
-      Deletable: slideDelete,
       SwipeDelete: swipeDelete,
       SwipeDelete1: swipeDelete
     }
@@ -194,9 +195,8 @@
     data = {
       select:"0",
       pathSkip:0,
-      pathLimit:5,
       nodeSkip:0,
-      nodeLimit:5,
+      limit: 5,
       user:{
         index:0,
         img:"../images/test1.jpg",
@@ -206,10 +206,18 @@
       pathList:[],
       nodeList:[],
       manage:true
-
     }
 
     methods = {
+      toCollection() {
+        wx.navigateTo({
+          url: '/pages/collection',
+        })
+      },
+      handleManItem(itemData) {
+        console.log(itemData)
+      },
+
       handleDelItem (itemData) {
         console.log(itemData)
       },
@@ -219,65 +227,102 @@
       },
 
       pathTouchEnd(){
-        console.log("pte")
-        return;
+        this.searchPath(this.pathSkip);
       },
       nodeTouchEnd(){
-        console.log('nte');
-        return;
+        this.searchNode(this.nodeSkip);
       },
-
-
-
-
-
     }
 
-    async onLoad() {
-
-      try{
+    async searchPath(skip) {
+      try {
         let res = await wepy.request({
-          url: httpHead + '/paths/author?authorId=' + this.$parent.globalData.userInfo +
-          "&skip=" + this.pathSkip + "&limit=" + this.pathLimit,
-          method: 'GET'
+          url: httpHead + '/paths/author',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            skip: skip,
+            limit: this.limit,
+          }
+        })
+        console.log(res.data);
+        let paths = res.data.paths.map((item) => {
+          return {...item, img: imgHead + item.img}
         });
-        console.log(res.data.paths);
-        this.pathList = res.data.paths;
-        this.$apply()
-
-      }catch (e) {
+        if (paths.length > 0) {
+          if (this.pathSkip === 0) {
+            this.pathList = paths;
+          }
+          else {
+            this.pathList = [...this.pathList, ...paths];
+          }
+          this.pathSkip += 5;
+        }
+        else {
+          if (skip === 0) {
+            this.pathList = [];
+            wx.showToast({
+              title: '没有创建路径',
+              icon: 'none',
+            })
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+        this.$apply();
+      }
+      catch (e) {
         console.log(e);
       }
-
-      try{
-        let res = await wepy.request({
-          url: httpHead + '/nodes/author?authorId=' + this.$parent.globalData.userInfo +
-          "&skip=" + this.nodeSkip + "&limit=" + this.nodeLimit,
-          method: 'GET'
-        });
-        console.log(res.data.nodes);
-        this.nodeList = res.data.nodes.map((item) => {
-          return {...item, img: imgHead + item.img, state: {
-              offset: 0, // 内容区域滑动的位移
-              start: 0,  // 手指触屏的开始位置
-              move: 0,   // 手指移动的位置
-              btnWidth: 140,  // 按钮的宽度
-              lock: false,   // 限制模块右滑
-              now: 0         //为标记滑动位置设置的变量
-            }}
-        });
-        this.$apply()
-
-      }catch (e) {
-        console.log(e);
-      }
-
-
-
     }
 
-    config={
-      navigationBarTitleText: 'test'
+    async searchNode(skip) {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/nodes/author',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            skip: skip,
+            limit: this.limit,
+          }
+        })
+        console.log(res.data);
+        if (res.data.nodes.length > 0) {
+          let nodes = res.data.nodes.map((item) => {
+            return {...item, img: imgHead + item.img}
+          });
+
+          if (skip === 0) {
+            this.nodeList = nodes;
+          }
+          else if (this.nodeList.length === skip) {
+            this.nodeList = [...this.nodeList, ...nodes];
+          }
+          this.nodeSkip += this.limit;
+        }
+        else {
+          if (skip === 0) {
+            wx.showToast({
+              title: '没有创建点位',
+              icon: 'none',
+            })
+            this.nodeList = [];
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
     }
   }
 </script>

@@ -52,7 +52,6 @@
            bindconfirm="nodeNameConfirm">
       <input value="{{nodeName}}" bindinput="bindNodeNameInput" type='text' placeholder="请输入内容"/>
     </modal>
-
   </view>
 </template>
 <script>

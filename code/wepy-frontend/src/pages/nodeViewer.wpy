@@ -60,7 +60,7 @@
       endSkip: 0,
       pathSkip: 0,
       limit: 5,
-
+      originToEnd: []
     }
     components = {
       Node: node
@@ -108,23 +108,18 @@
     async searchPath(data) {
       try {
         let res = await wepy.request({
-          url: httpHead + '/paths',
+          url: httpHead + '/paths/origin',
           data: data
         })
         console.log(res.data);
         if (res.data.paths.length > 0) {
-          this.nodes = res.data.nodes.map((item) => {
+          let originToEnd = res.data.paths.map((item) => {
             return {...item, img: imgHead + item.img}
           });
-          this.$apply();
-        }
-        else {
-          wx.showToast({
-            title: '没有满足条件的点位',
-            icon: 'none',
+          this.$preload('originToEnd', originToEnd);
+          wx.navigateTo({
+            url: '/pages/pathInfo',
           })
-          this.nodes = [];
-          this.$apply();
         }
       }
       catch (e) {

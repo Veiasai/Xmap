@@ -53,11 +53,10 @@
           }
         })
         console.log(res.data);
-
-        if (res.data.paths.length > 0) {
-          let paths = res.data.paths.map((item) => {
-            return {...item, img: imgHead + item.img}
-          });
+        let paths = res.data.paths.map((item) => {
+          return {...item, img: imgHead + item.img}
+        });
+        if (paths.length > 0) {
           if (this.skip === 0) {
             this.paths = paths;
           }
@@ -67,7 +66,7 @@
           this.skip += 5;
 
         }
-        if (res.data.paths.length === 0) {
+        else {
           if (this.skip === 0) {
             this.paths = [];
             wx.showToast({
@@ -82,7 +81,6 @@
             })
           }
         }
-
         this.$parent.globalData.paths = this.paths;
         this.$apply();
       }
@@ -90,7 +88,6 @@
         console.log(e);
       }
     }
-
     methods = {
       searchInput(e) {
         let name = e.detail.value;

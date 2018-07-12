@@ -65,31 +65,61 @@
         <view class="tabtext" id="1" >收藏路线</view>
       </view>
     </view>
-    <scroll-view class="tabcontent" wx:if="{{select === '0'}}">
-      <NodeList :nodeList.sync="nodeList"></NodeList>
-    </scroll-view>
-    <scroll-view class="tabcontent" wx:if="{{select === '1'}}">
-      <PathList :pathList.sync="pathList"></PathList>
-    </scroll-view>
-  </view>
+      <view class="tabcontent" wx:if="{{select === '0'}}">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
+          <repeat for="{{nodeList}}" key="index" item="item" index="index">
+            <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
+              <SwipeDelete :swipeData="item" @delItem.user="handleDelItem">
+                <view  class="node">
+                  <view class="nodeimg">
+                    <image mode="aspectFill" src="{{item.img}}" />
+                  </view>
+                  <view class="nodename" >{{item.name}}</view>
+                </view>
+              </SwipeDelete>
+            </view>
+          </repeat>
+        </scroll-view>
+      </view>
+      <view class="tabcontent" wx:if="{{select === '1'}}">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+          <repeat for="{{pathList}}" key="index" item="item" index="index">
+            <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
+              <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
+                <view @tap = "notifi" class="path">
+                  <view class="pathimg">
+                    <image mode="aspectFill" src="{{item.img}}" />
+                  </view>
+                  <view>
+                    <view class="pathname">{{item.name}}</view>
+                    <view class="pathdetail">步数：{{item.steps}}  转弯数：{{item.curves}}</view>
+                  </view>
+                </view>
+              </SwipeDelete1>
+            </view>
+          </repeat>
+        </scroll-view>
+      </view>
+    </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import {httpHead} from '../properties/Const'
+  import {httpHead, imgHead} from '../properties/Const'
   import Path from '../components/path';
   import Node from '../components/node';
-  import Pathlist from '../components/pathList'
-  import Nodelist from '../components/nodeList'
+  import swipeDelete from '../components/swipe-delete';
 
   export default class Collection extends wepy.page {
     onLoad() {
-
+        this.searchNode(0);
+        this.searchPath(0);
     }
 
     config = {
       navigationBarTitleText: "Collection"
     }
+
     data = {
       select:"0",
       pathList:[],
@@ -97,81 +127,122 @@
       nodeSkip: 0,
       pathSkip: 0,
       limit: 5,
+      name: "",
+    }
+    components = {
+      Path: Path,
+      Node: Node,
+      SwipeDelete: swipeDelete,
+      SwipeDelete1: swipeDelete
     }
 
-    async searchNode(skip, limit)
-    {
-      try {
-        let res = await wepy.request({
-          url: httpHead + '/favorite/nodes',
-          data: {
-            authorId: this.$parent.globalData.userInfo,
-            skip: skip,
-            limit: limit,
-          }})
-
-        console.log(res.data);
-        this.nodeList=res.data.nodes;
-        this.$apply();
-        if (res.data.nodes.length === 0) {
-          wx.showToast({
-            title: '没有收藏点位',
-            icon: 'none',
-          })
-        }
-      }
-      catch (e)
-      {
+    methods = {
+      handleDelItem (itemData) {
+        console.log(itemData)
+      },
+      select(e){
         console.log(e);
-      }
+        this.select = e.target.id;
+      },
+
+      pathTouchEnd(){
+        this.searchPath(this.pathSkip);
+      },
+      nodeTouchEnd(){
+        this.searchNode(this.nodeSkip);
+      },
     }
 
-    async searchPath(skip, limit)
-    {
+    async searchPath(skip) {
       try {
         let res = await wepy.request({
           url: httpHead + '/favorite/path',
           data: {
             authorId: this.$parent.globalData.userInfo,
+            pathName: this.name,
             skip: skip,
-            limit: limit,
-          }})
+            limit: this.limit,
+          }
+        })
         console.log(res.data);
-        this.pathList=res.data.paths;
+        let paths = res.data.paths.map((item) => {
+          return {...item, img: imgHead + item.img}
+        });
+        if (paths.length > 0) {
+          if (this.pathSkip === 0) {
+            this.pathList = paths;
+          }
+          else {
+            this.pathList = [...this.pathList, ...paths];
+          }
+          this.pathSkip += 5;
+        }
+        else {
+          if (skip === 0) {
+            this.pathList = [];
+            wx.showToast({
+              title: '没有收藏路径',
+              icon: 'none',
+            })
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
         this.$apply();
-        if (res.data.paths.length === 0) {
-          wx.showToast({
-            title: '没有收藏路线',
-            icon: 'none',
-          })
-        }
       }
-      catch (e)
-      {
+      catch (e) {
         console.log(e);
       }
     }
 
+    async searchNode(skip) {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/favorite/nodes',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            nodeName: this.name,
+            skip: skip,
+            limit: this.limit,
+          }
+        })
+        console.log(res.data);
+        if (res.data.nodes.length > 0) {
+          let nodes = res.data.nodes.map((item) => {
+            return {...item, img: imgHead + item.img}
+          });
 
-    components = {
-      Path: Path,
-      Node: Node,
-      PathList: Pathlist,
-      NodeList: Nodelist
-    }
-
-    methods = {
-      select(e){
+          if (skip === 0) {
+            this.nodeList = nodes;
+          }
+          else if (this.nodeList.length === skip) {
+            this.nodeList = [...this.nodeList, ...nodes];
+          }
+          this.nodeSkip += this.limit;
+        }
+        else {
+          if (skip === 0) {
+            wx.showToast({
+              title: '没有收藏点位',
+              icon: 'none',
+            })
+            this.nodeList = [];
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+        this.$apply();
+      }
+      catch (e) {
         console.log(e);
-        this.select = e.target.id;
-        if (e.target.id === "0")
-        {
-          this.searchNode(this.nodeSkip, this.limit)
-        }
-        else
-        {
-          this.searchPath(this.pathSkip, this.limit)
-        }
       }
     }
   }

@@ -5,21 +5,19 @@
 </style>
 
 <template>
-
-  <view style="height: 200rpx">
-    <SlideDelete :manage="manage">
-      <view class="test" @tap="jumpto">
-        <Path :path="node"></Path>
-      </view>
-    </SlideDelete>
-    <view @tap="addPath">
-      上传路线
+<view style="height: 200rpx">
+  <SlideDelete :manage="manage">
+    <view class="test" @tap="jumpto">
+      <Path :path="node"></Path>
     </view>
+  </SlideDelete>
+  <view @tap="addPath">
+    上传路线
+  </view>
   <view style="height: 200rpx" @tap="jumpto">
     test
   </view>
-
-
+</view>
 </template>
 
 <script>
@@ -48,7 +46,97 @@
       manage:true
 
     }
+    async searchPath(skip) {
+      try {
+        console.log(data);
+        let res = await wepy.request({
+          url: httpHead + '/paths/author',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            skip: skip,
+            limit: this.limit,
+          }
+        })
+        console.log(res.data);
+        let paths = res.data.paths.map((item) => {
+          return {...item, img: imgHead + item.img}
+        });
+        if (paths.length > 0) {
+          if (this.skip === 0) {
+            this.pathList = paths;
+          }
+          else {
+            this.pathList = [...this.pathList, ...paths];
+          }
+          this.pathSkip += 5;
+        }
+        else {
+          if (skip === 0) {
+            this.pathList = [];
+            wx.showToast({
+              title: '没有创建路径',
+              icon: 'none',
+            })
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
 
+    async searchNode(skip) {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/nodes/author',
+          data: {
+            authorId: this.$parent.globalData.userInfo,
+            skip: skip,
+            limit: this.limit,
+          }
+        })
+        console.log(res.data);
+        if (res.data.nodes.length > 0) {
+          let nodes = res.data.nodes.map((item) => {
+            return {...item, img: imgHead + item.img}
+          });
+
+          if (skip === 0) {
+            this.nodeList = nodes;
+          }
+          else if (this.nodeList.length === skip) {
+            this.nodeList = [...this.nodeList, ...nodes];
+          }
+          this.nodeSkip += this.limit;
+        }
+        else {
+          if (skip === 0) {
+            wx.showToast({
+              title: '没有创建点位',
+              icon: 'none',
+            })
+            this.nodeList = [];
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
     methods = {
       jumpto(){
         wx.navigateTo({
