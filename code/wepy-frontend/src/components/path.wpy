@@ -3,7 +3,6 @@
   .path{
     margin-top: 1vh;
     margin-left: 34rpx;
-    left: 34rpx;
     top: 180rpx;
     width: 682rpx;
     height: 200rpx;
