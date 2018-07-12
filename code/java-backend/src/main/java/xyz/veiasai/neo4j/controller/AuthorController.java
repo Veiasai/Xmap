@@ -27,25 +27,37 @@ public class AuthorController {
     {
         return authorService.addAuthor(author);
     }
-    @ApiOperation(value = "收藏/取消收藏",notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等,已存在则取消收藏;\r\n404:不存在;\r\n200:删除成功")
-    @PutMapping("/favorite")
+    @ApiOperation(value = "收藏",notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等;\r\n404:不存在;\r\n200:删除成功")
+    @PostMapping("/favorite")
     public Result postFavorite(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
-                               @RequestParam @ApiParam(name = "favoriteId",value = "收藏事物的Id") String favoriteId){
+                               @RequestParam @ApiParam(name = "favoriteId",value = "要收藏事物的Id") String favoriteId){
         Result result =new Result();
         if(authorService.getAuthorById(authorId)==null){
             result.setMessage("用户不存在");
             result.setCode(404);
             return result;
         }
-        if(authorService.FavoriteIsExistInAuthor(authorId,favoriteId)==false){
-            authorService.addFavorite(authorId,favoriteId);
-            result.setMessage("收藏成功（可能favoriteId不存在");
-            result.setCode(200); //to be continued
+        authorService.addFavorite(authorId,favoriteId);
+        result.setMessage("收藏成功");
+        result.setCode(200);
+        return result;
+
+    }
+    @ApiOperation(value = "取消收藏",notes = "通过favoriteId取消收藏（点位，路线，用户，建筑,数据组等;\r\n404:不存在;\r\n200:删除成功")
+    @DeleteMapping("/favorite")
+    public Result cancelFavorite(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
+                               @RequestParam @ApiParam(name = "favoriteId",value = "要取消收藏事物的Id") String favoriteId){
+        Result result =new Result();
+        if(authorService.getAuthorById(authorId)==null){
+            result.setMessage("用户不存在");
+            result.setCode(404);
             return result;
         }
-        result.setMessage("取消收藏");
         authorService.deleteFavorite(authorId,favoriteId);
+        result.setMessage("取消收藏成功");
+        result.setCode(200);
         return result;
+
     }
     @ApiOperation(value = "判断用户是否收藏",notes = "如果authorId和favoriteId无效也会返回false")
     @GetMapping("/favorexist")

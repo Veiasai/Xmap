@@ -82,6 +82,7 @@ public class DataSetController {
             return result;
         }
         result.setCode(404);
+        result.setMessage("找不到数据组");
         return result;
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线;" +
