@@ -49,7 +49,7 @@ public class NodeService {
         return nodeRepository.findByTwoNodeId(nId1, nId2, depth);
     }
     @Transactional(readOnly = true)
-    public TestRepository.RelaData findAllPathsByTwoNodeId(String nId1, String nId2){
+    public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2){
         return testRepository.findAllPathsByTwoNodeId(nId1,nId2);
     }
 

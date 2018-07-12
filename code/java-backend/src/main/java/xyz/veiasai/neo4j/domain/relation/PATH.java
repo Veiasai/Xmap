@@ -1,9 +1,12 @@
 package xyz.veiasai.neo4j.domain.relation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.neo4j.ogm.annotation.*;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.domain.Path;
 
+@JsonIgnoreProperties
 @RelationshipEntity(type = "PATH")
 public class PATH {
     @Property(name = "node")
@@ -13,9 +16,11 @@ public class PATH {
     private String path;
 
     @StartNode
+    @JsonIgnore
     private Path path1;
 
     @EndNode
+    @JsonIgnore
     private Node node1;
 
     public Path getPath1() {

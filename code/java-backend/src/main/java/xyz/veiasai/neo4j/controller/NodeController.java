@@ -5,13 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.repositories.TestRepository;
 import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingService;
 import xyz.veiasai.neo4j.service.NodeService;
 
 import javax.validation.Valid;
+import java.util.Map;
+import java.util.Set;
 
 @Api(value="node-controller")
 @RestController
@@ -92,8 +93,19 @@ public class NodeController {
         return result;
     }
     @GetMapping("/nodes/twonodes")
-    public TestRepository.RelaData pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2){
-        TestRepository.RelaData temp = nodeService.findAllPathsByTwoNodeId(nId1,nId2);
+    public Set<Map<String, Object>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2){
+        Set<Map<String, Object>> temp = nodeService.findAllPathsByTwoNodeId(nId1,nId2);
+        /*
+        String result="";
+        Iterator it =temp.iterator();
+        while (it.hasNext()){
+            JSONArray json1 = JSONArray.fromObject(it.next());
+            for(int i=0;i<json1.size();i++){
+                JSONObject job = json1.getJSONObject(i);
+                String str = job.toString();
+                result+=str;
+            }
+        }*/
         return temp;
     }
     @GetMapping("/nodes/building")
