@@ -18,9 +18,9 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/pathUpload/pathUpload',
         'pages/start',
         'pages/dataSetViewer',
+        // 'pages/test',
         'pages/main',
         'pages/pathInfo',
         'pages/uploadSelect',

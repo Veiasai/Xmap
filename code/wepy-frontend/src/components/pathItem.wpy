@@ -53,7 +53,7 @@
     </view>
     <view wx:elif="{{item.type==='action'}}" class='item action'>
       <view class="icon">
-        <image mode="aspectFill" src = "../icons/{{item.message[0]}}.png"></image>
+        <image mode="aspectFill" src = "../icons/{{item.message[0] === ' ' ? 'left' : 'right'}}.png"></image>
       </view>
       <view style="margin-left: 33rpx;">{{(item.message[0] === ' ' ? '' : ' ') + item.message}} 步后 </view>
       <view style="margin-left: 33rpx">{{item.message[0] === ' ' ? '左转' : '右转'}}</view>

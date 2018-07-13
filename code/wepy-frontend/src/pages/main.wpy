@@ -1,16 +1,33 @@
 <style>
+
+  .searchInput{
+    height: 7vh;
+    width: 680rpx;
+    margin-top: 2vh;
+    margin-left: 35rpx;
+    font-size: 32rpx;
+    font-weight: lighter;
+    text-align: center;
+    background-color: white;
+    border-radius: 4vh;
+    border: rgb(242,242,242);
+    border-style: solid;
+    border-width: 4rpx;
+  }
+
   .pathGroup {
-    border-bottom: 1px solid #ddd;
     width: 700 rpx;
+    height: 90vh;
+    bottom: 0;
   }
 </style>
 
 <template>
   <view>
-    <view class="searchInput">
-      <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+    <view style="height: 10vh">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
-    <scroll-view style="height: 80vh" scroll-y bindscrolltolower="touchLow" class="pathGroup">
+    <scroll-view  scroll-y bindscrolltolower="touchLow" class="pathGroup">
       <repeat for="{{paths}}" index="index" item="item">
         <Path :path="item"></Path>
       </repeat>

@@ -7,7 +7,6 @@
     <button @tap="selectBuilding">选择建筑</button>
     <view>欢迎体验Xmap，享受便捷</view>
   </view>
-
 </template>
 
 <script>
