@@ -25,7 +25,6 @@ public class DataSet {
 
     private String name;
 
-    @ApiModelProperty(hidden = true)
     private String type;
 
     @ApiModelProperty(hidden = true)

@@ -19,9 +19,8 @@ public class DataSetService {
     private DataSetRepository dataSetRepository;
 
     @Transactional
-    public DataSet addDataSet(DataSet dataSet,String buildingId,String authorId,String type){
+    public DataSet addDataSet(DataSet dataSet,String buildingId,String authorId){
         dataSet.setId(null);
-        dataSet.setType(type);
         dataSet = dataSetRepository.save(dataSet);
         String dataSetId = dataSet.getId();
         dataSetRepository.addRelationAuthorAndBuilding(dataSetId,buildingId,authorId);

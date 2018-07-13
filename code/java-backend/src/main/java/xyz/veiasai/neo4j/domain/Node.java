@@ -38,11 +38,11 @@ public class Node {
     @ApiModelProperty(value = "点位图片的uuid", required = true)
     private String img;
 
-    @ApiModelProperty(hidden = true)
+    @JsonIgnore
     @Relationship(type = "BUILDING", direction = Relationship.INCOMING)
     private Building building;
 
-    @ApiModelProperty(hidden = true)
+    @JsonIgnore
     @Relationship(type = "AUTHOR", direction = Relationship.INCOMING)
     private Author author;
 

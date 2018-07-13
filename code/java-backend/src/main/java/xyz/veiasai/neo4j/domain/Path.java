@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.*;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import org.neo4j.ogm.id.UuidStrategy;
 import xyz.veiasai.neo4j.converter.ContentConverter;
+import xyz.veiasai.neo4j.domain.relation.PATH;
 import xyz.veiasai.neo4j.pojo.Content;
 
 import javax.validation.constraints.NotNull;
@@ -32,17 +33,33 @@ public class Path {
     @Convert(ContentConverter.class)
     private List<Content> contents;
 
+    @JsonIgnore
     @Relationship(type = "AUTHOR", direction = Relationship.INCOMING)
     private Author author;
 
+    @JsonIgnore
     @Relationship(type = "BUILDING", direction = Relationship.INCOMING)
     private Building building;
 
+    @JsonIgnore
     @Relationship(type = "PATH", direction = Relationship.INCOMING)
     private Node origin;
 
+    @JsonIgnore
     @Relationship(type = "PATH")
     private Node end;
+
+    @JsonIgnoreProperties
+    @Relationship(type = "PATH")
+    private PATH path2node;
+
+    public PATH getPath2node() {
+        return path2node;
+    }
+
+    public void setPath2node(PATH path2node) {
+        this.path2node = path2node;
+    }
 
     public String getImg() {
         return img;

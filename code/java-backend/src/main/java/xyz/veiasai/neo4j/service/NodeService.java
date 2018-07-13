@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.repositories.AuthorRepository;
-import xyz.veiasai.neo4j.repositories.BuildingRepository;
 import xyz.veiasai.neo4j.repositories.NodeRepository;
+import xyz.veiasai.neo4j.repositories.TestRepository;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -17,13 +15,12 @@ public class NodeService {
     @Autowired
     private NodeRepository nodeRepository;
     @Autowired
-    private BuildingRepository buildingRepository;
-    @Autowired
-    private AuthorRepository authorRepository;
+    private TestRepository testRepository;
 
     public Node addNode(Node node)
     {
         node.setId(null);
+        node.setState(1);
         return nodeRepository.save(node);
     }
 
@@ -48,13 +45,13 @@ public class NodeService {
     public Node update(Node node) {return nodeRepository.save(node);};
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByTwoNodeId(String nId1,String nId2, String depth)
+    public Set<Map<String, Object>> findByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit)
     {
-        return nodeRepository.findByTwoNodeId(nId1, nId2, depth);
+        return nodeRepository.findByTwoNodeId(nId1, nId2, skip,limit);
     }
     @Transactional(readOnly = true)
-    public  Collection<Collection<Node>> findAllPathsByTwoNodeId(String nId1,String nId2){
-        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2);
+    public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2,Integer skip,Integer limit){
+        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
     }
 
     @Transactional(readOnly = true)

@@ -2,10 +2,8 @@ package xyz.veiasai.neo4j.controller;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import xyz.veiasai.neo4j.domain.Building;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.service.AuthorService;
@@ -13,8 +11,7 @@ import xyz.veiasai.neo4j.service.BuildingService;
 import xyz.veiasai.neo4j.service.NodeService;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Api(value="node-controller")
 @RestController
@@ -94,9 +91,31 @@ public class NodeController {
         result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
         return result;
     }
-    @GetMapping("/nodes/twonodes")
-    public Collection<Collection<Node>> pathGetByTwoNodes(@RequestParam String nId1,@RequestParam String nId2){
-        return nodeService.findAllPathsByTwoNodeId(nId1,nId2);
+    @GetMapping("/nodes/twonodes/v2")
+    public Set<Map<String, Object>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
+                                                      @RequestParam(required = false) Integer skip,
+                                                      @RequestParam(required = false)Integer limit){
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 5;
+        }
+        Set<Map<String, Object>> result = nodeService.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
+        return result;
+    }
+    @GetMapping("/nodes/twonodes/v1")
+    public Set<Map<String, Object>> ShorestpathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
+                                                             @RequestParam(required = false) Integer skip,
+                                                             @RequestParam(required = false)Integer limit){
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 5;
+        }
+        Set<Map<String, Object>> result = nodeService.findByTwoNodeId(nId1,nId2,skip,limit);
+        return result;
     }
     @GetMapping("/nodes/building")
     public NodeResult nodeGetByBuilding(@RequestParam String buildingId,

@@ -31,9 +31,9 @@ public class DataSetController {
     @PostMapping("/dataset")
     public DataSet postDataSet(@RequestBody @Valid DataSet dataSet,
                                @RequestParam @ApiParam(name="buildingId", value = "数据组所在建筑物的id")String buildingId,
-                               @RequestParam @ApiParam(name="authorId", value = "上传者的open-id")String authorId,
-                               @RequestParam @ApiParam(name="type",value="数据组的类型")String type){
-        dataSet = dataSetService.addDataSet(dataSet,buildingId,authorId,type);
+                               @RequestParam @ApiParam(name="authorId", value = "上传者的open-id")String authorId
+                               ){
+        dataSet = dataSetService.addDataSet(dataSet,buildingId,authorId);
         return dataSet;
     }
     @ApiOperation(value = "删除数据组",notes="删除数据组及其相关联系;\r\n404:不存在;\r\n200:删除成功")
@@ -54,7 +54,7 @@ public class DataSetController {
     @GetMapping("/dataset")
     public DataSetResult getDataSets(@RequestParam(required = false) String buildingId,
                                      @RequestParam(required = false) String authorId,
-                                     @RequestParam(required = false) String dataSetName,
+                                     @RequestParam(required = false,defaultValue = "") String dataSetName,
                                      @RequestParam(required = false) Integer skip,
                                      @RequestParam(required = false) Integer limit){
         if(skip == null){
@@ -69,19 +69,20 @@ public class DataSetController {
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndAuthor(buildingId,authorId,skip,limit));
         }
-        if(buildingId != null && dataSetName !=null) {
+        if(buildingId != null) {
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndName(buildingId, dataSetName, skip, limit));
             return result;
         }
-        if(authorId != null && dataSetName !=null){
+        if(authorId != null ){
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByAuthorAndName(authorId,dataSetName,skip,limit));
             return result;
         }
         result.setCode(404);
+        result.setMessage("找不到数据组");
         return result;
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线;" +
