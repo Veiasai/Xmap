@@ -16,7 +16,7 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
     @Query("MATCH (:Node {id: {nodeId}})-[PATH]->(n:Path) RETURN n")
     public Collection<Path> findByOrigin(@Param("nodeId") String nodeId);
 
-    @Query("MATCH (:Building {id:{buildingId}})-[BUILDING]->(p:Path) WHERE p.name=~('.*'+{name}+'.*')"+
+    @Query("MATCH (:Building {id:{buildingId}})-[:BUILDING]-(p:Path) WHERE p.name=~('.*'+{name}+'.*')"+
             "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}")
     public Collection<Path> findByBuildingAndName(@Param("buildingId") String buildingId,
                                                   @Param("name") String name,
@@ -24,7 +24,7 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
                                                   @Param("limit")Integer limit);
 
     @Query("match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (path: Path {id:{pathId}})" +
-            "merge (author)-[:AUTHOR]->(path)<-[:BUILDING]->(building)"
+            "merge (author)-[:AUTHOR]-(path)-[:BUILDING]-(building)"
     )
     public void addRelationAuthorAndBuilding(@Param("pathId") String pathId, @Param("buildingId") String buildingId, @Param("author") String author);
 
