@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.domain.relation.PATH;
 import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingService;
@@ -92,10 +91,31 @@ public class NodeController {
         result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
         return result;
     }
-    @GetMapping("/nodes/twonodes")
-    public Set<Map<String, Object>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2){
-        Set<Map<String, Object>> temp = nodeService.findAllPathsByTwoNodeId(nId1,nId2);
-        return temp;
+    @GetMapping("/nodes/twonodes/v2")
+    public Set<Map<String, Object>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
+                                                      @RequestParam(required = false) Integer skip,
+                                                      @RequestParam(required = false)Integer limit){
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 5;
+        }
+        Set<Map<String, Object>> result = nodeService.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
+        return result;
+    }
+    @GetMapping("/nodes/twonodes/v1")
+    public Set<Map<String, Object>> ShorestpathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
+                                                             @RequestParam(required = false) Integer skip,
+                                                             @RequestParam(required = false)Integer limit){
+        if(skip == null){
+            skip = 0;
+        }
+        if(limit == null){
+            limit = 5;
+        }
+        Set<Map<String, Object>> result = nodeService.findByTwoNodeId(nId1,nId2,skip,limit);
+        return result;
     }
     @GetMapping("/nodes/building")
     public NodeResult nodeGetByBuilding(@RequestParam String buildingId,

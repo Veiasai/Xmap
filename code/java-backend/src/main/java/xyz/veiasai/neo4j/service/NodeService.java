@@ -45,13 +45,13 @@ public class NodeService {
     public Node update(Node node) {return nodeRepository.save(node);};
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByTwoNodeId(String nId1,String nId2, String depth)
+    public Set<Map<String, Object>> findByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit)
     {
-        return nodeRepository.findByTwoNodeId(nId1, nId2, depth);
+        return nodeRepository.findByTwoNodeId(nId1, nId2, skip,limit);
     }
     @Transactional(readOnly = true)
-    public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2){
-        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2);
+    public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2,Integer skip,Integer limit){
+        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
     }
 
     @Transactional(readOnly = true)
