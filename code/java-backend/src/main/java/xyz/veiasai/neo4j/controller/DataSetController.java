@@ -31,9 +31,9 @@ public class DataSetController {
     @PostMapping("/dataset")
     public DataSet postDataSet(@RequestBody @Valid DataSet dataSet,
                                @RequestParam @ApiParam(name="buildingId", value = "数据组所在建筑物的id")String buildingId,
-                               @RequestParam @ApiParam(name="authorId", value = "上传者的open-id")String authorId,
-                               @RequestParam @ApiParam(name="type",value="数据组的类型")String type){
-        dataSet = dataSetService.addDataSet(dataSet,buildingId,authorId,type);
+                               @RequestParam @ApiParam(name="authorId", value = "上传者的open-id")String authorId
+                               ){
+        dataSet = dataSetService.addDataSet(dataSet,buildingId,authorId);
         return dataSet;
     }
     @ApiOperation(value = "删除数据组",notes="删除数据组及其相关联系;\r\n404:不存在;\r\n200:删除成功")

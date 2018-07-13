@@ -16,11 +16,9 @@ public class PATH {
     private String path;
 
     @StartNode
-    @JsonIgnore
     private Path path1;
 
     @EndNode
-    @JsonIgnore
     private Node node1;
 
     public Path getPath1() {
