@@ -3,8 +3,8 @@
 </style>
 
 <template>
-  <view>
-
+  <view @tap="search">
+    test
   </view>
 </template>
 
@@ -23,7 +23,33 @@
 
     data = {
       dataSet: [],
+      name:"",
+      skip:0,
+      limit:5,
+    }
 
+    methods = {
+      search() {
+        this.search();
+      }
+    }
+
+    async search() {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/dataset',
+          data: {
+            buildingId : this.$parent.globalData.building.id,
+            authorId: this.$parent.globalData.userInfo,
+            dataSetName: this.name,
+            skip: this.skip,
+            limit: this.limit
+          }
+        })
+        console.log(res.data);
+      }catch (e) {
+        console.log(e);
+      }
     }
   }
 </script>
