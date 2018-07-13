@@ -64,7 +64,6 @@
             this.paths = [...this.paths, ...paths];
           }
           this.skip += 5;
-
         }
         else {
           if (this.skip === 0) {

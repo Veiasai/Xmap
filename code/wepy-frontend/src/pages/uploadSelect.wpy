@@ -67,7 +67,7 @@
       },
       jumpToAddPath(){
         wx.navigateTo({
-          url: '/pages/pathUpload/pathUpload',
+          url: '/pages/pathUpload/nodeSelect',
         })
       }
     }

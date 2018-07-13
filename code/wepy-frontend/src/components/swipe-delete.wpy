@@ -101,15 +101,6 @@
       moveX: null
     }
 
-    onLoad () {
-      //this.swipeData.style = 0;
-    }
-
-    onReady()
-    {
-      this.swipeData.style = 0;
-    }
-
     methods = {
       ts (e) {
         if (e.touches.length === 1) {

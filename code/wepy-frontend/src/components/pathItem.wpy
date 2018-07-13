@@ -53,10 +53,10 @@
     </view>
     <view wx:elif="{{item.type==='action'}}" class='item action'>
       <view class="icon">
-        <image mode="aspectFill" src = "../icons/{{item.turn}}.png"></image>
+        <image mode="aspectFill" src = "../icons/{{item.message[0]}}.png"></image>
       </view>
-      <view style="margin-left: 33rpx;">{{item.steps}} 步后 </view>
-      <view style="margin-left: 33rpx">{{item.turntext}}</view>
+      <view style="margin-left: 33rpx;">{{(item.message[0] === ' ' ? '' : ' ') + item.message}} 步后 </view>
+      <view style="margin-left: 33rpx">{{item.message[0] === ' ' ? '左转' : '右转'}}</view>
     </view>
     <view wx:elif="{{item.type==='comment'}}" class='item'>
       <view>comment: {{item.message}}</view>
@@ -75,18 +75,22 @@
       }
     }
 
-    onLoad (){
-      let mes = this.item.message.split(",",2);
-      this.item.steps = mes[0];
-      this.item.turn = mes[1];
-      if(mes[1]==='left')
-        this.item.turntext = "左转"
-      else if(mes[1]==='right')
-        this.tiem.turntext = "右转"
-      else
-        this.tiem.turntext = "无效"
-      console.log(this.item.steps);
-      console.log(this.item.turntext)
+    onReady (){
+      // console.log(e);
+      // if(this.item.type === 'action')
+      // {
+      //   let mes = this.item.message.split(",",2);
+      //   this.item.steps = mes[0];
+      //   this.item.turn = mes[1];
+      //   if(mes[1]==='left')
+      //     this.item.turntext = "左转"
+      //   else if(mes[1]==='right')
+      //     this.tiem.turntext = "右转"
+      //   else
+      //     this.tiem.turntext = "无效"
+      //   console.log(this.item.steps);
+      //   console.log(this.item.turntext)
+      // }
   }
 
   }

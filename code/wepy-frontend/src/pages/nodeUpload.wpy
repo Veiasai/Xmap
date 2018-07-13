@@ -93,7 +93,9 @@
           let data = JSON.parse(res.data);
           if (data.code === 200) {
             this.cloudsrc = data.message;
+            this.$apply();
           }
+          console.log(data);
         } catch (e) {
           console.log(e);
         }
@@ -148,7 +150,7 @@
         }
         try {
           let res = await wepy.request({
-            url: httpHead + '/node' + '?author=' + this.$parent.globalData.userInfo.openid
+            url: httpHead + '/node' + '?author=' + this.$parent.globalData.userInfo
             + '&buildingId=' + this.$parent.globalData.building.id,
             method: 'POST',
             header: {
@@ -163,14 +165,13 @@
           });
           this.src = "";
           this.cloudsrc = "";
-
+        } catch (e) {
+          console.log(e);
           wx.hideLoading();
           wx.showToast({
             title: '网络异常',
             icon: 'none',
           });
-        } catch (e) {
-          console.log(e);
         }
       }
     }

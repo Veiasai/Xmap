@@ -302,10 +302,10 @@
 
         let message;
         if (cal > 0.86) {
-          message = "走 " + steps + " 步, 左转";
+          message = " " + steps;
         }
         else if (cal < -0.86) {
-          message = "走 " + steps + " 步，右转";
+          message = "" + steps;
         }
         this.curves++;
         array.push({"type": 'action', "message": message});

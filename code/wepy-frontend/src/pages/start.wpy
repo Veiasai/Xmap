@@ -3,8 +3,9 @@
 </style>
 
 <template>
-  <view>
-    <button @tap="selectBuilding">ssss</button>
+  <view style="text-align: center">
+    <button @tap="selectBuilding">选择建筑</button>
+    <view>欢迎体验Xmap，享受便捷</view>
   </view>
 
 </template>
@@ -20,35 +21,33 @@
     }
 
     methods = {
-      selectBuilding() {
-        wx.chooseLocation({
-          success: (res) => {
-            console.log("b", res)
-            this.$parent.globalData.building = res;
-            wx.navigateTo({
-              url: '/pages/main',
-            })
-            wx.request({
-              url: httpHead + '/building' + '?address=' + res.address,
-              method: 'POST',
-              header: {
-                'content-type': 'application/json'
-              },
-              data: {
-                name: res.name,
-                location: {latitude: res.latitude, longitude: res.longitude}
-              },
-              success: (res) => {
-                let data = res.data;
-                if (data.id) {
-                  this.$parent.globalData.building.id = data.id;
-
-                }
-                console.log(data.id);
-              }
-            })
+      async selectBuilding() {
+        try {
+          let building = await wepy.chooseLocation();
+          console.log("b", building)
+          this.$parent.globalData.building = building;
+          let res = await wepy.request({
+            url: httpHead + '/building' + '?address=' + building.address,
+            method: 'POST',
+            header: {
+              'content-type': 'application/json'
+            },
+            data: {
+              name: building.name,
+              location: {latitude: building.latitude, longitude: building.longitude}
+            }
+          })
+          let data = res.data;
+          if (data.id) {
+            this.$parent.globalData.building.id = data.id;
           }
-        })
+          console.log(data.id);
+          wepy.switchTab({
+            url: '/pages/main',
+          })
+        } catch (e) {
+
+        }
       }
     }
   }
