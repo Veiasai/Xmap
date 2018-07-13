@@ -1,39 +1,76 @@
 <style>
-  .searchInput {
-    margin-left: 75 rpx;
-    margin-top: 3vh;
-    width: 600 rpx;
+  .searchInput{
+    height: 7vh;
+    width: 680rpx;
+    margin-top: 2vh;
+    margin-left: 35rpx;
+    font-size: 32rpx;
+    font-weight: lighter;
+    text-align: center;
+    background-color: white;
+    border-radius: 4vh;
+    border: rgb(242,242,242);
     border-style: solid;
-    border-color: #C0C0C0;
+    border-width: 4rpx;
   }
 
   .nodeSelect {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
     width: 600 rpx;
     margin-left: 75 rpx;
     height: 100 rpx;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
   }
+
+  .nodeSelectItem{
+    width: 270rpx;
+    height: 100rpx;
+    border-radius: 32rpx;
+    font-size: 32rpx;
+    font-weight: lighter;
+    background-color: rgb(242,242,242);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+
+  .cancel{
+    width: 34rpx;
+    height: 34rpx;
+  }
+
+
 
 </style>
 
 <template>
   <view>
-    <view class="searchInput">
-      <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+    <view style="height: 9vh">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
     <view class="nodeSelect">
-      <view style="width: 50%" wx:if="{{origin !== null}}">起点:{{origin.name}}
-        <view @tap="nodeCancel" id="1">X</view>
+      <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
+      <view class="nodeSelectItem" style="margin-left: 90rpx" wx:if="{{origin !== null}}">
+        <view>起点:{{origin.name}} </view>
+        <view class="cancel" @tap="nodeCancel" id="1">
+          <image id="1" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../icons/cancel.svg"></image>
+        </view>
       </view>
-      <view style="width: 50%" wx:if="{{end !== null}}">终点:{{end.name}}
-        <view @tap="nodeCancel" id="2">X</view>
+      <view class="nodeSelectItem" style="margin-left: 30rpx" wx:if="{{end !== null}}">
+        <view>终点:{{end.name}} </view>
+        <view class="cancel" @tap="nodeCancel" id="2">
+          <image id="2" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../icons/cancel.svg"></image>
+        </view>
       </view>
     </view>
     <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
-      <repeat for="{{nodes}}" index="index" item="item">
-        <Node :node="item"></Node>
+      <repeat  for="{{nodes}}" index="index" item="item">
+        <Node  :node="item"></Node>
       </repeat>
     </scroll-view>
   </view>
@@ -151,6 +188,7 @@
 
       nodeCancel(e) {
         let id = e.target.id;
+        console.log(e.target)
         if (id === "1") {
           this.origin = null;
           this.end = null;

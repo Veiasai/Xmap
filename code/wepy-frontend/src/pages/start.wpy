@@ -4,7 +4,7 @@
 
 <template>
   <view>
-    <button @tap="selectBuilding">ssss</button>
+    <button @tap="selectBuilding">选择建筑</button>
   </view>
 
 </template>
@@ -25,7 +25,7 @@
           success: (res) => {
             console.log("b", res)
             this.$parent.globalData.building = res;
-            wx.navigateTo({
+            wx.switchTab({
               url: '/pages/main',
             })
             wx.request({

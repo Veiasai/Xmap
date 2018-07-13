@@ -18,6 +18,7 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        'pages/start',
         // 'pages/test',
         'pages/main',
         'pages/pathInfo',
@@ -28,7 +29,7 @@
         'pages/pathUpload/pathUpload',
         'pages/pathUpload/nodeSelect',
         'pages/nodeUpload',
-        'pages/start'
+
       ],
       window: {
         backgroundTextStyle: 'light',
