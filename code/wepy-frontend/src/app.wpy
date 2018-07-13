@@ -19,16 +19,17 @@
     config = {
       pages: [
         'pages/dataSetViewer',
+        // 'pages/test',
         'pages/main',
-        'pages/test',
+        'pages/pathInfo',
+        'pages/uploadSelect',
         'pages/collection',
         'pages/nodeViewer',
         'pages/user',
         'pages/pathUpload/pathUpload',
         'pages/pathUpload/nodeSelect',
         'pages/nodeUpload',
-        'pages/start',
-        'pages/pathInfo'
+        'pages/start'
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -47,11 +48,25 @@
           "text": "首页"
         },
           {
+            "selectedIconPath": "./icons/guideselected.png",
+            "iconPath": "./icons/guidedefault.png",
+            "pagePath": "pages/nodeViewer",
+            "text": "点位查找"
+          },
+          {
+            "selectedIconPath": "./icons/addselected.png",
+            "iconPath": "./icons/adddefault.png",
+            "pagePath": "pages/uploadSelect",
+            "text": "添加"
+          },
+          {
             "selectedIconPath": "./icons/userselected.png",
             "iconPath": "./icons/userdefault.png",
             "pagePath": "pages/user",
             "text": "用户"
           }
+
+
         ]
 
       }

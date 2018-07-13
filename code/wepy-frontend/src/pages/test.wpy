@@ -6,16 +6,14 @@
 
 <template>
 <view style="height: 200rpx">
-  <SlideDelete :manage="manage">
-    <view class="test" @tap="jumpto">
-      <Path :path="node"></Path>
-    </view>
-  </SlideDelete>
   <view @tap="addPath">
     上传路线
   </view>
   <view style="height: 200rpx" @tap="jumpto">
     test
+  </view>
+  <view>
+    <PathItem :item.sync="pathInfo"></PathItem>
   </view>
 </view>
 </template>
@@ -24,15 +22,14 @@
   import wepy from 'wepy';
   import Path from '../components/path';
   import Node from '../components/node';
-  import SlideDelete from '../components/slideDelete'
-
+  import PathItem from '../components/pathItem'
 
   export default class test extends wepy.page {
 
     components = {
       node: Node,
       Path: Path,
-      SlideDelete: SlideDelete
+      PathItem: PathItem
     }
 
     data = {
@@ -43,7 +40,12 @@
         steps:"66",
         curves:"8"
       },
-      manage:true
+      manage:true,
+
+      pathInfo:{
+        type:"action",
+        message:"17,left"
+      }
 
     }
     async searchPath(skip) {

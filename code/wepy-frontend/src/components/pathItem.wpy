@@ -1,17 +1,65 @@
-<style>
+<style lang="less">
+  .imgview{
+    width: 682rpx;
+    height: 684rpx;
+    border-radius: 16rpx;
+  }
+
+  .img{
+    width: 682rpx;
+    height: 684rpx;
+  }
+
+  .item{
+    width: 682rpx;
+    height: 150rpx;
+    border-radius: 16rpx;
+    background-color: #F2F2F2;
+    font-size: 40rpx;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    &.action{
+      display: flex;
+      flex-direction: row;
+
+    }
+  }
+
+  .icon{
+    margin-left: 11rpx;
+    background-color: #FEFEFE;
+    width: 128rpx;
+    height: 128rpx;
+    border-radius: 50%;
+    align-items: center;
+  }
+
+  .icon image{
+    padding-top: 15rpx;
+    width: 90rpx;
+    height: 90rpx;
+
+  }
+
+
 
 </style>
 
 <template>
-  <view>
+  <view style="margin-left: 34rpx; margin-top: 1vh">
     <view wx:if="{{item.type==='img'}}" class='imgview'>
-    <image lazy-load mode='widthFix' class="img" src="{{item.message}}"></image>
+    <image lazy-load mode='aspectFill' class="img" src="{{item.message}}"></image>
     </view>
-    <view wx:elif="{{item.type==='action'}}" class='item'>
-      <text>step: {{item.message}}</text>
+    <view wx:elif="{{item.type==='action'}}" class='item action'>
+      <view class="icon">
+        <image mode="aspectFill" src = "../icons/{{item.turn}}.png"></image>
+      </view>
+      <view style="margin-left: 33rpx;">{{item.steps}} 步后 </view>
+      <view style="margin-left: 33rpx">{{item.turntext}}</view>
     </view>
     <view wx:elif="{{item.type==='comment'}}" class='item'>
-      <text>comment: {{item.message}}</text>
+      <view>comment: {{item.message}}</view>
     </view>
   </view>
 </template>
@@ -19,10 +67,27 @@
 <script>
   import wepy from 'wepy';
 
-  export default class PathUpload extends wepy.component {
+  export default class PathItem extends wepy.component {
     props = {
-      item:{}
+      item:{
+        // twoWay:true,
+        type:Object
+      }
     }
+
+    onLoad (){
+      let mes = this.item.message.split(",",2);
+      this.item.steps = mes[0];
+      this.item.turn = mes[1];
+      if(mes[1]==='left')
+        this.item.turntext = "左转"
+      else if(mes[1]==='right')
+        this.tiem.turntext = "右转"
+      else
+        this.tiem.turntext = "无效"
+      console.log(this.item.steps);
+      console.log(this.item.turntext)
+  }
 
   }
 </script>
