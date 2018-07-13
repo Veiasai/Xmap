@@ -12,11 +12,19 @@
     flex-direction: column;
     align-items: center;
   }
+
+  .pathDisplay{
+    width: 750rpx;
+    height: 80vh;
+  }
+
 </style>
 
 <template>
   <view class="container">
-    <PathDisplay :pathArray.sync="pathArray"/>
+    <view class="pathDisplay">
+      <PathDisplay :pathArray.sync="pathArray"/>
+    </view>
     <view>
       <text>步数：{{steps}}</text>
       <text>方向：{{direction == null ? 0 : direction}}</text>
