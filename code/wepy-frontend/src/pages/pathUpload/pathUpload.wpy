@@ -77,28 +77,6 @@
       end: "",
       img: "",
     }
-    watch = {
-      tempFilePath(newValue, oldValue) {
-        wepy.uploadFile({
-          url: httpHead + '/upload',
-          filePath: newValue,
-          name: 'file',
-          formData: {
-            'user': 'woshiqiangmima'
-          },
-          success: (uploadres) => {
-            console.log(uploadres)
-            let data = JSON.parse(uploadres.data);
-            if (data.code === 200) {
-              this.imgArray.push(data.message);
-            }
-            else {
-              this.imgArray.push("");
-            }
-          }
-        });
-      }
-    }
 
     methods = {
       record() {
@@ -116,22 +94,40 @@
         }
       },
 
-      takephoto() {
+      async takephoto() {
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});
-        wepy.chooseImage({
-          count: 1, // 默认9
-          sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有}
-          success: (imgres) => {
-            this.tempFilePath = imgres.tempFilePaths[0];
-            this.pathArray.push({"type": 'action', "message": "直行" + this.steps + "步"})
-            this.pathArray.push({"type": 'img', "message": this.tempFilePath});
-            this.allsteps += this.steps;
-            this.steps = 0;
-            this.$apply();
+        try {
+          let imgres = await wepy.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['compressed']}) // 可以指定是原图还是压缩图，默认二者都有}
+
+          console.log(imgres);
+          let uploadres = await wepy.uploadFile({
+            url: httpHead + '/upload',
+            filePath: imgres.tempFilePaths[0],
+            name: 'file',
+            formData: {
+              'user': 'woshiqiangmima'
+            }})
+
+          console.log(uploadres)
+          let data = JSON.parse(uploadres.data);
+          if (data.code === 200) {
+            this.imgArray.push(data.message);
           }
-        });
+          else {
+            this.imgArray.push("");
+          }
+          this.pathArray.push({"type": 'actionS', "message": this.steps + ""})
+          this.pathArray.push({"type": 'img', "message": imgres.tempFilePaths[0]});
+          this.allsteps += this.steps;
+          this.steps = 0;
+          this.$apply();
+        }catch (e){
+          console.log(e);
+        }
       },
 
       //点击注释按钮
@@ -300,15 +296,17 @@
         if (cal < 0.86 && cal > -0.86)
           return;
 
-        let message;
+        let message, action;
         if (cal > 0.86) {
-          message = " " + steps;
+          message = "" + steps;
+          action = "actionL";
         }
         else if (cal < -0.86) {
           message = "" + steps;
+          action = "actionR";
         }
         this.curves++;
-        array.push({"type": 'action', "message": message});
+        array.push({"type": action, "message": message});
         this.allsteps += steps;
         this.steps = 0;
         this.direction = res.direction;

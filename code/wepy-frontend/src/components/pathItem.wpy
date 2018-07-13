@@ -51,12 +51,25 @@
     <view wx:if="{{item.type==='img'}}" class='imgview'>
     <image lazy-load mode='aspectFill' class="img" src="{{item.message}}"></image>
     </view>
-    <view wx:elif="{{item.type==='action'}}" class='item action'>
+    <view wx:elif="{{item.type==='actionS'}}" class='item action'>
       <view class="icon">
-        <image mode="aspectFill" src = "../icons/{{item.message[0] === ' ' ? 'left' : 'right'}}.png"></image>
+        <image mode="aspectFill" src = "../icons/left.png"></image>
       </view>
-      <view style="margin-left: 33rpx;">{{(item.message[0] === ' ' ? '' : ' ') + item.message}} 步后 </view>
-      <view style="margin-left: 33rpx">{{item.message[0] === ' ' ? '左转' : '右转'}}</view>
+      <view style="margin-left: 33rpx;">直行 {{item.message}} 步 </view>
+    </view>
+    <view wx:elif="{{item.type==='actionL'}}" class='item action'>
+      <view class="icon">
+        <image mode="aspectFill" src = "../icons/left.png"></image>
+      </view>
+      <view style="margin-left: 33rpx;">{{item.message}} 步后 </view>
+      <view style="margin-left: 33rpx">左转</view>
+    </view>
+    <view wx:elif="{{item.type==='actionR'}}" class='item action'>
+      <view class="icon">
+        <image mode="aspectFill" src = "../icons/right.png"></image>
+      </view>
+      <view style="margin-left: 33rpx;">{{item.message}} 步后 </view>
+      <view style="margin-left: 33rpx">右转</view>
     </view>
     <view wx:elif="{{item.type==='comment'}}" class='item'>
       <view>comment: {{item.message}}</view>

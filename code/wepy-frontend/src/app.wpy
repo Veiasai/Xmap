@@ -27,7 +27,7 @@
         'pages/collection',
         'pages/nodeViewer',
         'pages/user',
-
+        'pages/pathUpload/pathUpload',
         'pages/pathUpload/nodeSelect',
         'pages/nodeUpload',
       ],

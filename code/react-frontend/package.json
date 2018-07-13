@@ -1,0 +1,26 @@
+{
+  "name": "react-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.2.3",
+    "babel-plugin-import": "^1.6.6",
+    "mobx": "^4.1.0",
+    "mobx-react": "^5.0.0",
+    "moment": "^2.22.0",
+    "react": "^16.4.1",
+    "react-app-rewire-mobx": "^1.0.7",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4",
+    "react-router-dom": "^4.2.2"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "react-app-rewired": "^1.5.0"
+  }
+}

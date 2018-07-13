@@ -59,9 +59,6 @@
   import {httpHead} from '../properties/Const';
 
   export default class NodeUpload extends wepy.page {
-    props = {
-      gitem: {}
-    }
     data = {
       src: "",
       cloudsrc: "",
