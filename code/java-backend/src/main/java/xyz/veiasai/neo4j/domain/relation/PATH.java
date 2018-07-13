@@ -6,7 +6,7 @@ import org.neo4j.ogm.annotation.*;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.domain.Path;
 
-@JsonIgnoreProperties
+
 @RelationshipEntity(type = "PATH")
 public class PATH {
     @Property(name = "node")

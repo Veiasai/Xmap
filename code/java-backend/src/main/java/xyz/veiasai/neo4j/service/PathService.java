@@ -32,6 +32,7 @@ public class PathService {
     public Path addPath(Path path)
     {
         path.setId(null);
+        path.setState(1);
         return pathRepository.save(path);
     }
 

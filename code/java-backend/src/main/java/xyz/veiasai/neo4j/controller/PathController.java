@@ -35,7 +35,6 @@ public class PathController {
     @PostMapping("/path")
     public Path pathPost(@RequestBody Path path, @RequestParam String buildingId, @RequestParam String author,
                          @RequestParam(required = false) String origin, @RequestParam(required = false) String end) throws Exception {
-        path.setState(1);
         path = pathService.addPath(path);
         String id = path.getId();
         if (id == null)

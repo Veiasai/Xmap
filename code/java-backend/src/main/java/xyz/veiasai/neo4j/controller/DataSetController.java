@@ -54,7 +54,7 @@ public class DataSetController {
     @GetMapping("/dataset")
     public DataSetResult getDataSets(@RequestParam(required = false) String buildingId,
                                      @RequestParam(required = false) String authorId,
-                                     @RequestParam(required = false) String dataSetName,
+                                     @RequestParam(required = false,defaultValue = "") String dataSetName,
                                      @RequestParam(required = false) Integer skip,
                                      @RequestParam(required = false) Integer limit){
         if(skip == null){
@@ -69,13 +69,13 @@ public class DataSetController {
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndAuthor(buildingId,authorId,skip,limit));
         }
-        if(buildingId != null && dataSetName !=null) {
+        if(buildingId != null) {
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndName(buildingId, dataSetName, skip, limit));
             return result;
         }
-        if(authorId != null && dataSetName !=null){
+        if(authorId != null ){
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByAuthorAndName(authorId,dataSetName,skip,limit));

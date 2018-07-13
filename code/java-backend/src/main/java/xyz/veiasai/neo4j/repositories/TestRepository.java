@@ -12,8 +12,8 @@ import java.util.Set;
 
 public interface TestRepository extends Neo4jRepository<PATH, Long> {
     @Query("Match (n1:Node {id:{nId1}}),(n2:Node {id:{nId2}}), p=((n1)-[n:PATH*..10]->(n2))  " +
-            "return n as paths")
-    public Set<Map<String, PATH>> findAllPathsByTwoNodeId(@Param("nId1") String nId1, @Param("nId2") String nId2);
+            "return nodes(p) as paths")
+    public Set<Map<String, Object>> findAllPathsByTwoNodeId(@Param("nId1") String nId1, @Param("nId2") String nId2);
 
     @QueryResult
     public class RelaData{

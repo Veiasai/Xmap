@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.domain.Path;
 import xyz.veiasai.neo4j.domain.relation.PATH;
 import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.service.AuthorService;
@@ -13,9 +12,7 @@ import xyz.veiasai.neo4j.service.BuildingService;
 import xyz.veiasai.neo4j.service.NodeService;
 
 import javax.validation.Valid;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Api(value="node-controller")
 @RestController
@@ -96,30 +93,8 @@ public class NodeController {
         return result;
     }
     @GetMapping("/nodes/twonodes")
-    public Set<Map<String, PATH>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2){
-        Set<Map<String, PATH>> temp = nodeService.findAllPathsByTwoNodeId(nId1,nId2);
-        /*
-        String result="";
-        Iterator<Map<String,PATH>> it = temp.iterator();
-        while (it.hasNext()){
-            Map<String,PATH> m =it.next();
-            for (Iterator<PATH> i = m.values().iterator(); i.hasNext();) {
-                PATH obj = i.next();
-                Path p = obj.getPath1();
-                result+=" value:"+p.getName();
-            }
-        */
-        /*
-        String result="";
-        Iterator it =temp.iterator();
-        while (it.hasNext()){
-            JSONArray json1 = JSONArray.fromObject(it.next());
-            for(int i=0;i<json1.size();i++){
-                JSONObject job = json1.getJSONObject(i);
-                String str = job.toString();
-                result+=str;
-            }
-        }*/
+    public Set<Map<String, Object>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2){
+        Set<Map<String, Object>> temp = nodeService.findAllPathsByTwoNodeId(nId1,nId2);
         return temp;
     }
     @GetMapping("/nodes/building")
