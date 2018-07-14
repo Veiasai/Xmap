@@ -14,8 +14,36 @@
   }
 
   .pathDisplay{
+
     width: 750rpx;
     height: 80vh;
+  }
+
+  .controller{
+    width: 240rpx;
+    height: 90rpx;
+    border-radius: 32rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #9BC1DF;
+    color: #FEFEFE;
+    box-shadow: rgb(3, 3, 3) 2rpx 4rpx 14px;
+  }
+
+  .tapedController{
+    background-color: #7b99b2;
+  }
+
+  .pause{
+    width: 40rpx;
+    height: 40rpx;
+  }
+
+  .pause image{
+    width: 40rpx;
+    height: 40rpx;
   }
 
 </style>
@@ -28,6 +56,13 @@
     <view>
       <text>步数：{{steps}}</text>
       <text>方向：{{direction == null ? 0 : direction}}</text>
+    </view>
+    <view @tap="record" class="controller" hover-class="tapedController" hover-stay-time="0">
+      <view class="pause">
+        <image mode="widthFix" src="../../icons/start.svg" wx:if="{{recordButton !== '暂停记录'}}"></image>
+        <image mode="widthFix" src="../../icons/pause.svg" wx:if="{{recordButton === '暂停记录'}}"></image>
+      </view>
+      <view>{{recordButton}}</view>
     </view>
     <view class='functional'>
       <button bindtap='record' class='Button'>
@@ -111,7 +146,7 @@
     methods = {
       record() {
         if (this.recordButton === "暂停记录") {
-          this.recordButton = "开始记录";
+          this.recordButton = "继续记录";
           this.xyz = [1, 1];
           this.direction = null;
           wepy.stopAccelerometer({});
