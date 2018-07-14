@@ -14,12 +14,58 @@
   }
 
   .pathDisplay{
-
     width: 750rpx;
     height: 80vh;
   }
 
+  .addInfo{
+    width: 750rpx;
+    height: 110rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .addComment{
+    margin-left: 95rpx;
+    width: 272rpx;
+    height: 90rpx;
+    border-radius: 32rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #8794CB;
+    color: #FEFEFE;
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+  }
+  .tapedAddComment{
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
+    background-color: #8490c1;
+  }
+
+  .addImage{
+    width: 110rpx;
+    height: 110rpx;
+    border-radius: 50%;
+    background-color: #305690;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+  }
+
   .controller{
+    width: 750rpx;
+    height: 90rpx;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .startPause{
+    margin-left: 95rpx;
     width: 240rpx;
     height: 90rpx;
     border-radius: 32rpx;
@@ -29,21 +75,37 @@
     align-items: center;
     background-color: #9BC1DF;
     color: #FEFEFE;
-    box-shadow: rgb(3, 3, 3) 2rpx 4rpx 14px;
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
   }
-
-  .tapedController{
-    background-color: #7b99b2;
+  .tapedStartPause{
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
+    background-color: #90b3d0;
   }
-
   .pause{
     width: 40rpx;
     height: 40rpx;
   }
-
   .pause image{
     width: 40rpx;
     height: 40rpx;
+  }
+
+  .endRecord{
+    margin-left: 155rpx;
+    width: 200rpx;
+    height: 90rpx;
+    border-radius: 32rpx;
+    background-color: #F2393C;
+    color: #FEFEFE;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+  }
+  .tapedEnd{
+    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
+    background-color: #df3438;
   }
 
 </style>
@@ -53,30 +115,37 @@
     <view class="pathDisplay">
       <PathDisplay :pathArray.sync="pathArray"/>
     </view>
+
     <view>
       <text>步数：{{steps}}</text>
       <text>方向：{{direction == null ? 0 : direction}}</text>
     </view>
-    <view @tap="record" class="controller" hover-class="tapedController" hover-stay-time="0">
-      <view class="pause">
-        <image mode="widthFix" src="../../icons/start.svg" wx:if="{{recordButton !== '暂停记录'}}"></image>
-        <image mode="widthFix" src="../../icons/pause.svg" wx:if="{{recordButton === '暂停记录'}}"></image>
+
+    <view class="addInfo">
+      <view class="addComment" hover-class="tapedAddComment" hover-stay-time="100" @tap="comment">
+        <image mode="widthFix" style="width: 60rpx;height: 60rpx;margin-top: 6rpx" src="../../icons/comment.svg"></image>
+        <view style="margin-left: 6rpx">添加评论</view>
       </view>
-      <view>{{recordButton}}</view>
+      <view class="addImage" @tap="takePhoto">
+        <view>
+          <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
+        </view>
+      </view>
+
     </view>
-    <view class='functional'>
-      <button bindtap='record' class='Button'>
-        {{recordButton}}
-      </button>
-      <button bindtap='takephoto' class='Button'>
-        拍照
-      </button>
-      <button bindtap='comment' class='Button'>
-        注释
-      </button>
-      <button bindtap='done' class='Button'>
-        结束
-      </button>
+
+    <view class="controller">
+      <view class="startPause" hover-class="tapedStartPause" hover-stay-time="100" @tap="record">
+        <view class="pause">
+          <image mode="widthFix" src="../../icons/start.svg" wx:if="{{recordButton !== '暂停记录'}}"></image>
+          <image mode="widthFix" src="../../icons/pause.svg" wx:if="{{recordButton === '暂停记录'}}"></image>
+        </view>
+        <view>{{recordButton}}</view>
+      </view>
+      <view class="endRecord" hover-class="tapedEnd" hover-stay-time="100" @tap="done">
+        <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/endwhite.svg"></image>
+        <view style="margin-left: 10rpx">结束</view>
+      </view>
     </view>
     <modal hidden="{{hiddenComment}}" title="请输入注释" confirm-text="提交" cancel-text="取消" bindcancel="commentCancel"
            bindconfirm="commentConfirm">
@@ -159,7 +228,7 @@
         }
       },
 
-      takephoto() {
+      takePhoto() {
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});
