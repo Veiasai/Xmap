@@ -15,20 +15,19 @@
 
   .pathDisplay{
     width: 750rpx;
-    height: 80vh;
+    height: 75vh;
   }
 
   .addInfo{
     width: 750rpx;
-    height: 110rpx;
+    height: 120rpx;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
   }
 
   .addComment{
-    margin-left: 95rpx;
+    margin-left: 79rpx;
     width: 272rpx;
     height: 90rpx;
     border-radius: 32rpx;
@@ -38,14 +37,15 @@
     align-items: center;
     background-color: #8794CB;
     color: #FEFEFE;
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+    box-shadow: rgb(53, 63, 82) 2rpx 4rpx 30rpx;
   }
   .tapedAddComment{
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
+    box-shadow: rgb(33, 40, 54) 2rpx 4rpx 14rpx;
     background-color: #8490c1;
   }
 
   .addImage{
+    margin-left: 180rpx;
     width: 110rpx;
     height: 110rpx;
     border-radius: 50%;
@@ -59,9 +59,10 @@
 
   .controller{
     width: 750rpx;
-    height: 90rpx;
+    height: 120rpx;
     display: flex;
     flex-direction: row;
+    align-items: center;
   }
 
   .startPause{
@@ -75,7 +76,7 @@
     align-items: center;
     background-color: #9BC1DF;
     color: #FEFEFE;
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+    box-shadow: rgb(79, 96, 111) 2rpx 4rpx 30rpx;
   }
   .tapedStartPause{
     box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
@@ -101,7 +102,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+    box-shadow: rgb(105, 104, 111) 2rpx 4rpx 30rpx;
   }
   .tapedEnd{
     box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
@@ -131,7 +132,6 @@
           <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
         </view>
       </view>
-
     </view>
 
     <view class="controller">
