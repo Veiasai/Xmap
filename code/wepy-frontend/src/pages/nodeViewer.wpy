@@ -68,11 +68,20 @@
         </view>
       </view>
     </view>
-    <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
-      <repeat  for="{{nodes}}" index="index" item="item">
-        <Node  :node="item"></Node>
-      </repeat>
-    </scroll-view>
+    <view wx:if="{{originToEndList === null}}">
+      <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+        <repeat  for="{{nodes}}" index="index" item="item">
+          <Node  :node="item"></Node>
+        </repeat>
+      </scroll-view>
+    </view>
+    <view wx:else>
+      <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+        <repeat  for="{{originToEndList}}" index="index" item="item">
+          <view id="{{index}}" @tap="pathView">路线{{index}},经过点和路线总数{{item.paths.length}}</view>
+        </repeat>
+      </scroll-view>
+    </view>
   </view>
 </template>
 
@@ -83,7 +92,12 @@
 
   export default class NodeViewer extends wepy.page {
     onLoad() {
-
+      let data = {
+        buildingId: this.$parent.globalData.building.id,
+        skip: 0,
+        limit: this.limit,
+      }
+      this.searchNode(data);
     }
 
     config = {
@@ -97,10 +111,93 @@
       endSkip: 0,
       pathSkip: 0,
       limit: 5,
-      originToEnd: []
+      originToEnd: [],
+      originToEndList: null,
     }
     components = {
       Node: node
+    }
+
+    methods = {
+      searchInput(e) {
+        let value = e.detail.value;
+        this.originSkip = 0;
+        this.endSkip = 0;
+        let data = {
+          name: value,
+          skip: 0,
+          limit: this.limit,
+        }
+        if (this.origin !== null) {
+          data.originId = this.origin.id;
+        }
+        else {
+          data.buildingId = this.$parent.globalData.building.id
+        }
+        this.searchNode(data);
+      },
+
+      nodeCancel(e) {
+        let id = e.target.id;
+        console.log(e.target)
+        if (id === "1") {
+          this.origin = null;
+          this.end = null;
+        }
+        else {
+          this.end = null;
+        }
+      },
+
+      touchLow() {
+        let data = {
+          buildingId: this.$parent.globalData.building.id,
+          name: this.name,
+          skip: this.origin === null ? this.originSkip : this.endSkip,
+          limit: this.limit,
+        }
+        this.searchNode(data);
+      },
+
+      pathView(e) {
+        let index =  parseInt(e.target.id);
+        console.log(index);
+        this.$preload("originToEnd", this.originToEndList[index].paths);
+        wx.navigateTo({
+          url: '/pages/pathInfo',
+        })
+      }
+    }
+
+    events = {
+      'tap-Node': (node, $event) => {
+        if (this.origin === null) {
+          this.origin = node;
+          this.nodes = [];
+          let data = {
+            originId: node.id,
+            skip: this.endSkip,
+            limit: this.limit,
+          }
+          console.log(data);
+          this.searchNode(data);
+        }
+        else {
+          if (this.origin.id !== node.id) {
+            this.end = node;
+            this.searchPath(this.pathSkip);
+          }
+          else {
+            wx.showToast({
+              title: '起点终点不能相同',
+              icon: 'none',
+            })
+          }
+        }
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
+        console.log("node", node);
+        //$event.$destroy();
+      }
     }
 
     async searchNode(data) {
@@ -122,12 +219,11 @@
             this.nodes = [...this.nodes, ...nodes];
           }
           if (data.originId) {
-            this.originSkip += 5;
+            this.endSkip += this.limit;
           }
           else {
-            this.endSkip += 5;
+            this.originSkip += this.limit;
           }
-          this.$apply();
         }
         else {
           wx.showToast({
@@ -135,101 +231,38 @@
             icon: 'none',
           })
           this.nodes = [];
-          this.$apply();
         }
+        this.$apply();
       } catch (e) {
         console.log(e);
       }
     }
 
-    async searchPath(data) {
+    async searchPath(skip) {
       try {
         let res = await wepy.request({
-          url: httpHead + '/paths/origin',
-          data: data
+          url: httpHead + '/nodes/twonodes/v2',
+          data: {
+            nId1: this.origin.id,
+            nId2: this.end.id,
+            skip: skip,
+            limit: this.limit
+          }
         })
         console.log(res.data);
-        if (res.data.paths.length > 0) {
-          let originToEnd = res.data.paths.map((item) => {
-            return {...item, img: imgHead + item.img}
-          });
-          this.$preload('originToEnd', originToEnd);
-          wx.navigateTo({
-            url: '/pages/pathInfo',
-          })
+        if (res.data.length > 0) {
+          if (skip === 0) {
+            this.originToEndList = res.data;
+          }
+          else{
+            this.originToEndList = [...this.originToEndList, ...res.data];
+          }
+          this.pathSkip += this.limit;
         }
+        this.$apply();
       }
       catch (e) {
         console.log(e);
-      }
-    }
-
-    methods = {
-      searchInput(e) {
-        let value = e.detail.value;
-        let data = {
-          name: value,
-          skip: this.originSkip,
-          limit: this.limit,
-        }
-        if (this.origin !== null) {
-          data.originId = this.origin.id
-        }
-        else {
-          data.buildingId = this.$parent.globalData.building.id
-        }
-        this.searchNode(data);
-      },
-
-      nodeCancel(e) {
-        let id = e.target.id;
-        console.log(e.target)
-        if (id === "1") {
-          this.origin = null;
-          this.end = null;
-        }
-        else {
-          this.end = null;
-
-        }
-      },
-
-      touchLow() {
-        let data = {
-          buildingId: this.$parent.globalData.building.id,
-          name: this.name,
-          skip: this.origin === null ? this.originSkip : this.endSkip,
-          limit: this.limit,
-        }
-        this.searchNode(data);
-      },
-    }
-
-    events = {
-      'tap-Node': (node, $event) => {
-        if (this.origin === null) {
-          this.origin = node;
-          let data = {
-            originId: node.id,
-            skip: this.endSkip,
-            limit: this.limit,
-          }
-          this.searchNode(data);
-        }
-        else {
-          if (this.origin.id !== node.id) {
-            this.end = node;
-          }
-          else {
-            wx.showToast({
-              title: '起点终点不能相同',
-              icon: 'none',
-            })
-          }
-        }
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
-        console.log("node", node);
-        //$event.$destroy();
       }
     }
   }

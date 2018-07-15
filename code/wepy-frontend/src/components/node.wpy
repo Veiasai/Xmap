@@ -55,7 +55,7 @@
   import wepy from 'wepy';
   import {imgHead} from '../properties/Const';
 
-  export default class Path extends wepy.component {
+  export default class Node extends wepy.component {
     props = {
       node:{
         type:Object,

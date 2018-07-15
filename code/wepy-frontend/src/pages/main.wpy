@@ -42,7 +42,7 @@
 
   export default class Main extends wepy.page {
     onLoad() {
-      this.paths = this.$parent.globalData.paths
+      this.search({skip: this.skip});
     }
 
     config = {

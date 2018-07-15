@@ -1,5 +1,5 @@
 <style>
-  .swiper {
+  .swiper{
     height: 95vh;
     width: 725 rpx;
   }
@@ -10,10 +10,16 @@
     <swiper indicator-dots class="swiper">
       <repeat for="{{originToEnd}}" item="item">
         <swiper-item>
-          <scroll-view scroll-y="true" class="modaldisplay">
-            <PathDisplay :pathArray.sync="item.contents"/>
-          </scroll-view>
-          <view @tap="like" id="{{index}}">收藏</view>
+          <view wx:if="{{item.contents !== undefined}}">
+            <view style="width:700rpx; height: 80vh">
+              <PathDisplay :pathArray.sync="item.contents"/>
+            </view>
+            <view @tap="like" id="{{index}}">收藏</view>
+          </view>
+          <view wx:else>
+            <view>{{item.name}}</view>
+            <image src="{{item.img}}"></image>
+          </view>
         </swiper-item>
       </repeat>
     </swiper>
@@ -55,14 +61,20 @@
     }
 
     onLoad(params, data) {
-      this.originToEnd = data.preload.originToEnd.map((path) => {
-        return {
-          ...path, contents: path.contents.map((item) => {
-            if (item.type === "img")
-              return {...item, message: imgHead + item.message};
-            else
-              return item;
-          })
+      console.log(data.preload.originToEnd);
+      this.originToEnd = data.preload.originToEnd.map((path, index) => {
+        if (index % 2 === 0)
+        {
+          return {...path, img: imgHead + path.img};
+        }else{
+          return {
+            ...path, contents: path.contents.map((item) => {
+              if (item.type === "img")
+                return {...item, message: imgHead + item.message};
+              else
+                return item;
+            })
+          }
         }
       });
     }
