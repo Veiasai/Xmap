@@ -138,7 +138,8 @@
 
     methods = {
       handleDelItem (itemData) {
-        console.log(itemData)
+        console.log(itemData);
+        this.cancelCollection(itemData);
       },
       select(e){
         console.log(e);
@@ -215,7 +216,6 @@
           let nodes = res.data.nodes.map((item) => {
             return {...item, img: imgHead + item.img}
           });
-
           if (skip === 0) {
             this.nodeList = nodes;
           }
@@ -242,6 +242,22 @@
         this.$apply();
       }
       catch (e) {
+        console.log(e);
+      }
+    }
+
+    async cancelCollection(item) {
+      try{
+        let res = await wepy.request({
+          url: httpHead + "/favorite" + "?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + item.id,
+          method: "DELETE",
+        })
+      }catch (e)
+      {
+        wx.showToast({
+          title: '删除失败，网络异常',
+          icon: 'none',
+        })
         console.log(e);
       }
     }

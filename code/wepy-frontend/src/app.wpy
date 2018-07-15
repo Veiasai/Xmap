@@ -20,15 +20,15 @@
         'pages/start',
         'pages/dataSetViewer',
         // 'pages/test',
+        'pages/pathUpload/pathUpload',
+        'pages/nodeUpload',
         'pages/main',
         'pages/pathInfo',
         'pages/uploadSelect',
         'pages/collection',
         'pages/nodeViewer',
         'pages/user',
-        'pages/pathUpload/pathUpload',
         'pages/pathUpload/nodeSelect',
-        'pages/nodeUpload',
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -38,29 +38,29 @@
       },
       tabBar:{
         "color": "#a9b7b7",
-        "selectedColor": "#1296db",
+        "selectedColor": "#9bc1df",
         "borderStyle":"white",
         "list": [{
-          "selectedIconPath": "./icons/mainselected.png",
-          "iconPath": "./icons/maindefault.png",
+          "selectedIconPath": "./icons/tabBar/mainselected.png",
+          "iconPath": "./icons/tabBar/maindefault.png",
           "pagePath": "pages/main",
           "text": "首页"
         },
           {
-            "selectedIconPath": "./icons/guideselected.png",
-            "iconPath": "./icons/guidedefault.png",
+            "selectedIconPath": "./icons/tabBar/guideselected.png",
+            "iconPath": "./icons/tabBar/guidedefault.png",
             "pagePath": "pages/nodeViewer",
             "text": "点位查找"
           },
           {
-            "selectedIconPath": "./icons/addselected.png",
-            "iconPath": "./icons/adddefault.png",
+            "selectedIconPath": "./icons/tabBar/addselected.png",
+            "iconPath": "./icons/tabBar/adddefault.png",
             "pagePath": "pages/uploadSelect",
             "text": "添加"
           },
           {
-            "selectedIconPath": "./icons/userselected.png",
-            "iconPath": "./icons/userdefault.png",
+            "selectedIconPath": "./icons/tabBar/userselected.png",
+            "iconPath": "./icons/tabBar/userdefault.png",
             "pagePath": "pages/user",
             "text": "用户"
           }
@@ -111,5 +111,6 @@
         console.log(e);
       }
     }
+
   }
 </script>

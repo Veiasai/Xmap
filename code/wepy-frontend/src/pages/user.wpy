@@ -324,5 +324,16 @@
         console.log(e);
       }
     }
+
+    async delNode() {
+      try{
+        let res = await wepy.request({
+          url: httpHead + "/"
+        })
+      }catch (e)
+      {
+        console.log(e);
+      }
+    }
   }
 </script>

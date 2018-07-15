@@ -14,12 +14,12 @@
             <view style="width:700rpx; height: 80vh">
               <PathDisplay :pathArray.sync="item.contents"/>
             </view>
-            <view @tap="like" id="{{index}}">收藏</view>
           </view>
           <view wx:else>
             <view>{{item.name}}</view>
             <image src="{{item.img}}"></image>
           </view>
+          <view @tap="like" id="{{index}}">收藏</view>
         </swiper-item>
       </repeat>
     </swiper>
@@ -47,10 +47,10 @@
         console.log(e.target)
         try{
           let index = e.target.id;
-          let path = this.originToEnd[index];
+          let item = this.originToEnd[index];
           let res = wepy.request({
-            url: httpHead + "/favorite?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + path.id,
-            method:"PUT"
+            url: httpHead + "/favorite?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + item.id,
+            method:"POST"
           })
           console.log(res);
         }catch (e)
