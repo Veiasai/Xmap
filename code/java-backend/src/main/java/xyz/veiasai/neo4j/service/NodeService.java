@@ -41,7 +41,6 @@ public class NodeService {
         return nodeRepository.findByBuildingId(building,skip,limit);
     }
 
-
     public Node update(Node node) {return nodeRepository.save(node);};
 
     @Transactional(readOnly = true)
