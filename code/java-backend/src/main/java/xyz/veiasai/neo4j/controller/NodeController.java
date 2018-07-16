@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.result.NodeResult;
+import xyz.veiasai.neo4j.result.Result;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingService;
 import xyz.veiasai.neo4j.service.NodeService;
@@ -133,5 +134,21 @@ public class NodeController {
         result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));
         return result;
 
+    }
+    @DeleteMapping("/node")
+    public Result nodeDeleteById(@RequestParam String authorId,@RequestParam String nodeId){
+        Result result = new Result();
+        if(authorService.getAuthorById(authorId)==null){
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        }
+        if(nodeService.findById(nodeId)==null){
+            result.setCode(404);
+            result.setMessage("点位不存在");
+        }
+        nodeService.deleteNodeById(authorId, nodeId);
+        result.setCode(200);
+        result.setMessage("删除点位成功");
+        return result;
     }
 }

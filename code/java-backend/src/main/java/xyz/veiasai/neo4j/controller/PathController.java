@@ -85,7 +85,7 @@ public class PathController {
     }
 
     @ApiOperation(value = "查询路线",notes="name设为空，则可查询所有")
-    @GetMapping("paths/name")
+    @GetMapping("/paths/name")
     public  PathResult pathGetByName(@RequestParam(required = false,defaultValue = "") String name,
                                             @RequestParam(required = false) Integer skip,
                                             @RequestParam(required = false) Integer limit){
@@ -97,6 +97,23 @@ public class PathController {
         }
         PathResult result =new PathResult();
         result.setPaths(pathService.findByName(name,skip,limit));
+        return result;
+    }
+
+    @DeleteMapping("/path")
+    public Result pathDeleteById(@RequestParam String authorId,@RequestParam String pathId){
+        Result result =new Result();
+        if(authorService.getAuthorById(authorId)==null){
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        }
+        if(pathService.findById(pathId)==null){
+            result.setCode(404);
+            result.setMessage("路线不存在");
+        }
+        pathService.deletePathById(authorId, pathId);
+        result.setCode(200);
+        result.setMessage("删除路线成功");
         return result;
     }
 }

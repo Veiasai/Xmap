@@ -37,6 +37,8 @@ public class PathService {
     }
 
     @Transactional(readOnly = true)
+    public Path findById(String pathId){ return pathRepository.findById(pathId).orElse(null);}
+    @Transactional(readOnly = true)
     public Collection<Path> findByOrigin(String id)
     {
         return pathRepository.findByOrigin(id);
@@ -62,5 +64,10 @@ public class PathService {
     public Collection<Path> findByAuthorId(String authorId, String name,Integer skip,Integer limit)
     {
         return pathRepository.findByAuthorId(authorId,name,skip,limit);
+    }
+
+    @Transactional(readOnly = true)
+    public void deletePathById(String authorId,String pathId){
+        pathRepository.deletePathById(authorId,pathId);
     }
 }
