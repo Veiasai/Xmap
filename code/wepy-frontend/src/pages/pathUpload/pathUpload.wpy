@@ -213,7 +213,9 @@
         try {
           let imgres = await wepy.chooseImage({
             count: 1, // 默认9
-            sizeType: ['compressed']}) // 可以指定是原图还是压缩图，默认二者都有}
+            sizeType: ['compressed'],  // 可以指定是原图还是压缩图，默认二者都有}
+            sourceType: ['camera','album ']
+        })
 
           console.log(imgres);
           let uploadres = await wepy.uploadFile({

@@ -182,7 +182,7 @@
     }
 
     config={
-      navigationBarTitleText: 'test'
+      navigationBarTitleText: 'User'
     }
 
     components = {

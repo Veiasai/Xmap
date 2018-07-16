@@ -111,7 +111,6 @@
       endSkip: 0,
       pathSkip: 0,
       limit: 5,
-      originToEnd: [],
       originToEndList: null,
     }
     components = {
@@ -147,6 +146,7 @@
         else {
           this.end = null;
         }
+        this.originToEndList = null;
       },
 
       touchLow() {
@@ -185,6 +185,7 @@
         else {
           if (this.origin.id !== node.id) {
             this.end = node;
+            this.pathSkip = 0;
             this.searchPath(this.pathSkip);
           }
           else {
