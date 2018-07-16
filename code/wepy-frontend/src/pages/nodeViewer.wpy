@@ -27,7 +27,7 @@
   .nodeSelectItem{
     width: 270rpx;
     height: 100rpx;
-    border-radius: 32rpx;
+    border-radius: 16rpx;
     font-size: 32rpx;
     font-weight: lighter;
     background-color: rgb(242,242,242);
@@ -37,22 +37,20 @@
     justify-content: center;
   }
 
-
-
   .cancel{
     width: 34rpx;
     height: 34rpx;
   }
-
-
-
+  
 </style>
 
 <template>
   <view>
+    <!--search input box-->
     <view style="height: 9vh">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
+    <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
       <view class="nodeSelectItem" style="margin-left: 90rpx" wx:if="{{origin !== null}}">
@@ -68,6 +66,7 @@
         </view>
       </view>
     </view>
+    <!--show the available node-->
     <view wx:if="{{originToEndList === null}}">
       <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
         <repeat  for="{{nodes}}" index="index" item="item">
