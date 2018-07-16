@@ -43,4 +43,7 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
                                            @Param("name") String name,
                                            @Param("skip")Integer skip,
                                            @Param("limit")Integer limit);
+
+    @Query("Match (p:Path {id:{pathId}})-[:AUTHOR]-(a:Author {id:{authorId}}) detach delete p")
+    public void deletePathById(@Param("authorId")String authorId,@Param("pathId")String pathId);
 }

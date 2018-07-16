@@ -68,4 +68,9 @@ public class NodeService {
     public Collection<Node> findByAuthorAndName(String authorId, String name,Integer skip,Integer limit) {
         return nodeRepository.findByAuthorId(authorId,name,skip,limit);
     }
+
+    @Transactional(readOnly = true)
+    public void deleteNodeById(String auhtorId,String nodeId){
+        nodeRepository.deleteNodeById(auhtorId,nodeId);
+    }
 }
