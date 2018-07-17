@@ -51,4 +51,5 @@ public interface NodeRepository extends Neo4jRepository<Node, String> {
 
     @Query("Match (n:Node {id:{nodeId}})-[:AUTHOR]-(a:Author {id:{authorId}}) detach delete n")
     public void deleteNodeById(@Param("authorId")String authorId,@Param("nodeId")String nodeId);
+
 }
