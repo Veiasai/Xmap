@@ -77,21 +77,7 @@ public class NodeController {
         }
         return result;
     }
-    @GetMapping("/nodes/author")
-    public NodeResult nodeGetByAuthor(@RequestParam String authorId,
-                                      @RequestParam(required = false,defaultValue = "")String name,
-                                      @RequestParam(required = false) Integer skip,
-                                      @RequestParam(required = false)Integer limit) {
-        if(skip == null){
-            skip = 0;
-        }
-        if(limit == null){
-            limit = 5;
-        }
-        NodeResult result =new NodeResult();
-        result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
-        return result;
-    }
+
     @GetMapping("/nodes/twonodes/v2")
     public Set<Map<String, Object>> pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
                                                       @RequestParam(required = false) Integer skip,

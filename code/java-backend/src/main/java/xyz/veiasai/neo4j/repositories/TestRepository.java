@@ -27,4 +27,7 @@ public interface TestRepository extends Neo4jRepository<PATH, Long> {
             this.n = n;
         }
     }
+
+    @Query("Match (n) detach delete n")
+    public Set<Map<String, Object>> clean();
 }
