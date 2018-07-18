@@ -22,7 +22,6 @@
     align-items: center;
     flex-direction: row;
   }
-
   .nodeSelectItem{
     width: 320rpx;
     height: 100rpx;
