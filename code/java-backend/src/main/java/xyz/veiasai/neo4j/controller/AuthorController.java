@@ -21,12 +21,6 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
-    @ApiOperation(value = "保存点位制作者" )
-    @PostMapping("/author")
-    public Author postAuthor(@RequestBody @Valid Author author, BindingResult bindingResult)
-    {
-        return authorService.addAuthor(author);
-    }
     @ApiOperation(value = "收藏",notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等;\r\n404:不存在;\r\n200:删除成功")
     @PostMapping("/favorite")
     public Result postFavorite(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
@@ -41,8 +35,8 @@ public class AuthorController {
         result.setMessage("收藏成功");
         result.setCode(200);
         return result;
-
     }
+
     @ApiOperation(value = "取消收藏",notes = "通过favoriteId取消收藏（点位，路线，用户，建筑,数据组等;\r\n404:不存在;\r\n200:删除成功")
     @DeleteMapping("/favorite")
     public Result cancelFavorite(@RequestParam @ApiParam(name = "authorId",value = "用户的Id") String authorId,
@@ -57,15 +51,24 @@ public class AuthorController {
         result.setMessage("取消收藏成功");
         result.setCode(200);
         return result;
-
     }
+
     @ApiOperation(value = "判断用户是否收藏",notes = "如果authorId和favoriteId无效也会返回false")
     @GetMapping("/favorexist")
-    public boolean favorIsexist(String authorId,String favoriteId){
-        if(authorService.getAuthorById(authorId)==null || authorService.FavoriteIsExistInDb(favoriteId)==false) {
-            return false;
+    public Result favorIsexist(String authorId,String favoriteId){
+        Result result =new Result();
+        if(authorService.getAuthorById(authorId)==null || !authorService.FavoriteIsExistInDb(favoriteId)) {
+            result.setCode(400);
+            return result;
         }
-        return authorService.FavoriteIsExistInAuthor(authorId, favoriteId);
+        if (authorService.FavoriteIsExistInAuthor(authorId, favoriteId)){
+            result.setMessage("1");
+        }
+        else{
+            result.setMessage("0");
+        }
+        result.setCode(200);
+        return result;
     }
 
     @ApiOperation(value="查询收藏中所有",notes="通过名字模糊查询所有收藏相关")
@@ -81,8 +84,7 @@ public class AuthorController {
         if(limit == null){
             limit = 5;
         }
-        FavoriteResult result = authorService.findFavoriteByNameLike(authorId,favoriteName,skip,limit);
-        return result;
+        return authorService.findFavoriteByNameLike(authorId,favoriteName,skip,limit);
     }
 
     @ApiOperation(value="查询收藏中点位",notes="通过名字模糊查询收藏里的点位")
@@ -98,8 +100,7 @@ public class AuthorController {
             limit = 5;
         }
 
-        NodeResult result = authorService.findfavorNodeByNameLike(authorId,nodeName,skip,limit);
-        return result;
+        return authorService.findfavorNodeByNameLike(authorId,nodeName,skip,limit);
     }
 
     @ApiOperation(value="查询收藏中路线",notes="通过名字模糊查询收藏里的路线")
@@ -112,9 +113,7 @@ public class AuthorController {
         if(skip == null){
             skip = 0;
         }
-        if(limit == null){
-            limit = 100;
-        }
+        if(limit == null) limit = 100;
         PathResult result = authorService.findfavorPathByNameLike(authorId,pathName,skip,limit);
         return result;
     }
@@ -132,8 +131,18 @@ public class AuthorController {
             limit = 5;
         }
 
-        DataSetResult result = authorService.findfavorDataSetByNameLike(authorId,dataSetName,skip,limit);
-        return result;
+        return authorService.findfavorDataSetByNameLike(authorId,dataSetName,skip,limit);
     }
+
+    /* 废弃接口
+    @ApiOperation(value = "保存点位制作者" )
+    @PostMapping("/author")
+    public Author postAuthor(@RequestBody @Valid Author author, BindingResult bindingResult)
+    {
+        return authorService.addAuthor(author);
+    }
+
+
+     */
 
 }

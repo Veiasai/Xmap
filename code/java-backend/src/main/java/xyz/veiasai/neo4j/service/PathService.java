@@ -38,11 +38,8 @@ public class PathService {
 
     @Transactional(readOnly = true)
     public Path findById(String pathId){ return pathRepository.findById(pathId).orElse(null);}
-    @Transactional(readOnly = true)
-    public Collection<Path> findByOrigin(String id)
-    {
-        return pathRepository.findByOrigin(id);
-    }
+
+
 
     @Transactional(readOnly = true)
     public Collection<Path> findByBuildingAndName(String buildingId, String name,Integer skip,Integer limit)
@@ -56,8 +53,8 @@ public class PathService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByOriginAndEnd(String originId, String endId) {
-        return pathRepository.findByOriginAndEnd(originId, endId);
+    public void deletePathById(String authorId,String pathId){
+        pathRepository.deletePathById(authorId,pathId);
     }
 
     @Transactional(readOnly = true)
@@ -66,8 +63,17 @@ public class PathService {
         return pathRepository.findByAuthorId(authorId,name,skip,limit);
     }
 
+    /* 废弃接口
     @Transactional(readOnly = true)
-    public void deletePathById(String authorId,String pathId){
-        pathRepository.deletePathById(authorId,pathId);
+    public Collection<Path> findByOriginAndEnd(String originId, String endId) {
+        return pathRepository.findByOriginAndEnd(originId, endId);
     }
+
+    @Transactional(readOnly = true)
+    public Collection<Path> findByOrigin(String id)
+    {
+        return pathRepository.findByOrigin(id);
+    }
+    */
+
 }

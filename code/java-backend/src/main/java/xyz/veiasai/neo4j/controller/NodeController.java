@@ -71,10 +71,6 @@ public class NodeController {
             result.setNodes(nodeService.findByOriginNode(originId, name,skip,limit));
             return result;
         }
-        if (buildingId != null){
-            result.setNodes(nodeService.findByBuilding(buildingId,skip,limit));
-            return result;
-        }
         return result;
     }
 
@@ -88,22 +84,29 @@ public class NodeController {
         if(limit == null){
             limit = 5;
         }
-        Set<Map<String, Object>> result = nodeService.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
+        return nodeService.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
+    }
+
+    @DeleteMapping("/node")
+    public Result nodeDeleteById(@RequestParam String authorId,@RequestParam String nodeId){
+        Result result = new Result();
+        if(authorService.getAuthorById(authorId)==null){
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        }
+        else if(nodeService.findById(nodeId)==null){
+            result.setCode(404);
+            result.setMessage("点位不存在");
+        }
+        else {
+            nodeService.deleteNodeById(authorId, nodeId);
+            result.setCode(200);
+            result.setMessage("删除点位成功");
+        }
         return result;
     }
-    @GetMapping("/nodes/twonodes/v1")
-    public Set<Map<String, Object>> ShorestpathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
-                                                             @RequestParam(required = false) Integer skip,
-                                                             @RequestParam(required = false)Integer limit){
-        if(skip == null){
-            skip = 0;
-        }
-        if(limit == null){
-            limit = 5;
-        }
-        Set<Map<String, Object>> result = nodeService.findByTwoNodeId(nId1,nId2,skip,limit);
-        return result;
-    }
+
+    /* 废弃接口
     @GetMapping("/nodes/building")
     public NodeResult nodeGetByBuilding(@RequestParam String buildingId,
                                         @RequestParam(required = false,defaultValue = "") String name,
@@ -121,20 +124,20 @@ public class NodeController {
         return result;
 
     }
-    @DeleteMapping("/node")
-    public Result nodeDeleteById(@RequestParam String authorId,@RequestParam String nodeId){
-        Result result = new Result();
-        if(authorService.getAuthorById(authorId)==null){
-            result.setCode(404);
-            result.setMessage("用户不存在");
+
+    @GetMapping("/nodes/twonodes/v1")
+    public Set<Map<String, Object>> ShorestpathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
+                                                             @RequestParam(required = false) Integer skip,
+                                                             @RequestParam(required = false)Integer limit){
+        if(skip == null){
+            skip = 0;
         }
-        if(nodeService.findById(nodeId)==null){
-            result.setCode(404);
-            result.setMessage("点位不存在");
+        if(limit == null){
+            limit = 5;
         }
-        nodeService.deleteNodeById(authorId, nodeId);
-        result.setCode(200);
-        result.setMessage("删除点位成功");
+        Set<Map<String, Object>> result = nodeService.findByTwoNodeId(nId1,nId2,skip,limit);
         return result;
     }
+    */
+
 }

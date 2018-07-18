@@ -1,0 +1,43 @@
+workspace:
+  base: /Xmap
+  path: src/github.com/Veiasai/Xmap
+
+pipeline:
+  backend:
+    image: maven:3.5.3-jdk-9
+    volumes:
+      - /home/administrator/mavenhub/:/root/.m2
+    commands:
+      - mvn clean package
+      - mv ./target/Xmap-1.0.0.war ./target/Xmap.war
+    when:
+        branch: [ master, dev ]
+
+  docker:
+    image: plugins/docker
+    repo: veiasai/server
+    tags: latest
+    secrets: [ docker_username, docker_password ]
+    when:
+        branch: [ master, dev]
+
+  ssh:
+    image: appleboy/drone-ssh
+    host: 192.168.0.233
+    username: administrator
+    port: 22
+    secrets: [ ssh_password ]
+    script:
+      - docker stop myserver
+      - docker rm myserver
+      - docker run --name myserver -p 8086:8080 -d veiasai/server:latest
+    when:
+        branch: [ master, dev]
+
+  notify:
+    image: drillster/drone-email
+    secrets: [EMAIL_HOST, EMAIL_PORT, EMAIL_USERNAME, EMAIL_PASSWORD]
+    from: 3395176096@qq.com
+    recipients: [ 3395176096@qq.com ]
+
+services:

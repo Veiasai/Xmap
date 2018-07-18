@@ -14,8 +14,6 @@ import java.util.*;
 public class NodeService {
     @Autowired
     private NodeRepository nodeRepository;
-    @Autowired
-    private TestRepository testRepository;
 
     public Node addNode(Node node)
     {
@@ -35,19 +33,6 @@ public class NodeService {
         return nodeRepository.findById(id).orElse(null);
     }
 
-    @Transactional(readOnly = true)
-    public Collection<Node> findByBuilding(String building,Integer skip,Integer limit)
-    {
-        return nodeRepository.findByBuildingId(building,skip,limit);
-    }
-
-    public Node update(Node node) {return nodeRepository.save(node);};
-
-    @Transactional(readOnly = true)
-    public Set<Map<String, Object>> findByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit)
-    {
-        return nodeRepository.findByTwoNodeId(nId1, nId2, skip,limit);
-    }
     @Transactional(readOnly = true)
     public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2,Integer skip,Integer limit){
         return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
@@ -72,4 +57,21 @@ public class NodeService {
     public void deleteNodeById(String auhtorId,String nodeId){
         nodeRepository.deleteNodeById(auhtorId,nodeId);
     }
+
+    /*废弃接口
+
+    @Transactional(readOnly = true)
+    public Collection<Node> findByBuilding(String building,Integer skip,Integer limit)
+    {
+        return nodeRepository.findByBuildingId(building,skip,limit);
+    }
+
+    public Node update(Node node) {return nodeRepository.save(node);};
+
+    @Transactional(readOnly = true)
+    public Set<Map<String, Object>> findByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit)
+    {
+        return nodeRepository.findByTwoNodeId(nId1, nId2, skip,limit);
+    }
+     */
 }

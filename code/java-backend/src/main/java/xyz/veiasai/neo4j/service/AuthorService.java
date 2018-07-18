@@ -48,6 +48,7 @@ public class AuthorService {
         }
         return false;
     }
+
     @Transactional
     public boolean FavoriteIsExistInAuthor(String authorId,String favoriteId){
         if(authorRepository.findFavoriteById(authorId,favoriteId)!=0){

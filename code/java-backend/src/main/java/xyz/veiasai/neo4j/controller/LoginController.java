@@ -20,15 +20,20 @@ public class LoginController {
     @Autowired
     private AuthorService authorService;
     @GetMapping("/login")
-    public String Login(@RequestParam String code)
+    public JSONObject Login(@RequestParam String code)
     {
         RestTemplate template = new RestTemplate();
         String authorJson =template.getForObject(head + code, String.class);
         JSONObject jsonObject = JSONObject.fromObject(authorJson);
-        String authorId = jsonObject.getString("openid");
-        Author author = new Author();
-        author.setId(authorId);
-        authorService.addAuthor(author);
-        return authorJson;
+        try {
+            String authorId = jsonObject.getString("openid");
+            Author author = new Author();
+            author.setId(authorId);
+            authorService.addAuthor(author);
+        }catch (Exception e)
+        {
+            return jsonObject;
+        }
+        return jsonObject;
     }
 }
