@@ -6,7 +6,11 @@ import org.springframework.data.repository.query.Param;
 import xyz.veiasai.neo4j.domain.Message;
 
 public interface MessageRepository extends Neo4jRepository<Message,String> {
-    @Query("Match (m:Message {id:{messageId}})-[:BUILDINGADMIN]-(a:Author {id:{authorId}})" +
+    @Query("Match (m:Message {id:{messageId}})-[:AUTHOR]-(a:Author {id:{authorId}})" +
             "detach delete m")
     public void deleteMessage(@Param("authorId")String authorId,@Param("messageId")String messageId);
+
+    @Query("Match (m:Message {id:{messageId}})-[r:AUTHOR]-(a:Author {id:{authorId}})" +
+            "return count(r)")
+    public int countMessageAndAuthor(@Param("authorId") String authorId,@Param("messageId") String messageId);
 }

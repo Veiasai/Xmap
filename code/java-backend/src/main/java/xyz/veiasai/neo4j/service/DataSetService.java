@@ -28,8 +28,13 @@ public class DataSetService {
     }
 
     @Transactional
-    public DataSet getDataSet(String dataSetId){
+    public DataSet getDataSetById(String dataSetId){
         return dataSetRepository.getDataSetById(dataSetId);
+    }
+
+    @Transactional
+    public Collection<DataSet> getDataSetByName(String dataSetName,Integer skip,Integer limit){
+        return dataSetRepository.getDataSetByName(dataSetName, skip, limit);
     }
     @Transactional
     public void deleteDataSet(String dataSetId){

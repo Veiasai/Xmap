@@ -40,7 +40,7 @@ public class DataSetController {
     @DeleteMapping("/dataset")
     public Result deleteDataSet(@RequestParam String dataSetId){
         Result result = new Result();
-        if(dataSetService.getDataSet(dataSetId)==null){
+        if(dataSetService.getDataSetById(dataSetId)==null){
             result.setMessage("数据组不存在");
             result.setCode(404);
             return result;
@@ -55,34 +55,34 @@ public class DataSetController {
     public DataSetResult getDataSets(@RequestParam(required = false) String buildingId,
                                      @RequestParam(required = false) String authorId,
                                      @RequestParam(required = false,defaultValue = "") String dataSetName,
-                                     @RequestParam(required = false) Integer skip,
-                                     @RequestParam(required = false) Integer limit){
-        if(skip == null){
-            skip = 0;
-        }
-        if(limit == null){
-            limit = 5;
-        }
+                                     @RequestParam(required = false,defaultValue = "0")Integer skip,
+                                     @RequestParam(required = false,defaultValue = "5")Integer limit){
+
         DataSetResult result =new DataSetResult();
         if(buildingId != null && authorId !=null){
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndAuthor(buildingId,authorId,skip,limit));
         }
-        if(buildingId != null) {
+        else if(buildingId != null) {
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndName(buildingId, dataSetName, skip, limit));
-            return result;
         }
-        if(authorId != null ){
+        else if(authorId != null ){
             result.setCode(200);
             result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByAuthorAndName(authorId,dataSetName,skip,limit));
-            return result;
         }
-        result.setCode(404);
-        result.setMessage("找不到数据组");
+        else if(!dataSetName.equals("")){
+            result.setCode(200);
+            result.setMessage("查询成功");
+            result.setDataSets(dataSetService.getDataSetByName(dataSetName, skip, limit));
+        }
+        else{
+            result.setCode(404);
+            result.setMessage("找不到数据组");
+        }
         return result;
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线;" +
@@ -90,22 +90,16 @@ public class DataSetController {
             "skip 0 limit 100;\r\n404:不存在;\r\n200:删除成功")
     @GetMapping("/dataset/some")
     public Result searchNodeOrPath(@RequestParam String dataSetId,
-                             @RequestParam(required = false,defaultValue = "") @ApiParam(name="Name",value="查找所需的点位/名称")String Name,
-                             @RequestParam(required = false)Integer skip,
-                             @RequestParam(required = false)Integer limit){
+                                   @RequestParam(required = false,defaultValue = "") @ApiParam(name="Name",value="查找所需的点位/名称")String Name,
+                                   @RequestParam(required = false,defaultValue = "0")Integer skip,
+                                   @RequestParam(required = false,defaultValue = "5")Integer limit){
 
-        DataSet dataSet = dataSetService.getDataSet(dataSetId);
+        DataSet dataSet = dataSetService.getDataSetById(dataSetId);
         if(dataSet==null){
             Result result = new Result();
             result.setMessage("数据组不存在");
             result.setCode(404);
             return result;
-        }
-        if(skip == null){
-            skip = 0;
-        }
-        if(limit == null){
-            limit = 5;
         }
         if(dataSet.getType().equals("node")){
             NodeResult result = new NodeResult();
@@ -151,7 +145,7 @@ public class DataSetController {
     @PostMapping("/dataset/add")
     public Result addNodes(@RequestParam String dataSetId,@RequestBody @ApiParam(name="NodeIds",value="增加所需的点位/路线id List")List<String>NodeIds){
         Result result =new Result();
-        DataSet dataSet = dataSetService.getDataSet(dataSetId);
+        DataSet dataSet = dataSetService.getDataSetById(dataSetId);
         if(dataSet==null){
             result.setMessage("数据组不存在");
             result.setCode(404);
@@ -176,7 +170,7 @@ public class DataSetController {
     @PutMapping("/dataset")
     public Result deleteNodes(@RequestParam String dataSetId,@RequestBody @ApiParam(name="NodeIds",value="删除所需的点位id List") List<String>Ids){
         Result result =new Result();
-        DataSet dataSet = dataSetService.getDataSet(dataSetId);
+        DataSet dataSet = dataSetService.getDataSetById(dataSetId);
         if(dataSet==null){
             result.setMessage("数据组不存在");
             result.setCode(404);

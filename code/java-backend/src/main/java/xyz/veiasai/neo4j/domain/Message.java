@@ -17,7 +17,8 @@ public class Message {
     @ApiModelProperty(hidden = true)
     private  String id;
 
-    private Integer timestamp;
+    private String title;
+
 
     private String Date;
 
@@ -41,12 +42,12 @@ public class Message {
         this.id = id;
     }
 
-    public Integer getTimestamp() {
-        return timestamp;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTimestamp(Integer timestamp) {
-        this.timestamp = timestamp;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDate() {

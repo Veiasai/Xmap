@@ -45,7 +45,7 @@ public interface NodeRepository extends Neo4jRepository<Node, String> {
             "RETURN r ORDER BY r.name SKIP {skip} LIMIT {limit}")
     public Collection<Node> findByAuthorId(@Param("authorId") String authorId, @Param("name") String name, @Param("skip")Integer skip,
                                            @Param("limit")Integer limit);
-    @Query("Match (n:Node)-[:AUTHOR]-(a:Author{id:{authorId}}, (n:Node)-[:BUILDING]-(b:Building{id:{buildingId}}" +
+    @Query("Match (n:Node)-[:AUTHOR]-(a:Author{id:{authorId}}), (n:Node)-[:BUILDING]-(b:Building{id:{buildingId}})" +
             "RETURN n ORDER BY n.name SKIP {skip} LIMIT{limit}")
     public Collection<Node> findByAuthorAndBuilding(@Param("authorId")String authorId,@Param("buildingId")String buildingId,@Param("skip")Integer skip,@Param("limit")Integer limit);
 

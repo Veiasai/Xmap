@@ -15,6 +15,10 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     @Query("Match (d:DataSet{id:{dataSetId}}) return d")
     public DataSet getDataSetById(@Param("dataSetId") String dataSetId);
 
+    @Query("Match (d:DataSet) where d.name =~ ('.*'+Name+'.*') return d " +
+            "order by d.name SKIP{skip} LIMIT{limit} ")
+    public Collection<DataSet> getDataSetByName(@Param("Name")String Name,@Param("skip")Integer skip,
+                                                @Param("limit")Integer limit);
     @Query("match (building:Building {id:{buildingId}}),(author:Author {id:{authorId}}),(dataset:DataSet {id:{dataSetId}}) " +
             "merge (author)-[:AUTHOR]->(dataset)<-[:BUILDING]-(building)"
     )
