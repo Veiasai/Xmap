@@ -35,44 +35,42 @@ public class PathController {
 
     @PostMapping("/path")
     public PathResult pathPost(@RequestBody Path path, @RequestParam String buildingId, @RequestParam String author,
-                         @RequestParam(required = false) String origin, @RequestParam(required = false) String end) throws Exception {
+                               @RequestParam(required = false) String origin, @RequestParam(required = false) String end) throws Exception {
         path = pathService.addPath(path);
         String id = path.getId();
         pathService.addRelation(id, buildingId, author, origin, end);
-        PathResult result =new PathResult();
+        PathResult result = new PathResult();
         result.setPath(path);
         return result;
     }
 
     @GetMapping("/paths")
     public PathResult pathGet(@RequestParam String buildingId,
-                                    @RequestParam(required = false,defaultValue = "") String name,
-                                    @RequestParam(required = false) Integer skip,
-                                    @RequestParam(required = false)Integer limit) {
-        if(skip == null){
-            skip = 0;
+                              @RequestParam(required = false, defaultValue = "") String name,
+                              @RequestParam(required = false, defaultValue = "0") Integer skip,
+                              @RequestParam(required = false, defaultValue = "5") Integer limit) {
+        PathResult result = new PathResult();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(404);
+            result.setMessage("建筑不存在");
+        } else {
+            result.setCode(200);    //对查询结果做判断，是否为空 to be continued
+            result.setPaths(pathService.findByBuildingAndName(buildingId, name, skip, limit));
         }
-        if(limit == null){
-            limit = 5;
-        }
-        PathResult result =new PathResult();
-        result.setPaths(pathService.findByBuildingAndName(buildingId, name,skip,limit));
         return result;
     }
 
 
     @DeleteMapping("/path")
-    public Result pathDeleteById(@RequestParam String authorId,@RequestParam String pathId){
-        Result result =new Result();
-        if(authorService.getAuthorById(authorId)==null){
+    public Result pathDeleteById(@RequestParam String authorId, @RequestParam String pathId) {
+        Result result = new Result();
+        if (authorService.getAuthorById(authorId) == null) {
             result.setCode(404);
             result.setMessage("用户不存在");
-        }
-        else if(pathService.findById(pathId)==null){
+        } else if (pathService.findById(pathId) == null) {
             result.setCode(404);
             result.setMessage("路线不存在");
-        }
-        else {
+        } else {
             pathService.deletePathById(authorId, pathId);
             result.setCode(200);
             result.setMessage("删除路线成功");
@@ -82,17 +80,18 @@ public class PathController {
 
     @GetMapping("/paths/author")
     public PathResult pathGetByAuthor(@RequestParam String authorId,
-                                      @RequestParam(required = false,defaultValue = "") String name,
-                                      @RequestParam(required = false) Integer skip,
-                                      @RequestParam(required = false)Integer limit) {
-        if(skip == null){
-            skip = 0;
+                                      @RequestParam(required = false, defaultValue = "") String name,
+                                      @RequestParam(required = false, defaultValue = "0") Integer skip,
+                                      @RequestParam(required = false, defaultValue = "5") Integer limit) {
+
+        PathResult result = new PathResult();
+        if (authorService.getAuthorById(authorId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else {
+            result.setCode(200);        //对查询结果做判断，是否为空 to be continued
+            result.setPaths(pathService.findByAuthorId(authorId, name, skip, limit));
         }
-        if(limit == null){
-            limit = 5;
-        }
-        PathResult result =new PathResult();
-        result.setPaths(pathService.findByAuthorId(authorId, name,skip,limit));
         return result;
     }
 

@@ -27,30 +27,35 @@ public class BuildingAdminService {
     private BuildingAdminRepository buildingAdminRepository;
 
     @Transactional(readOnly = true)
-    public void addBuildingAdmin(String buildingId, String authorId){
-        buildingAdminRepository.addBuildingAdmin(buildingId, authorId);
+    public void addBuildingAdmin(String buildingId, String authorId) {
+        buildingAdminRepository.applyBuildingAdmin(buildingId, authorId);
     }
+
     @Transactional(readOnly = true)
-    public void deleteBuildingAdmin(String buildingId,String authorId){
+    public void deleteBuildingAdmin(String buildingId, String authorId) {
         buildingAdminRepository.deleteBuildingAdmin(buildingId, authorId);
     }
 
+    @Transactional(readOnly = true)
+    public void refuseBuildingAdmin(String buildingId, String authorId){
+
+    }
 
     @Transactional(readOnly = true)
-    public boolean existBuildingAdmin(String buildingId,String authorId){
-        if(buildingAdminRepository.countBuildingAdmin(buildingId, authorId)!=0){
-            return true;    //buildlingId和authorId都有效且相连的时候 才为true
+    public boolean existValidBuildingAdmin(String buildingId, String authorId) {
+        if (buildingAdminRepository.countValidBuildingAdmin(buildingId, authorId) != 0) {
+            return true;    //buildlingId和authorId都有效且相连state=1的时候 才为true
         }
         return false;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Building> findBuildingByAdmin(String authorId){   //authorId是否有效可放到controller层
+    public Collection<Building> findBuildingByAdmin(String authorId) {   //authorId是否有效可放到controller层
         return buildingAdminRepository.findBuildingByAdmin(authorId);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Author> findAdminByBuildingId(String buildingId){
+    public Collection<Author> findAdminByBuildingId(String buildingId) {
         return buildingAdminRepository.findAdminByBuildingId(buildingId);
     }
 

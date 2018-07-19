@@ -18,105 +18,121 @@ public class DataSetService {
     @Autowired
     private DataSetRepository dataSetRepository;
 
-    @Transactional
-    public DataSet addDataSet(DataSet dataSet,String buildingId,String authorId){
+    @Transactional(readOnly = true)
+    public DataSet addDataSet(DataSet dataSet, String buildingId, String authorId) {
         dataSet.setId(null);
         dataSet = dataSetRepository.save(dataSet);
         String dataSetId = dataSet.getId();
-        dataSetRepository.addRelationAuthorAndBuilding(dataSetId,buildingId,authorId);
+        dataSetRepository.addRelationAuthorAndBuilding(dataSetId, buildingId, authorId);
         return dataSet;
     }
 
-    @Transactional
-    public DataSet getDataSetById(String dataSetId){
+    @Transactional(readOnly = true)
+    public DataSet getDataSetById(String dataSetId) {
         return dataSetRepository.getDataSetById(dataSetId);
     }
 
-    @Transactional
-    public Collection<DataSet> getDataSetByName(String dataSetName,Integer skip,Integer limit){
+    @Transactional(readOnly = true)
+    public Collection<DataSet> getDataSetByName(String dataSetName, Integer skip, Integer limit) {
         return dataSetRepository.getDataSetByName(dataSetName, skip, limit);
     }
-    @Transactional
-    public void deleteDataSet(String dataSetId){
+
+    @Transactional(readOnly = true)
+    public void deleteDataSet(String dataSetId) {
         dataSetRepository.deleteDataSetById(dataSetId);
     }
-    @Transactional
-    public void addRelationNodes(String dataSetId, List<String>NodeIds){
+
+    @Transactional(readOnly = true)
+    public void addRelationNodes(String dataSetId, List<String> NodeIds) {
         Iterator it = NodeIds.iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             String nodeId = it.next().toString();
-            addRelationNode(dataSetId,nodeId);
+            addRelationNode(dataSetId, nodeId);
         }
 
     }
-    @Transactional
-    public void addRelationNode(String dataSetId, String nodeId){
-        dataSetRepository.addRelationNodeAndDataSet(dataSetId,nodeId);
+
+    @Transactional(readOnly = true)
+    public void addRelationNode(String dataSetId, String nodeId) {
+        dataSetRepository.addRelationNodeAndDataSet(dataSetId, nodeId);
     }
-    @Transactional
-    public void deleteRelationNode(String dataSetId,String nodeId){
-        dataSetRepository.deleteRelationNodeAndDataSet(dataSetId,nodeId);
+
+    @Transactional(readOnly = true)
+    public void deleteRelationNode(String dataSetId, String nodeId) {
+        dataSetRepository.deleteRelationNodeAndDataSet(dataSetId, nodeId);
     }
-    @Transactional
-    public void deleteRelationNodes(String dataSetId,List<String>NodeIds){
+
+    @Transactional(readOnly = true)
+    public void deleteRelationNodes(String dataSetId, List<String> NodeIds) {
         Iterator it = NodeIds.iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             String nodeId = it.next().toString();
-            deleteRelationNode(dataSetId,nodeId);
+            deleteRelationNode(dataSetId, nodeId);
         }
     }
-    @Transactional
-    public Collection<Node> searchNodesByNameLike(String dataSetId,String nodeName,Integer skip,Integer limit){
-        return dataSetRepository.SearchNodesByNameLike(dataSetId,nodeName,skip,limit);
+
+    @Transactional(readOnly = true)
+    public Collection<Node> searchNodesByNameLike(String dataSetId, String nodeName, Integer skip, Integer limit) {
+        return dataSetRepository.SearchNodesByNameLike(dataSetId, nodeName, skip, limit);
     }
-    @Transactional
-    public Collection<Node> searchAllNodes(String dataSetId){
+
+    @Transactional(readOnly = true)
+    public Collection<Node> searchAllNodes(String dataSetId) {
         return dataSetRepository.SearchAllNodes(dataSetId);
     }
-    @Transactional
-    public void deleteRelationPath(String dataSetId,String pathId){
-        dataSetRepository.deleteRelationPathAndDataSet(dataSetId,pathId);
+
+    @Transactional(readOnly = true)
+    public void deleteRelationPath(String dataSetId, String pathId) {
+        dataSetRepository.deleteRelationPathAndDataSet(dataSetId, pathId);
     }
-    @Transactional
-    public void addRelationPaths(String dataSetId, List<String>PathIds){
+
+    @Transactional(readOnly = true)
+    public void addRelationPaths(String dataSetId, List<String> PathIds) {
         Iterator it = PathIds.iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             String pathId = it.next().toString();
-            addRelationPath(dataSetId,pathId);
+            addRelationPath(dataSetId, pathId);
         }
 
     }
-    @Transactional
-    public void addRelationPath(String dataSetId, String pathId){
-        dataSetRepository.addRelationPathAndDataSet(dataSetId,pathId);
+
+    @Transactional(readOnly = true)
+    public void addRelationPath(String dataSetId, String pathId) {
+        dataSetRepository.addRelationPathAndDataSet(dataSetId, pathId);
     }
-    @Transactional
-    public void deleteRelationPaths(String dataSetId,List<String>PathIds){
+
+    @Transactional(readOnly = true)
+    public void deleteRelationPaths(String dataSetId, List<String> PathIds) {
         Iterator it = PathIds.iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             String pathId = it.next().toString();
-            deleteRelationPath(dataSetId,pathId);
+            deleteRelationPath(dataSetId, pathId);
         }
     }
-    @Transactional
-    public Collection<Path> searchPathByNameLike(String dataSetId,String pathName,Integer skip,Integer limit){
-        return dataSetRepository.SearchPathsByNameLike(dataSetId,pathName,skip,limit);
+
+    @Transactional(readOnly = true)
+    public Collection<Path> searchPathByNameLike(String dataSetId, String pathName, Integer skip, Integer limit) {
+        return dataSetRepository.SearchPathsByNameLike(dataSetId, pathName, skip, limit);
     }
-    @Transactional
-    public Collection<Path> searchAllPaths(String dataSetId){
+
+    @Transactional(readOnly = true)
+    public Collection<Path> searchAllPaths(String dataSetId) {
         return dataSetRepository.SearchAllPaths(dataSetId);
     }
-    @Transactional
-    public Collection<DataSet> findDataSetByBuildingAndName(String buildingId,String dataSetName,Integer skip,Integer limit){
-        return dataSetRepository.findByBuildingAndName(buildingId,dataSetName,skip,limit);
+
+    @Transactional(readOnly = true)
+    public Collection<DataSet> findDataSetByBuildingAndName(String buildingId, String dataSetName, Integer skip, Integer limit) {
+        return dataSetRepository.findByBuildingAndName(buildingId, dataSetName, skip, limit);
     }
-    @Transactional
-    public Collection<DataSet> findDataSetByBuildingAndAuthor(String buildingId,String authorId,Integer skip,Integer limit){
-        return dataSetRepository.findByBuildingAndAuthor(buildingId,authorId,skip,limit);
+
+    @Transactional(readOnly = true)
+    public Collection<DataSet> findDataSetByBuildingAndAuthor(String buildingId, String authorId, Integer skip, Integer limit) {
+        return dataSetRepository.findByBuildingAndAuthor(buildingId, authorId, skip, limit);
     }
-    @Transactional
-    public Collection<DataSet> findDataSetByAuthorAndName(String authorId,String dataSetName,Integer skip,Integer limit){
-        return dataSetRepository.findByAuthorAndName(authorId,dataSetName,skip,limit);
+
+    @Transactional(readOnly = true)
+    public Collection<DataSet> findDataSetByAuthorAndName(String authorId, String dataSetName, Integer skip, Integer limit) {
+        return dataSetRepository.findByAuthorAndName(authorId, dataSetName, skip, limit);
     }
 
 }

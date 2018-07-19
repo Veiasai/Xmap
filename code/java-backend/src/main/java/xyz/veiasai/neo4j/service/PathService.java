@@ -24,44 +24,41 @@ public class PathService {
     private AuthorRepository authorRepository;
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByName(String name,Integer skip,Integer limit)
-    {
-        return  pathRepository.findByNameLike(name,skip,limit);
+    public Collection<Path> findByName(String name, Integer skip, Integer limit) {
+        return pathRepository.findByNameLike(name, skip, limit);
     }
 
     @Transactional(readOnly = true)
-    public Path addPath(Path path)
-    {
+    public Path addPath(Path path) {
         path.setId(null);
         path.setState(1);
         return pathRepository.save(path);
     }
 
     @Transactional(readOnly = true)
-    public Path findById(String pathId){ return pathRepository.findById(pathId).orElse(null);}
-
+    public Path findById(String pathId) {
+        return pathRepository.findById(pathId).orElse(null);
+    }
 
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByBuildingAndName(String buildingId, String name,Integer skip,Integer limit)
-    {
-        return pathRepository.findByBuildingAndName(buildingId,name,skip,limit);
+    public Collection<Path> findByBuildingAndName(String buildingId, String name, Integer skip, Integer limit) {
+        return pathRepository.findByBuildingAndName(buildingId, name, skip, limit);
     }
 
     public void addRelation(String pathId, String buildingId, String author, String origin, String end) {
-        pathRepository.addRelationAuthorAndBuilding(pathId,buildingId,author);
+        pathRepository.addRelationAuthorAndBuilding(pathId, buildingId, author);
         pathRepository.addRelationOriginAndEnd(pathId, origin, end);
     }
 
     @Transactional(readOnly = true)
-    public void deletePathById(String authorId,String pathId){
-        pathRepository.deletePathById(authorId,pathId);
+    public void deletePathById(String authorId, String pathId) {
+        pathRepository.deletePathById(authorId, pathId);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Path> findByAuthorId(String authorId, String name,Integer skip,Integer limit)
-    {
-        return pathRepository.findByAuthorId(authorId,name,skip,limit);
+    public Collection<Path> findByAuthorId(String authorId, String name, Integer skip, Integer limit) {
+        return pathRepository.findByAuthorId(authorId, name, skip, limit);
     }
 
     /* 废弃接口

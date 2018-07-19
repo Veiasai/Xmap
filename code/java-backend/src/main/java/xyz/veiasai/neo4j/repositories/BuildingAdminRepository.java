@@ -8,22 +8,31 @@ import xyz.veiasai.neo4j.domain.Building;
 
 import java.util.Collection;
 
-public interface BuildingAdminRepository extends Neo4jRepository<Author,String> {
+public interface BuildingAdminRepository extends Neo4jRepository<Author, String> {
     @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}})" +
-            " merge (a)-[:BUILDINGADMIN]-(b)")
-    public void addBuildingAdmin(@Param("buildingId")String buildingId,@Param("authorId")String authorId);
+            " merge (a)-[:BUILDINGADMIN {state:0}]-(b)")
+    public void applyBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
     @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}})" +
             " delete (a)-[:BUILDINGADMIN]-(b)")
-    public void deleteBuildingAdmin(@Param("buildingId")String buildingId,@Param("authorId")String authorId);
+    public void deleteBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
     @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)" +
             " return count(r)")
-    public int countBuildingAdmin(@Param("buildingId")String buildingId,@Param("authorId")String authorId);
+    public int countBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
+
+    @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)" +
+            " where r.state = 1 " +
+            " return count(r)")
+    public int countValidBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
     @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN]-(b:Building {id:{buildingId}}) return b")
-    public Collection<Building> findBuildingByAdmin(@Param("authorId")String authorId);
+    public Collection<Building> findBuildingByAdmin(@Param("authorId") String authorId);
 
     @Query("Match (a:Author)-[:BUILDINGADMIN]-(b:Building {id:{buildingId}}) return a")
-    public Collection<Author> findAdminByBuildingId(@Param("buildingId")String buildingId);
+    public Collection<Author> findAdminByBuildingId(@Param("buildingId") String buildingId);
+
+    @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)" +
+            "set r.state = 2 ") //2 means refused
+    public void refuseBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 }
