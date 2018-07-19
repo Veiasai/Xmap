@@ -1,35 +1,82 @@
 <style>
-  .searchInput {
-    margin-left: 75 rpx;
-    margin-top: 3vh;
-    width: 600 rpx;
+  .searchInput{
+    height: 7vh;
+    width: 680rpx;
+    margin-top: 2vh;
+    margin-left: 35rpx;
+    font-size: 32rpx;
+    font-weight: lighter;
+    text-align: center;
+    background-color: white;
+    border-radius: 4vh;
+    border: rgb(242,242,242);
     border-style: solid;
-    border-color: #C0C0C0;
+    border-width: 4rpx;
   }
 
   .nodeSelect {
+    width: 680 rpx;
+    height: 110rpx;
+    background-color: white;
     display: flex;
     align-items: center;
     flex-direction: row;
-    width: 600 rpx;
-    margin-left: 75 rpx;
-    height: 100 rpx;
   }
+  .nodeSelectItem{
+    width: 320rpx;
+    height: 100rpx;
+    border-radius: 16rpx;
+    font-size: 28rpx;
+    font-weight: lighter;
+    background-color: rgb(242,242,242);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .cancel{
+    width: 34rpx;
+    height: 34rpx;
+  }
+
+  .confirmButton{
+    width: 240rpx;
+    height: 90rpx;
+    border-radius: 16rpx;
+    color: #FEFEFE;
+    background-color: #9BC1DF;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+
 
 </style>
 
 <template>
-  <view style="text-align: center">
-    <view class="searchInput">
-      <input bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+  <view style="background-color #FFFEFE;text-align: center;display: flex;flex-direction: column;align-items: center">
+    <!--search input box-->
+    <view style="height: 9vh">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
-    <view>上传路线的起点终点（可选）</view>
+    <!--instruction for pick nodes-->
+    <view style="margin-top: 1vh;font-size: 32rpx;font-weight: lighter;color: #535353;">——————选择上传路线的起点终点——————</view>
+    <!--show the selected start node and end node-->
     <view class="nodeSelect">
-      <view style="width: 50%" wx:if="{{origin !== null}}">起点:{{origin.name}}
-        <view @tap="nodeCancel" id="1">X</view>
+      <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
+      <view class="nodeSelectItem"  wx:if="{{origin !== null}}">
+        <view>起点: {{origin.name}} </view>
+        <view class="cancel" @tap="nodeCancel" id="1">
+          <image id="1" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../../icons/cancel.svg"></image>
+        </view>
       </view>
-      <view style="width: 50%" wx:if="{{end !== null}}">终点:{{end.name}}
-        <view @tap="nodeCancel" id="2">X</view>
+      <view class="nodeSelectItem" style="margin-left: 40rpx" wx:if="{{end !== null}}">
+        <view>终点: {{end.name}} </view>
+        <view class="cancel" @tap="nodeCancel" id="2">
+          <image id="2" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../../icons/cancel.svg"></image>
+        </view>
       </view>
     </view>
     <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
@@ -37,7 +84,11 @@
         <Node :node="item"></Node>
       </repeat>
     </scroll-view>
-    <view @tap="confirm">确认选择</view>
+    <view class="confirmButton" @tap="confirm">
+      <view wx:if="{{origin !== null}}">确认选择</view>
+      <view style="font-size: 32rpx" wx:if="{{origin === null}}">直接创建路线</view>
+    </view>
+    <view wx:if="{{origin === null}}" style="margin-top: 0.5vh;font-size: 28rpx;font-weight: lighter;color: #535353;">推荐绑定点位</view>
   </view>
 </template>
 

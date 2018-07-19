@@ -1,51 +1,54 @@
 <style>
-  .functional {
-    margin-top: 2vh;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 5vh;
+
+  .currentSteps{
+    font-size: 100rpx;
+    font-weight: bold;
+    color: #0073a7;
   }
 
   .container {
+    width: 750rpx;
+    height: 40vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
   }
 
   .pathDisplay{
     width: 750rpx;
-    height: 75vh;
+    height: 60vh;
+    border-bottom: #000000;
+    box-shadow: #313131;
   }
 
   .addInfo{
     width: 750rpx;
-    height: 120rpx;
+    height: 140rpx;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
   }
 
   .addComment{
-    margin-left: 79rpx;
-    width: 272rpx;
-    height: 90rpx;
-    border-radius: 32rpx;
+    margin-right: 102.5rpx;
+    width: 110rpx;
+    height: 110rpx;
+    border-radius: 50%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     background-color: #8794CB;
     color: #FEFEFE;
-    box-shadow: rgb(53, 63, 82) 2rpx 4rpx 30rpx;
   }
   .tapedAddComment{
-    box-shadow: rgb(33, 40, 54) 2rpx 4rpx 14rpx;
     background-color: #8490c1;
   }
 
   .addImage{
-    margin-left: 180rpx;
+    margin-left: 102.5rpx;
     width: 110rpx;
     height: 110rpx;
     border-radius: 50%;
@@ -54,7 +57,16 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 30rpx;
+  }
+
+  .pause{
+    width: 140rpx;
+    height: 140rpx;
+  }
+
+  .pause image{
+    width: 140rpx;
+    height: 140rpx;
   }
 
   .controller{
@@ -63,88 +75,60 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
   }
 
-  .startPause{
-    margin-left: 95rpx;
-    width: 240rpx;
-    height: 90rpx;
-    border-radius: 32rpx;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #9BC1DF;
-    color: #FEFEFE;
-    box-shadow: rgb(79, 96, 111) 2rpx 4rpx 30rpx;
-  }
-  .tapedStartPause{
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
-    background-color: #90b3d0;
-  }
-  .pause{
-    width: 40rpx;
-    height: 40rpx;
-  }
-  .pause image{
-    width: 40rpx;
-    height: 40rpx;
-  }
 
   .endRecord{
-    margin-left: 155rpx;
     width: 200rpx;
     height: 90rpx;
-    border-radius: 32rpx;
+    border-radius: 16rpx;
     background-color: #F2393C;
     color: #FEFEFE;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    box-shadow: rgb(105, 104, 111) 2rpx 4rpx 30rpx;
   }
   .tapedEnd{
-    box-shadow: rgb(23, 29, 33) 2rpx 4rpx 14rpx;
     background-color: #df3438;
   }
 
 </style>
 
 <template>
-  <view class="container">
+  <view>
     <view class="pathDisplay">
       <PathDisplay :pathArray.sync="pathArray"/>
     </view>
-
-    <view>
-      <text>步数：{{steps}}</text>
-      <text>方向：{{direction == null ? 0 : direction}}</text>
-    </view>
-
-    <view class="addInfo">
-      <view class="addComment" hover-class="tapedAddComment" hover-stay-time="100" @tap="comment">
-        <image mode="widthFix" style="width: 60rpx;height: 60rpx;margin-top: 6rpx" src="../../icons/comment.svg"></image>
-        <view style="margin-left: 6rpx">添加评论</view>
+    <view class="container">
+      <view class="currentSteps">
+        {{steps}} 步
+        <!--<text>方向：{{direction == null ? 0 : direction}}</text>-->
       </view>
-      <view class="addImage" @tap="takePhoto">
-        <view>
-          <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
+      <view class="addInfo">
+        <!--add comment for path-->
+        <view class="addComment" hover-class="tapedAddComment" hover-stay-time="100" @tap="comment">
+          <image mode="widthFix" style="width: 60rpx;height: 60rpx;margin-top: 6rpx" src="../../icons/comment.svg"></image>
         </view>
-      </view>
-    </view>
-
-    <view class="controller">
-      <view class="startPause" hover-class="tapedStartPause" hover-stay-time="100" @tap="record">
-        <view class="pause">
+        <!--start and pause-->
+        <view class="pause" @tap="record">
           <image mode="widthFix" src="../../icons/start.svg" wx:if="{{recordButton !== '暂停记录'}}"></image>
           <image mode="widthFix" src="../../icons/pause.svg" wx:if="{{recordButton === '暂停记录'}}"></image>
         </view>
-        <view>{{recordButton}}</view>
+        <!--add image to path-->
+        <view class="addImage" @tap="takePhoto">
+          <view>
+            <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
+          </view>
+        </view>
       </view>
-      <view class="endRecord" hover-class="tapedEnd" hover-stay-time="100" @tap="done">
-        <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/endwhite.svg"></image>
-        <view style="margin-left: 10rpx">结束</view>
+      <view class="controller">
+        <!--end record and submit-->
+        <view class="endRecord" hover-class="tapedEnd" hover-stay-time="100" @tap="done">
+          <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/endwhite.svg"></image>
+          <view style="margin-left: 10rpx">结束</view>
+        </view>
       </view>
     </view>
     <modal hidden="{{hiddenComment}}" title="请输入注释" confirm-text="提交" cancel-text="取消" bindcancel="commentCancel"
@@ -206,7 +190,7 @@
         }
       },
 
-      async takephoto() {
+      async takePhoto() {
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});

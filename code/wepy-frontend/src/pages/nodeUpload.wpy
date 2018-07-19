@@ -1,35 +1,63 @@
 <style type="less">
-  .img {
-    margin-top: 1vh;
-    height: 90%;
-    width: 80%;
-    background-color: #eeeeee;
-  }
-
   .point {
     width: 750 rpx;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
   }
 
   .display {
     margin-top: 3vh;
-    height: 65vh;
-    width: 80%;
+    height: 800rpx;
+    width: 600rpx;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-style: solid;
-    border-color: #C0C0C0;
+    border-radius: 16rpx;
+    border-width: 2rpx;
+    border-color: #d6d6d6;
+  }
+  .display image{
+    height: 800rpx;
+    width: 600rpx;
+    border-radius: 16rpx;
   }
 
+
   .buttonView {
-    margin-top: 2vh;
-    height: 7vh;
+    margin-top: 4vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .addImage{
+    width: 110rpx;
+    height: 110rpx;
+    border-radius: 50%;
+    background-color: #305690;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .submitButton{
+    margin-top: 2vh;
+    width: 240rpx;
+    height: 90rpx;
+    border-radius: 16rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #9BC1DF;
+    color: #FEFEFE;
   }
 
   .input {
@@ -44,8 +72,12 @@
       <image class='img' src="{{src}}"></image>
     </view>
     <view class="buttonView">
-      <button @tap="choosePhoto">拍照</button>
-      <button @tap="submit">提交点位</button>
+      <view class="addImage" @tap="choosePhoto">
+        <view>
+          <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
+        </view>
+      </view>
+      <view class="submitButton" @tap="submit">提交点位</view>
     </view>
 
     <modal hidden="{{hiddenNodeName}}" title="请输入点位名字" confirm-text="提交" cancel-text="取消" bindcancel="nodeNameCancel"
@@ -60,7 +92,7 @@
 
   export default class NodeUpload extends wepy.page {
     data = {
-      src: "",
+      src: "../icons/image.svg",
       cloudsrc: "",
       hiddenNodeName: true,
       nodeName: "",

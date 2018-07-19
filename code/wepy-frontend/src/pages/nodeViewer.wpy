@@ -15,20 +15,20 @@
   }
 
   .nodeSelect {
-    width: 600 rpx;
-    margin-left: 75 rpx;
-    height: 100 rpx;
+    width: 680 rpx;
+    height: 110rpx;
     background-color: white;
     display: flex;
-    align-items: center;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
   }
 
   .nodeSelectItem{
-    width: 270rpx;
+    width: 320rpx;
     height: 100rpx;
-    border-radius: 32rpx;
-    font-size: 32rpx;
+    border-radius: 16rpx;
+    font-size: 28rpx;
     font-weight: lighter;
     background-color: rgb(242,242,242);
     display: flex;
@@ -36,26 +36,39 @@
     align-items: center;
     justify-content: center;
   }
-
-
-
   .cancel{
     width: 34rpx;
     height: 34rpx;
   }
 
+  .pathsAvailable{
+    margin-top: 1vh;
+    margin-left: 3%;
+    padding-left: 4%;
+    width: 90%;
+    height: 200rpx;
+    border-radius: 16rpx;
+    background: #ededed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-
+  .pathsAvailable view{
+    margin-left: ;
+  }
 </style>
 
 <template>
   <view>
+    <!--search input box-->
     <view style="height: 9vh">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
     </view>
+    <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
-      <view class="nodeSelectItem" style="margin-left: 90rpx" wx:if="{{origin !== null}}">
+      <view class="nodeSelectItem" wx:if="{{origin !== null}}">
         <view>起点:{{origin.name}} </view>
         <view class="cancel" @tap="nodeCancel" id="1">
           <image id="1" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../icons/cancel.svg"></image>
@@ -68,6 +81,7 @@
         </view>
       </view>
     </view>
+    <!--show the available node-->
     <view wx:if="{{originToEndList === null}}">
       <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
         <repeat  for="{{nodes}}" index="index" item="item">
@@ -76,9 +90,13 @@
       </scroll-view>
     </view>
     <view wx:else>
-      <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+      <scroll-view style="height: 60vh;" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
         <repeat  for="{{originToEndList}}" index="index" item="item">
-          <view id="{{index}}" @tap="pathView">路线{{index}},经过点和路线总数{{item.paths.length}}</view>
+          <view class="pathsAvailable" id="{{index}}" @tap="pathView">
+            <view id="{{index}}" style="font-size: 40rpx">路线 {{index+1}}</view>
+            <view id="{{index}}" style="font-size: 32rpx;font-weight: lighter;color: #383838">由 {{(item.paths.length-1)/2}} 条路线拼接而成</view>
+            <view id="{{index}}" style="font-size: 32rpx;font-weight: lighter;color: #383838">共经过 {{(item.paths.length+1)/2}} 个点</view>
+          </view>
         </repeat>
       </scroll-view>
     </view>
@@ -115,6 +133,12 @@
     }
     components = {
       Node: node
+    }
+
+    computed = {
+      pathAmount(e){
+        return (e-1)/2
+      }
     }
 
     methods = {
