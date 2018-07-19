@@ -67,7 +67,7 @@ public class AuthorControllerTest extends TestDefault {
     @Test
     public void favorIsexist () throws Exception {
         // ok
-        mvc.perform(MockMvcRequestBuilders.delete("/favorexist")
+        mvc.perform(MockMvcRequestBuilders.get("/favorexist")
                 .param("authorId", author.getId())
                 .param("favoriteId", node.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -75,18 +75,103 @@ public class AuthorControllerTest extends TestDefault {
     }
 
     @Test
-    public void getFavorite() {
+    public void getFavorite () throws Exception
+    {
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/some")
+                .param("authorId", author.getId())
+                .param("favoriteName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Nodes[0].id").value(node.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Paths[0].id").value(path.getId()));
+
+        // invalid author
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/some")
+                .param("authorId", "NotExist")
+                .param("favoriteName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Nodes").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Paths").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/some")
+                .param("authorId", author.getId())
+                .param("favoriteName", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Nodes").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Paths").isEmpty());
     }
 
     @Test
-    public void getFavoriteNodes() {
+    public void getFavoriteNodes() throws Exception{
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/nodes")
+                .param("authorId", author.getId())
+                .param("nodeName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes[0].id").value(node.getId()));
+
+        // invalid author
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/nodes")
+                .param("authorId", "NotExist")
+                .param("nodeName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/nodes")
+                .param("authorId", author.getId())
+                .param("nodeName", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
     }
 
     @Test
-    public void getFavoritePaths() {
+    public void getFavoritePaths() throws Exception{
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/path")
+                .param("authorId", author.getId())
+                .param("pathName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths[0].id").value(path.getId()));
+
+        // invalid author
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/path")
+                .param("authorId", "NotExist")
+                .param("pathName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/path")
+                .param("authorId", author.getId())
+                .param("pathName", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
+
     }
 
     @Test
-    public void getFavoriteDataSets() {
+    public void getFavoriteDataSets() throws Exception{
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")
+                .param("authorId", author.getId())
+                .param("datasetName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.DataSets").value(node.getId()));
+
+        // invalid author
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")
+                .param("authorId", "NotExist")
+                .param("datasetName", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.DataSets").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")
+                .param("authorId", author.getId())
+                .param("datasetName", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.DataSets").isEmpty());
     }
 }

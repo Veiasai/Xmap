@@ -39,12 +39,16 @@ public class TestDefault {
     @Autowired
     public PathRepository pathRepository;
 
+    @Autowired
+    public DataSetRepository dataSetRepository;
+
     public static Building building = new Building();
     public static Address address = new Address();
     public static Author author = new Author();
     public static Node node = new Node();
     public static Node node2 = new Node();
     public static Path path = new Path();
+    public static DataSet dataSet = new DataSet();
     public static Gson gson = new Gson();
 
     @Before
@@ -57,11 +61,11 @@ public class TestDefault {
         building.setAddress(address);
         building = buildingRepository.save(building);
 
-        //初始化author
+        // 初始化author
         author.setId("testUser");
         author = authorRepository.save(author);
 
-        //初始化node
+        // 初始化node
         node.setId(null);
         node.setName("testNode");
         node.setAuthor(author);
@@ -72,7 +76,7 @@ public class TestDefault {
         node2.setId(null);
         node2 = nodeRepository.save(node2);
 
-        //初始化path
+        // 初始化path
         path.setId(null);
         path.setName("test");
         path.setCurves(10);
@@ -89,9 +93,17 @@ public class TestDefault {
         pathRepository.addRelationAuthorAndBuilding(path.getId(), building.getId(), author.getId());
         pathRepository.addRelationOriginAndEnd(path.getId(), node.getId(), node2.getId());
 
-        //初始化favorite
+        // 初始化dataSet
+        dataSet.setName("test");
+        dataSet.setState(1);
+        dataSet.setType("node");
+        dataSet = dataSetRepository.save(dataSet);
+        dataSetRepository.addRelationNodeAndDataSet(dataSet.getId(), node.getId());
+
+        // 初始化favorite
         authorRepository.addFavorite(author.getId(), path.getId());
         authorRepository.addFavorite(author.getId(), node.getId());
+        authorRepository.addFavorite(author.getId(), dataSet.getId());
     }
 
     @After

@@ -114,8 +114,7 @@ public class AuthorController {
             skip = 0;
         }
         if(limit == null) limit = 100;
-        PathResult result = authorService.findfavorPathByNameLike(authorId,pathName,skip,limit);
-        return result;
+        return authorService.findfavorPathByNameLike(authorId,pathName,skip,limit);
     }
 
     @ApiOperation(value="查询收藏中数据组",notes="通过名字模糊查询收藏的数据组")

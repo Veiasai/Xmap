@@ -100,24 +100,38 @@ public class PathControllerTest extends TestDefault {
 
         Assert.assertEquals(path2.getId(), pathRepository.findById(path2.getId()).orElse(new Path()).getId());
 
+        // invalid pathId
         mvc.perform(MockMvcRequestBuilders.delete("/path")
                 .param("authorId", author.getId())
                 .param("pathId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
+        // invalid authorId
         mvc.perform(MockMvcRequestBuilders.delete("/path")
                 .param("authorId",  "NotExist")
                 .param("pathId", path2.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
+        // invalid author-[r]-path
+        mvc.perform(MockMvcRequestBuilders.delete("/path")
+                .param("authorId", author.getId())
+                .param("pathId", path2.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        Assert.assertNotNull("delete failed", pathRepository.findById(path2.getId()).orElse(null));
+
+        pathRepository.addRelationAuthorAndBuilding(path2.getId(), author.getId(), building.getId());
+
+        // ok
         mvc.perform(MockMvcRequestBuilders.delete("/path")
                 .param("authorId", author.getId())
                 .param("pathId", path2.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
 
-        Assert.assertNull("delete success", pathRepository.findById(path2.getId()).orElse(null));
+        Assert.assertNull("delete failed", pathRepository.findById(path2.getId()).orElse(null));
     }
 }

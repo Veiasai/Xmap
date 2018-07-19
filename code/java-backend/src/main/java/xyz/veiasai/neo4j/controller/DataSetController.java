@@ -65,24 +65,20 @@ public class DataSetController {
         }
         DataSetResult result =new DataSetResult();
         if(buildingId != null && authorId !=null){
-            result.setCode(200);
-            result.setMessage("查询成功");
             result.setDataSets(dataSetService.findDataSetByBuildingAndAuthor(buildingId,authorId,skip,limit));
         }
-        if(buildingId != null) {
-            result.setCode(200);
-            result.setMessage("查询成功");
+        else if(buildingId != null) {
             result.setDataSets(dataSetService.findDataSetByBuildingAndName(buildingId, dataSetName, skip, limit));
-            return result;
         }
-        if(authorId != null ){
-            result.setCode(200);
-            result.setMessage("查询成功");
+        else if(authorId != null ){
             result.setDataSets(dataSetService.findDataSetByAuthorAndName(authorId,dataSetName,skip,limit));
-            return result;
         }
-        result.setCode(404);
-        result.setMessage("找不到数据组");
+        else {
+            result.setCode(404);
+            result.setMessage("找不到数据组");
+        }
+        result.setCode(200);
+        result.setMessage("查询成功");
         return result;
     }
     @ApiOperation(value="模糊查询点位/路线",notes="查找数据组中包含某名字的点位/路线;" +
@@ -101,6 +97,7 @@ public class DataSetController {
             result.setCode(404);
             return result;
         }
+
         if(skip == null){
             skip = 0;
         }
