@@ -38,7 +38,8 @@ public class AuthorService {
 
     @Transactional
     public Author getAuthorById(String authorId){
-        return authorRepository.getAuthorById(authorId);
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        return optionalAuthor.orElse(null);
     }
 
     @Transactional

@@ -14,6 +14,7 @@ public class BuildingService {
     @Autowired
     private BuildingRepository buildingRepository;
 
+    @Transactional(readOnly = true)
     public Building addBuilding(Building building)
     {
         building.setId(null);
@@ -26,6 +27,14 @@ public class BuildingService {
         Optional<Building> optionalBuilding = buildingRepository.findById(id);
         return optionalBuilding.orElse(new Building(id));
     }
+
+    @Transactional(readOnly = true)
+    public Building getBuildingById(String buildingid)
+    {
+        Optional<Building> optionalBuilding = buildingRepository.findById(buildingid);
+        return optionalBuilding.orElse(null);
+    }
+
 
     @Transactional(readOnly = true)
     public Building findByAddressAndName(String name, String address)

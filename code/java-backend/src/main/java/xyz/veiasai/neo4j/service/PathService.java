@@ -29,6 +29,7 @@ public class PathService {
         return  pathRepository.findByNameLike(name,skip,limit);
     }
 
+    @Transactional(readOnly = true)
     public Path addPath(Path path)
     {
         path.setId(null);

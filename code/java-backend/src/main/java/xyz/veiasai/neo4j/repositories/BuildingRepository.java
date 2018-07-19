@@ -10,5 +10,6 @@ public interface BuildingRepository extends Neo4jRepository<Building, String> {
 
     @Query("MATCH (:Address {address : {a}})-[`IN-ADDRESS`]-> (res:Building {name: {n}}) RETURN res LIMIT 1")
     public Building findByNameAndAddress(@Param("n") String name, @Param("a") String address);
+
 }
 
