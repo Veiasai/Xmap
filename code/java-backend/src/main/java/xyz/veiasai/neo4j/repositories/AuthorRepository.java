@@ -13,40 +13,37 @@ import java.util.List;
 
 public interface AuthorRepository extends Neo4jRepository<Author, String> {
     @Query("Match (n),(a:Author {id:{authorId}}) where n.id={favoriteId} merge (a)-[:COLLECT]->(n)")
-    public void addFavorite(@Param("authorId")String authorId,@Param("favoriteId")String favoriteId);
+    public void addFavorite(@Param("authorId") String authorId, @Param("favoriteId") String favoriteId);
 
-    @Query("Match (n) where n.id = {favoriteId} return count(n)")
-    public int FavorExistInDb(@Param("favoriteId")String favoriteId);
+    @Query("Match (n {id:{favoriteId}}) return count(n)")
+    public int FavorExistInDb(@Param("favoriteId") String favoriteId);
 
-    @Query("Match (a:Author {id:{authorId}})-[:COLLECT]->(n) where n.id={favoriteId} return count(n) ")
-    public int findFavoriteById(@Param("authorId")String authorId,@Param("favoriteId")String favoriteId);
+    @Query("Match (a:Author {id:{authorId}})-[:COLLECT]->(n {id:{favoriteId}}) return count(n) ")
+    public int findFavoriteById(@Param("authorId") String authorId, @Param("favoriteId") String favoriteId);
 
-    @Query("Match (a:Author {id:{authorId}})-[r:COLLECT]->(n) where n.id={favoriteId} delete r")
-    public void deleteFavorite(@Param("authorId")String authorId,@Param("favoriteId")String favoriteId);
+    @Query("Match (a:Author {id:{authorId}})-[r:COLLECT]->(n {id:{favoriteId}}) detach delete r")
+    public void deleteFavorite(@Param("authorId") String authorId, @Param("favoriteId") String favoriteId);
 
-    @Query("Match (a:Author{id:{authorId}}) return a")
-    public Author getAuthorById(@Param("authorId")String authorId);
-
-    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:Node) WHERE n.name =~ ('.*'+{nodeName}+'.*')"+
+    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:Node) WHERE n.name =~ ('.*'+{nodeName}+'.*')" +
             "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
-    public Collection<Node> findNodeByNameLike(@Param("authorId")String authorId,
+    public Collection<Node> findNodeByNameLike(@Param("authorId") String authorId,
                                                @Param("nodeName") String nodeName,
-                                               @Param("skip")Integer skip,
-                                               @Param("limit")Integer limit);
+                                               @Param("skip") Integer skip,
+                                               @Param("limit") Integer limit);
 
-    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:Path) WHERE n.name =~ ('.*'+{pathName}+'.*') "+
+    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:Path) WHERE n.name =~ ('.*'+{pathName}+'.*') " +
             "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
-    public Collection<Path> findPathByNameLike(@Param("authorId")String authorId,
+    public Collection<Path> findPathByNameLike(@Param("authorId") String authorId,
                                                @Param("pathName") String pathName,
-                                               @Param("skip")Integer skip,
-                                               @Param("limit")Integer limit);
+                                               @Param("skip") Integer skip,
+                                               @Param("limit") Integer limit);
 
-    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:DataSet) WHERE n.name =~ ('.*'+{datasetName}+'.*')"+
+    @Query("MATCH (a:Author {id:{authorId}})-[:COLLECT]->(n:DataSet) WHERE n.name =~ ('.*'+{datasetName}+'.*')" +
             "RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}")
-    public Collection<DataSet> findDataSetByNameLike(@Param("authorId")String authorId,
+    public Collection<DataSet> findDataSetByNameLike(@Param("authorId") String authorId,
                                                      @Param("datasetName") String datasetName,
-                                                     @Param("skip")Integer skip,
-                                                     @Param("limit")Integer limit);
+                                                     @Param("skip") Integer skip,
+                                                     @Param("limit") Integer limit);
 
 
 }

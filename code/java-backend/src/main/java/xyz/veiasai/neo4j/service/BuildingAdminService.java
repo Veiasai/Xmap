@@ -11,6 +11,7 @@ import xyz.veiasai.neo4j.repositories.BuildingAdminRepository;
 import xyz.veiasai.neo4j.repositories.BuildingRepository;
 import xyz.veiasai.neo4j.result.Result;
 
+import java.security.PublicKey;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -27,30 +28,53 @@ public class BuildingAdminService {
     private BuildingAdminRepository buildingAdminRepository;
 
     @Transactional(readOnly = true)
-    public void addBuildingAdmin(String buildingId, String authorId){
-        buildingAdminRepository.addBuildingAdmin(buildingId, authorId);
+    public void applyBuildingAdmin(String buildingId, String authorId) {
+        buildingAdminRepository.applyBuildingAdmin(buildingId, authorId);
     }
     @Transactional(readOnly = true)
-    public void deleteBuildingAdmin(String buildingId,String authorId){
+    public void setBuildingAdmin(String buildingId, String authorId) {
+        buildingAdminRepository.setBuildingAdmin(buildingId, authorId);
+    }
+
+    @Transactional(readOnly = true)
+    public void deleteBuildingAdmin(String buildingId, String authorId) {
         buildingAdminRepository.deleteBuildingAdmin(buildingId, authorId);
     }
 
+    @Transactional(readOnly = true)
+    public void refuseBuildingAdmin(String buildingId, String authorId){
+
+    }
 
     @Transactional(readOnly = true)
-    public boolean existBuildingAdmin(String buildingId,String authorId){
-        if(buildingAdminRepository.countBuildingAdmin(buildingId, authorId)!=0){
-            return true;    //buildlingId和authorId都有效且相连的时候 才为true
+    public boolean isBuildingAdmin(String authorId){
+        if(buildingAdminRepository.countBuildingByAdmin(authorId)!=0){
+            return true;
+        }
+        return false;
+    }
+    @Transactional(readOnly = true)
+    public boolean existValidBuildingAdmin(String buildingId, String authorId) {
+        if (buildingAdminRepository.countValidBuildingAdmin(buildingId, authorId) != 0) {
+            return true;    //buildlingId和authorId都有效且相连state=1的时候 才为true
         }
         return false;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Building> findBuildingByAdmin(String authorId){   //authorId是否有效可放到controller层
+    public boolean existApplyBuildingAdmin(String buildingId, String authorId) {
+        if (buildingAdminRepository.countApplyBuildingAdmin(buildingId, authorId) != 0) {
+            return true;    //buildlingId和authorId都有效且相连state=0的时候 才为true
+        }
+        return false;
+    }
+    @Transactional(readOnly = true)
+    public Collection<Building> findBuildingByAdmin(String authorId) {   //authorId是否有效可放到controller层
         return buildingAdminRepository.findBuildingByAdmin(authorId);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Author> findAdminByBuildingId(String buildingId){
+    public Collection<Author> findAdminByBuildingId(String buildingId) {
         return buildingAdminRepository.findAdminByBuildingId(buildingId);
     }
 

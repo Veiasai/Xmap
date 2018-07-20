@@ -29,8 +29,8 @@ public class DataSetController {
     @PostMapping("/dataset")
     public DataSet postDataSet(@RequestBody @Valid DataSet dataSet,
                                @RequestParam @ApiParam(name = "buildingId", value = "数据组所在建筑物的id") String buildingId,
-                               @RequestParam @ApiParam(name = "authorId", value = "上传者的open-id") String authorId
-    ) {
+                               @RequestParam @ApiParam(name = "authorId", value = "上传者的open-id") String authorId)
+    {
         dataSet = dataSetService.addDataSet(dataSet, buildingId, authorId);
         return dataSet;
     }
@@ -59,6 +59,8 @@ public class DataSetController {
                                      @RequestParam(required = false, defaultValue = "5") Integer limit) {
 
         DataSetResult result = new DataSetResult();
+        result.setCode(200);
+        result.setMessage("查询成功");
         if (buildingId != null && authorId != null) {
             result.setDataSets(dataSetService.findDataSetByBuildingAndAuthor(buildingId, authorId, skip, limit));
         } else if (buildingId != null) {
@@ -69,41 +71,6 @@ public class DataSetController {
             result.setCode(404);
             result.setMessage("找不到数据组");
         }
-        result.setCode(200);
-        result.setMessage("查询成功");
-        return result;
-    }
-
-    @ApiOperation(value = "模糊查询点位/路线", notes = "查找数据组中包含某名字的点位/路线;" +
-            "通过Name设默认值为空的字符串，可以查询所有;" +
-            "skip 0 limit 100;\r\n404:不存在;\r\n200:删除成功")
-    @GetMapping("/dataset/some")
-    public Result searchNodeOrPath(@RequestParam String dataSetId,
-                                   @RequestParam(required = false, defaultValue = "") @ApiParam(name = "Name", value = "查找所需的点位/名称") String Name,
-                                   @RequestParam(required = false, defaultValue = "0") Integer skip,
-                                   @RequestParam(required = false, defaultValue = "5") Integer limit) {
-
-        DataSet dataSet = dataSetService.getDataSetById(dataSetId);
-        if (dataSet == null) {
-            Result result = new Result();
-            result.setMessage("数据组不存在");
-            result.setCode(404);
-            return result;
-        }
-
-        if (dataSet.getType().equals("node")) {
-            NodeResult result = new NodeResult();
-            Collection<Node> Nodes = dataSetService.findNodesByNameLike(dataSetId, Name, skip, limit);
-            result.setCode(200);
-            result.setMessage("查找点位成功");
-            result.setNodes(Nodes);
-            return result;
-        }
-        PathResult result = new PathResult();
-        Collection<Path> Paths = dataSetService.findPathByNameLike(dataSetId, Name, skip, limit);
-        result.setCode(200);
-        result.setMessage("查找路线成功");
-        result.setPaths(Paths);
         return result;
     }
 
@@ -180,6 +147,40 @@ public class DataSetController {
         result.setMessage("查找路线成功");
         result.setPaths(Paths);
         return result;
-    }*/
+    }
+
+     @ApiOperation(value = "模糊查询点位/路线", notes = "查找数据组中包含某名字的点位/路线;" +
+            "通过Name设默认值为空的字符串，可以查询所有;" +
+            "skip 0 limit 100;\r\n404:不存在;\r\n200:删除成功")
+    @GetMapping("/dataset/some")
+    public Result searchNodeOrPath(@RequestParam String dataSetId,
+                                   @RequestParam(required = false, defaultValue = "") @ApiParam(name = "Name", value = "查找所需的点位/名称") String Name,
+                                   @RequestParam(required = false, defaultValue = "0") Integer skip,
+                                   @RequestParam(required = false, defaultValue = "5") Integer limit) {
+
+        DataSet dataSet = dataSetService.findDataSetById(dataSetId);
+        if (dataSet == null) {
+            Result result = new Result();
+            result.setMessage("数据组不存在");
+            result.setCode(404);
+            return result;
+        }
+
+        if (dataSet.getType().equals("node")) {
+            NodeResult result = new NodeResult();
+            Collection<Node> Nodes = dataSetService.findNodesByNameLike(dataSetId, Name, skip, limit);
+            result.setCode(200);
+            result.setMessage("查找点位成功");
+            result.setNodes(Nodes);
+            return result;
+        }
+        PathResult result = new PathResult();
+        Collection<Path> Paths = dataSetService.findPathByNameLike(dataSetId, Name, skip, limit);
+        result.setCode(200);
+        result.setMessage("查找路线成功");
+        result.setPaths(Paths);
+        return result;
+    }
+    */
 
 }

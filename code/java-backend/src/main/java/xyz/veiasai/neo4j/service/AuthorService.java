@@ -23,73 +23,77 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public Author addAuthor(Author author)
-    {
+    @Transactional(readOnly = true)
+    public Author addAuthor(Author author) {
         Optional<Author> optionalAuthor = authorRepository.findById(author.getId());
         return optionalAuthor.orElse(authorRepository.save(author));
     }
 
     @Transactional(readOnly = true)
-    public Author findById(String id)
-    {
+    public Author findById(String id) {
         Optional<Author> optionalAuthor = authorRepository.findById(id);
         return optionalAuthor.orElse(new Author(id));
     }
 
-    @Transactional
-    public Author getAuthorById(String authorId){
+    @Transactional(readOnly = true)
+    public Author getAuthorById(String authorId) {
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
         return optionalAuthor.orElse(null);
     }
 
-    @Transactional
-    public boolean FavoriteIsExistInDb(String favoriteId){
-        if(authorRepository.FavorExistInDb(favoriteId)!=0){
+    @Transactional(readOnly = true)
+    public boolean FavoriteIsExistInDb(String favoriteId) {          //判断favorite是否存在
+        if (authorRepository.FavorExistInDb(favoriteId) != 0) {
             return true;
         }
         return false;
     }
 
-    @Transactional
-    public boolean FavoriteIsExistInAuthor(String authorId,String favoriteId){
-        if(authorRepository.findFavoriteById(authorId,favoriteId)!=0){
+    @Transactional(readOnly = true)
+    public boolean FavoriteIsExistInAuthor(String authorId, String favoriteId) {      //判断用户是否收藏
+        if (authorRepository.findFavoriteById(authorId, favoriteId) != 0) {
             return true;
         }
         return false;
     }
-    @Transactional
-    public void addFavorite(String authorId,String favoriteId){
-        authorRepository.addFavorite(authorId,favoriteId);
+
+    @Transactional(readOnly = true)
+    public void addFavorite(String authorId, String favoriteId) {
+        authorRepository.addFavorite(authorId, favoriteId);
     }
-    @Transactional
-    public void deleteFavorite(String auhtorId,String favoriteId){
-        authorRepository.deleteFavorite(auhtorId,favoriteId);
+
+    @Transactional(readOnly = true)
+    public void deleteFavorite(String auhtorId, String favoriteId) {
+        authorRepository.deleteFavorite(auhtorId, favoriteId);
     }
-    @Transactional
-    public FavoriteResult findFavoriteByNameLike(String authorId, String favoriteName,Integer skip,Integer limit){
-        FavoriteResult favoriteResult= new FavoriteResult();
-        favoriteResult.setDataSets(authorRepository.findDataSetByNameLike(authorId,favoriteName,skip,limit));
-        favoriteResult.setNodes(authorRepository.findNodeByNameLike(authorId,favoriteName,skip,limit));
-        favoriteResult.setPaths(authorRepository.findPathByNameLike(authorId,favoriteName,skip,limit));
+
+    @Transactional(readOnly = true)
+    public FavoriteResult findFavoriteByNameLike(String authorId, String favoriteName, Integer skip, Integer limit) {
+        FavoriteResult favoriteResult = new FavoriteResult();
+        favoriteResult.setDataSets(authorRepository.findDataSetByNameLike(authorId, favoriteName, skip, limit));
+        favoriteResult.setNodes(authorRepository.findNodeByNameLike(authorId, favoriteName, skip, limit));
+        favoriteResult.setPaths(authorRepository.findPathByNameLike(authorId, favoriteName, skip, limit));
         return favoriteResult;
     }
-    @Transactional
-    public NodeResult findfavorNodeByNameLike(String authorId, String nodeName,Integer skip,Integer limit){
+
+    @Transactional(readOnly = true)
+    public NodeResult findfavorNodeByNameLike(String authorId, String nodeName, Integer skip, Integer limit) {
         NodeResult nodeResult = new NodeResult();
-        nodeResult.setNodes(authorRepository.findNodeByNameLike(authorId,nodeName,skip,limit));
+        nodeResult.setNodes(authorRepository.findNodeByNameLike(authorId, nodeName, skip, limit));
         return nodeResult;
     }
 
-    @Transactional
-    public PathResult findfavorPathByNameLike(String authorId, String pathName, Integer skip, Integer limit){
+    @Transactional(readOnly = true)
+    public PathResult findfavorPathByNameLike(String authorId, String pathName, Integer skip, Integer limit) {
         PathResult pathResult = new PathResult();
-        pathResult.setPaths(authorRepository.findPathByNameLike(authorId,pathName,skip,limit));
+        pathResult.setPaths(authorRepository.findPathByNameLike(authorId, pathName, skip, limit));
         return pathResult;
     }
-    @Transactional
-    public DataSetResult findfavorDataSetByNameLike(String authorId, String dataSetName, Integer skip, Integer limit){
+
+    @Transactional(readOnly = true)
+    public DataSetResult findfavorDataSetByNameLike(String authorId, String dataSetName, Integer skip, Integer limit) {
         DataSetResult dataSetResult = new DataSetResult();
-        dataSetResult.setDataSets(authorRepository.findDataSetByNameLike(authorId,dataSetName,skip,limit));
+        dataSetResult.setDataSets(authorRepository.findDataSetByNameLike(authorId, dataSetName, skip, limit));
         return dataSetResult;
     }
 }

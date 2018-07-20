@@ -113,7 +113,7 @@ public class TestDefault {
         buildingAdmin.setId("bAdmin");
         authorRepository.save(buildingAdmin);
 
-        buildingAdminRepository.addBuildingAdmin(building.getId(), buildingAdmin.getId());
+        buildingAdminRepository.setBuildingAdmin(building.getId(), buildingAdmin.getId());
     }
 
     @After

@@ -29,77 +29,75 @@ public class MessageController {
     @Autowired
     private BuildingAdminService buildingAdminService;
 
-    @ApiOperation(value="发布信息" ,notes="建筑管理员发布信息")
+    @ApiOperation(value = "发布信息", notes = "建筑管理员发布信息")
     @PostMapping("/message")
-    public MessageResult postMessage(@RequestBody Message message, @RequestParam String buildingId, @RequestParam String authorId){
+    public MessageResult postMessage(@RequestBody Message message, @RequestParam String buildingId, @RequestParam String authorId) {
 
-        MessageResult result= new MessageResult();
-        if(buildingService.getBuildingById(buildingId)==null){
+        MessageResult result = new MessageResult();
+        if (buildingService.getBuildingById(buildingId) == null) {
             result.setMessage("建筑不存在");
             result.setCode(404);
-            return result;
-        }
-        if(authorService.getAuthorById(authorId)==null){
+        } else if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
             result.setCode(405);
-            return result;
-        }
-        if(!buildingAdminService.existBuildingAdmin(buildingId, authorId)){
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {
             result.setMessage("用户无权限发布信息");
             result.setCode(403);
-            return result;
+        } else {
+            message.setBuilding(buildingService.findById(buildingId));
+            message.setAuthor(authorService.findById(authorId));
+            message = messageService.addMessage(message);
+            result.setCode(200);
+            result.setMessage("发布信息成功");
+            result.setSingleMessage(message);
         }
-        message.setBuilding(buildingService.findById(buildingId));
-        message.setAuthor(authorService.findById(authorId));
-        message=messageService.addMessage(message);
-        result.setSingleMessage(message);
-        result.setCode(200);
-        result.setMessage("发布信息成功");
         return result;
     }
 
-    @ApiOperation(value="删除信息",notes="建筑管理员删除信息")
+    @ApiOperation(value = "删除信息", notes = "建筑管理员删除信息")
     @DeleteMapping("/message")
-    public Result deleteMessage(@RequestParam String authorId,@RequestParam String messageId){
-        Result result =new Result();
-        if(authorService.getAuthorById(authorId)==null){
+    public Result deleteMessage(@RequestParam String authorId, @RequestParam String messageId) {
+        Result result = new Result();
+        if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
             result.setCode(405);
-            return result;
-        }
-        if(messageService.getMessageById(messageId)==null){
+        } else if (messageService.getMessageById(messageId) == null) {
             result.setMessage("信息不存在");
             result.setCode(404);
-            return result;
-        }
-        if(!messageService.existMessageAndAuthor(authorId, messageId)){
+        } else if (!messageService.existMessageAndAuthor(authorId, messageId)) {
             result.setMessage("该用户无权限删除此信息");
             result.setCode(403);
-            return result;
+        } else {
+            messageService.deleteMessage(authorId, messageId);
+            result.setMessage("删除信息成功");
+            result.setCode(200);
         }
-        messageService.deleteMessage(authorId, messageId);
-        result.setMessage("删除信息成功");
-        result.setCode(200);
         return result;
     }
 
     @GetMapping("/message")
-    public MessageResult getMessage(@RequestParam(required = false)String buildingId,
+    public MessageResult getMessage(@RequestParam(required = false) String buildingId,  //此处与dataset-controller一样都没做buildingId和authorId的检验
                                     @RequestParam(required = false) String authorId,
-                                    @RequestParam(required = false,defaultValue = "0")Integer skip,
-                                    @RequestParam(required = false,defaultValue = "5")Integer limit){
-        MessageResult result =new MessageResult();
-        if(buildingId != null && authorId !=null){
+                                    @RequestParam(required = false, defaultValue = "") String title,
+                                    @RequestParam(required = false, defaultValue = "0") Integer skip,
+                                    @RequestParam(required = false, defaultValue = "5") Integer limit) {
+        MessageResult result = new MessageResult();
+        if (buildingId != null && authorId != null) {
+            result.setMessages(messageService.findMessageByAuthorAndBuilding(buildingId,title, authorId, skip, limit));
+            result.setMessage("查询成功");      //区别singleMessage方法
+            result.setCode(200);
+        } else if (buildingId != null) {
+            result.setMessages(messageService.findMessageByBuildingAndTitle(buildingId,title, skip, limit));
+            result.setMessage("查询成功");      //区别singleMessage方法
+            result.setCode(200);
+        } else if (authorId != null) {
+            result.setMessages(messageService.findMessageByAuthorAndTitle(authorId,title,skip, limit));
+            result.setMessage("查询成功");      //区别singleMessage方法
+            result.setCode(200);
 
-        }
-        else if(buildingId != null){
-
-        }
-        else if(authorId != null){
-
-        }
-        else{
-
+        } else {
+            result.setMessage("找不到信息");
+            result.setCode(404);
         }
         return result;
     }

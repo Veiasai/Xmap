@@ -9,19 +9,19 @@ import xyz.veiasai.neo4j.domain.Path;
 import java.util.Collection;
 
 public interface PathRepository extends Neo4jRepository<Path, String> {
-    @Query("MATCH (p:Path) where p.name =~ ('.*'+{Name}+'.*')"+
+    @Query("MATCH (p:Path) where p.name =~ ('.*'+{Name}+'.*')" +
             "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}")
-    public Collection<Path> findByNameLike(@Param("Name") String Name,@Param("skip") Integer skip,@Param("limit")Integer limit);
+    public Collection<Path> findByNameLike(@Param("Name") String Name, @Param("skip") Integer skip, @Param("limit") Integer limit);
 
     @Query("MATCH (:Node {id: {nodeId}})-[PATH]->(n:Path) RETURN n")
     public Collection<Path> findByOrigin(@Param("nodeId") String nodeId);
 
-    @Query("MATCH (:Building {id:{buildingId}})-[:BUILDING]-(p:Path) WHERE p.name=~('.*'+{name}+'.*')"+
+    @Query("MATCH (:Building {id:{buildingId}})-[:BUILDING]-(p:Path) WHERE p.name=~('.*'+{name}+'.*')" +
             "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}")
     public Collection<Path> findByBuildingAndName(@Param("buildingId") String buildingId,
                                                   @Param("name") String name,
-                                                  @Param("skip")Integer skip,
-                                                  @Param("limit")Integer limit);
+                                                  @Param("skip") Integer skip,
+                                                  @Param("limit") Integer limit);
 
     @Query("match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (path: Path {id:{pathId}})" +
             "merge (author)-[:AUTHOR]-(path)-[:BUILDING]-(building)"
@@ -37,13 +37,16 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
             "p = shortestpath((n1)-[:PATH*..25]->(n2)) RETURN p")
     public Collection<Path> findByOriginAndEnd(@Param("originId") String originId, @Param("endId") String endId);
 
-    @Query("match (n:Author {id:{authorId}})-[:AUTHOR]->(r:Path) where r.name=~('.*'+{name}+'.*')"+
+    @Query("match (n:Author {id:{authorId}})-[:AUTHOR]->(r:Path) where r.name=~('.*'+{name}+'.*')" +
             "RETURN r ORDER BY r.name SKIP {skip} LIMIT {limit}")
     public Collection<Path> findByAuthorId(@Param("authorId") String authorId,
                                            @Param("name") String name,
-                                           @Param("skip")Integer skip,
-                                           @Param("limit")Integer limit);
+                                           @Param("skip") Integer skip,
+                                           @Param("limit") Integer limit);
+
+    @Query("Match (p:Path {id:{pathId}})-[r:AUTHOR]-(a:Author {id:{authorId}}) return count(r)")
+    public int countPathByAuthorId(@Param("authorId") String authorId, @Param("pathId") String pathId);
 
     @Query("Match (p:Path {id:{pathId}})-[:AUTHOR]-(a:Author {id:{authorId}}) detach delete p")
-    public void deletePathById(@Param("authorId")String authorId,@Param("pathId")String pathId);
+    public void deletePathById(@Param("authorId") String authorId, @Param("pathId") String pathId);
 }

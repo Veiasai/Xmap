@@ -21,8 +21,7 @@ public class BuildingController {
     private AddressService addressService;
 
     @PostMapping("/building")
-    public Building postBuilding(@RequestBody @Valid  Building building,@RequestParam String address, BindingResult bindingResult)
-    {
+    public Building postBuilding(@RequestBody @Valid Building building, @RequestParam String address, BindingResult bindingResult) {
         Building b = buildingService.findByAddressAndName(building.getName(), address);
         if (b != null)
             return b;

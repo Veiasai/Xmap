@@ -32,7 +32,7 @@ public class AuthorControllerTest extends TestDefault {
                 .param("authorId", author.getId())
                 .param("favoriteId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AuthorControllerTest extends TestDefault {
                 .param("authorId", author.getId())
                 .param("favoriteId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
     }
 
     @Test
@@ -81,24 +81,24 @@ public class AuthorControllerTest extends TestDefault {
                 .param("authorId", author.getId())
                 .param("favoriteName", ""))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.Nodes[0].id").value(node.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.Paths[0].id").value(path.getId()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes[0].id").value(node.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths[0].id").value(path.getId()));
 
         // invalid author
         mvc.perform(MockMvcRequestBuilders.get("/favorite/some")
                 .param("authorId", "NotExist")
                 .param("favoriteName", ""))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.Nodes").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.Paths").isEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
 
         // invalid name
         mvc.perform(MockMvcRequestBuilders.get("/favorite/some")
                 .param("authorId", author.getId())
                 .param("favoriteName", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.Nodes").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.Paths").isEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
     }
 
     @Test
@@ -155,22 +155,22 @@ public class AuthorControllerTest extends TestDefault {
         // ok
         mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")
                 .param("authorId", author.getId())
-                .param("datasetName", ""))
+                .param("dataSetName", ""))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.DataSets").value(node.getId()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dataSets[0].id").value(dataSet.getId()));
 
         // invalid author
         mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")
                 .param("authorId", "NotExist")
-                .param("datasetName", ""))
+                .param("dataSetName", ""))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.DataSets").isEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dataSets").isEmpty());
 
         // invalid name
         mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")
                 .param("authorId", author.getId())
-                .param("datasetName", "NotExist"))
+                .param("dataSetName", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.DataSets").isEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dataSets").isEmpty());
     }
 }

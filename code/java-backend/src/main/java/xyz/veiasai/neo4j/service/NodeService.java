@@ -15,17 +15,15 @@ public class NodeService {
     @Autowired
     private NodeRepository nodeRepository;
 
-    public Node addNode(Node node)
-    {
+    public Node addNode(Node node) {
         node.setId(null);
         node.setState(1);
         return nodeRepository.save(node);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByBuildingAndName(String buildingId,String name,Integer skip,Integer limit)
-    {
-        return nodeRepository.findByBuildingAndNameLike(buildingId,name,skip,limit);
+    public Collection<Node> findByBuildingAndName(String buildingId, String name, Integer skip, Integer limit) {
+        return nodeRepository.findByBuildingAndNameLike(buildingId, name, skip, limit);
     }
 
     @Transactional(readOnly = true)
@@ -34,28 +32,29 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2,Integer skip,Integer limit){
-        return nodeRepository.findAllPathsByTwoNodeId(nId1,nId2,skip,limit);
+    public Set<Map<String, Object>> findAllPathsByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit) {
+        return nodeRepository.findAllPathsByTwoNodeId(nId1, nId2, skip, limit);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByOriginNode(String originId, String name,Integer skip,Integer limit) {
-        return nodeRepository.findByOriginNode(originId,name,skip,limit);
+    public Collection<Node> findByOriginNode(String originId, String name, Integer skip, Integer limit) {
+        return nodeRepository.findByOriginNode(originId, name, skip, limit);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByAuthorAndBuilding(String authorId,String buildingId,Integer skip,Integer limit){
-        return nodeRepository.findByAuthorAndBuilding(authorId,buildingId,skip,limit);
+    public Collection<Node> findByAuthorAndBuilding(String authorId, String buildingId, Integer skip, Integer limit) {
+        return nodeRepository.findByAuthorAndBuilding(authorId, buildingId, skip, limit);
 
-    }
-    @Transactional(readOnly = true)
-    public Collection<Node> findByAuthorAndName(String authorId, String name,Integer skip,Integer limit) {
-        return nodeRepository.findByAuthorId(authorId,name,skip,limit);
     }
 
     @Transactional(readOnly = true)
-    public void deleteNodeById(String auhtorId,String nodeId){
-        nodeRepository.deleteNodeById(auhtorId,nodeId);
+    public Collection<Node> findByAuthorAndName(String authorId, String name, Integer skip, Integer limit) {
+        return nodeRepository.findByAuthorId(authorId, name, skip, limit);
+    }
+
+    @Transactional(readOnly = true)
+    public void deleteNodeById(String auhtorId, String nodeId) {
+        nodeRepository.deleteNodeById(auhtorId, nodeId);
     }
 
     /*废弃接口
