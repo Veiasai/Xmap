@@ -19,7 +19,9 @@ public class Message {
 
     private String title;
 
+    private String authorName;
 
+    @ApiModelProperty(hidden = true)
     private String Date;
 
     private String content;
@@ -32,6 +34,7 @@ public class Message {
     @JsonIgnore
     private Building building;
 
+    @ApiModelProperty(hidden = true)
     private Integer state;
 
     public String getId() {

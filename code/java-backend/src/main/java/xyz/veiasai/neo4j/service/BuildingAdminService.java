@@ -11,6 +11,7 @@ import xyz.veiasai.neo4j.repositories.BuildingAdminRepository;
 import xyz.veiasai.neo4j.repositories.BuildingRepository;
 import xyz.veiasai.neo4j.result.Result;
 
+import java.security.PublicKey;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -42,6 +43,13 @@ public class BuildingAdminService {
     }
 
     @Transactional(readOnly = true)
+    public boolean isBuildingAdmin(String authorId){
+        if(buildingAdminRepository.countBuildingByAdmin(authorId)!=0){
+            return true;
+        }
+        return false;
+    }
+    @Transactional(readOnly = true)
     public boolean existValidBuildingAdmin(String buildingId, String authorId) {
         if (buildingAdminRepository.countValidBuildingAdmin(buildingId, authorId) != 0) {
             return true;    //buildlingId和authorId都有效且相连state=1的时候 才为true
@@ -49,6 +57,13 @@ public class BuildingAdminService {
         return false;
     }
 
+    @Transactional(readOnly = true)
+    public boolean existApplyBuildingAdmin(String buildingId, String authorId) {
+        if (buildingAdminRepository.countApplyBuildingAdmin(buildingId, authorId) != 0) {
+            return true;    //buildlingId和authorId都有效且相连state=0的时候 才为true
+        }
+        return false;
+    }
     @Transactional(readOnly = true)
     public Collection<Building> findBuildingByAdmin(String authorId) {   //authorId是否有效可放到controller层
         return buildingAdminRepository.findBuildingByAdmin(authorId);

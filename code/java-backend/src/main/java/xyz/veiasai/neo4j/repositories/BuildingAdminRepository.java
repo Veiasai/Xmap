@@ -26,6 +26,11 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
             " return count(r)")
     public int countValidBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
+    @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)" +
+            " where r.state = 0 " +
+            " return count(r)")
+    public int countApplyBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
+
     @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN]-(b:Building {id:{buildingId}}) return b")
     public Collection<Building> findBuildingByAdmin(@Param("authorId") String authorId);
 
@@ -35,4 +40,7 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
     @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)" +
             "set r.state = 2 ") //2 means refused
     public void refuseBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
+
+    @Query("Match (a:Author {id:{authorId}})-[r:BUILDINGADMIN]-(b:Building) return count(r)")
+    public int countBuildingByAdmin(@Param("authorId")String authorId);
 }

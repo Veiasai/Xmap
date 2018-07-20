@@ -7,12 +7,9 @@ import xyz.veiasai.neo4j.domain.Message;
 import xyz.veiasai.neo4j.repositories.AuthorRepository;
 import xyz.veiasai.neo4j.repositories.BuildingRepository;
 import xyz.veiasai.neo4j.repositories.MessageRepository;
-import xyz.veiasai.neo4j.result.Result;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.text.SimpleDateFormat;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -50,8 +47,8 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Message> findMessageByAuthorAndBuilding(String buildingId, String authorId, Integer skip, Integer limit) {
-        return messageRepository.findMessageByAuthorAndBuilding(buildingId, authorId, skip, limit);
+    public Collection<Message> findMessageByAuthorAndBuilding(String buildingId, String authorId, String title, Integer skip, Integer limit) {
+        return messageRepository.findMessageByAuthorAndBuilding(buildingId, authorId,title, skip, limit);
     }
 
     @Transactional(readOnly = true)

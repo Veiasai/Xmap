@@ -40,7 +40,7 @@ public class MessageController {
         } else if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
             result.setCode(405);
-        } else if (!buildingAdminService.existBuildingAdmin(buildingId, authorId)) {
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {
             result.setMessage("用户无权限发布信息");
             result.setCode(403);
         } else {
@@ -83,7 +83,7 @@ public class MessageController {
                                     @RequestParam(required = false, defaultValue = "5") Integer limit) {
         MessageResult result = new MessageResult();
         if (buildingId != null && authorId != null) {
-            result.setMessages(messageService.findMessageByAuthorAndBuilding(buildingId, authorId, skip, limit));
+            result.setMessages(messageService.findMessageByAuthorAndBuilding(buildingId,title, authorId, skip, limit));
             result.setMessage("查询成功");      //区别singleMessage方法
             result.setCode(200);
         } else if (buildingId != null) {
