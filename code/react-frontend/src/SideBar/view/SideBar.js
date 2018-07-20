@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Menu} from 'antd';
-import {link} from 'react-keeper'
+import {Link} from 'react-keeper'
 import "./SideBar.css"
 
 class SideBar extends Component

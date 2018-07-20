@@ -11,14 +11,19 @@ cd view
 cat>$fileName.js<<EOF
 import React, { Component } from 'react';
 import {} from 'antd';
+import {inject, observer} from "mobx-react/index";
 import "./${fileName}.css"
 
+@inject(['UserData'])
+@observer
 class ${fileName} extends Component
 {
     render()
     {
         return(
+            <div>
             
+            </div>
         )
     }
 }
