@@ -282,7 +282,7 @@
     async searchNode(skip) {
       try {
         let res = await wepy.request({
-          url: httpHead + '/nodes/author',
+          url: httpHead + '/nodes',
           data: {
             authorId: this.$parent.globalData.userInfo,
             skip: skip,

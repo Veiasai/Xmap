@@ -1,11 +1,9 @@
 package xyz.veiasai.neo4j.controller;
 
-import com.sun.org.omg.SendingContext.CodeBasePackage.ValueDescSeqHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Node;
@@ -95,14 +93,14 @@ public class DataSetController {
 
         if (dataSet.getType().equals("node")) {
             NodeResult result = new NodeResult();
-            Collection<Node> Nodes = dataSetService.searchNodesByNameLike(dataSetId, Name, skip, limit);
+            Collection<Node> Nodes = dataSetService.findNodesByNameLike(dataSetId, Name, skip, limit);
             result.setCode(200);
             result.setMessage("查找点位成功");
             result.setNodes(Nodes);
             return result;
         }
         PathResult result = new PathResult();
-        Collection<Path> Paths = dataSetService.searchPathByNameLike(dataSetId, Name, skip, limit);
+        Collection<Path> Paths = dataSetService.findPathByNameLike(dataSetId, Name, skip, limit);
         result.setCode(200);
         result.setMessage("查找路线成功");
         result.setPaths(Paths);

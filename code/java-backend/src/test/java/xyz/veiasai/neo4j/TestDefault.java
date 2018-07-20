@@ -1,4 +1,4 @@
-package xyz.veiasai.neo4j.controller;
+package xyz.veiasai.neo4j;
 
 import com.google.gson.Gson;
 import org.junit.After;
@@ -42,14 +42,18 @@ public class TestDefault {
     @Autowired
     public DataSetRepository dataSetRepository;
 
-    public static Building building = new Building();
-    public static Address address = new Address();
-    public static Author author = new Author();
-    public static Node node = new Node();
-    public static Node node2 = new Node();
-    public static Path path = new Path();
-    public static DataSet dataSet = new DataSet();
-    public static Gson gson = new Gson();
+    @Autowired
+    public BuildingAdminRepository buildingAdminRepository;
+
+    protected static Building building = new Building();
+    protected static Address address = new Address();
+    protected static Author author = new Author();
+    protected static Node node = new Node();
+    protected static Node node2 = new Node();
+    protected static Path path = new Path();
+    protected static DataSet dataSet = new DataSet();
+    protected static Gson gson = new Gson();
+    protected static Author buildingAdmin = new Author();
 
     @Before
     public void setup() {
@@ -104,6 +108,12 @@ public class TestDefault {
         authorRepository.addFavorite(author.getId(), path.getId());
         authorRepository.addFavorite(author.getId(), node.getId());
         authorRepository.addFavorite(author.getId(), dataSet.getId());
+
+        // 初始化building admin
+        buildingAdmin.setId("bAdmin");
+        authorRepository.save(buildingAdmin);
+
+        buildingAdminRepository.addBuildingAdmin(building.getId(), buildingAdmin.getId());
     }
 
     @After

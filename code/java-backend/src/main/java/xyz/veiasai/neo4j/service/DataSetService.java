@@ -66,12 +66,12 @@ public class DataSetService {
         }
     }
     @Transactional
-    public Collection<Node> searchNodesByNameLike(String dataSetId,String nodeName,Integer skip,Integer limit){
-        return dataSetRepository.SearchNodesByNameLike(dataSetId,nodeName,skip,limit);
+    public Collection<Node> findNodesByNameLike(String dataSetId, String nodeName, Integer skip, Integer limit){
+        return dataSetRepository.findNodesByNameLike(dataSetId,nodeName,skip,limit);
     }
     @Transactional
     public Collection<Node> searchAllNodes(String dataSetId){
-        return dataSetRepository.SearchAllNodes(dataSetId);
+        return dataSetRepository.findAllNodes(dataSetId);
     }
     @Transactional
     public void deleteRelationPath(String dataSetId,String pathId){
@@ -99,13 +99,10 @@ public class DataSetService {
         }
     }
     @Transactional
-    public Collection<Path> searchPathByNameLike(String dataSetId,String pathName,Integer skip,Integer limit){
-        return dataSetRepository.SearchPathsByNameLike(dataSetId,pathName,skip,limit);
+    public Collection<Path> findPathByNameLike(String dataSetId, String pathName, Integer skip, Integer limit){
+        return dataSetRepository.findPathsByNameLike(dataSetId,pathName,skip,limit);
     }
-    @Transactional
-    public Collection<Path> searchAllPaths(String dataSetId){
-        return dataSetRepository.SearchAllPaths(dataSetId);
-    }
+
     @Transactional
     public Collection<DataSet> findDataSetByBuildingAndName(String buildingId,String dataSetName,Integer skip,Integer limit){
         return dataSetRepository.findByBuildingAndName(buildingId,dataSetName,skip,limit);

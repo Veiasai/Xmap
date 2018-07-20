@@ -1,11 +1,9 @@
 package xyz.veiasai.neo4j.controller;
 
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import static org.junit.Assert.*;
+import xyz.veiasai.neo4j.TestDefault;
 
 public class LoginControllerTest extends TestDefault {
 

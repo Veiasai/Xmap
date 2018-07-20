@@ -8,10 +8,11 @@ pipeline:
     volumes:
       - /home/administrator/mavenhub/:/root/.m2
     commands:
+      - cd ./code/java-backend
       - mvn clean package
-      - mv ./target/Xmap-1.0.0.war ./target/Xmap.war
+      - mv ./target/Xmap-1.0.0.jar ./target/Xmap.jar
     when:
-        branch: [ master, dev ]
+        branch: [ master ]
 
   docker:
     image: plugins/docker
@@ -19,20 +20,7 @@ pipeline:
     tags: latest
     secrets: [ docker_username, docker_password ]
     when:
-        branch: [ master, dev]
-
-  ssh:
-    image: appleboy/drone-ssh
-    host: 192.168.0.233
-    username: administrator
-    port: 22
-    secrets: [ ssh_password ]
-    script:
-      - docker stop myserver
-      - docker rm myserver
-      - docker run --name myserver -p 8086:8080 -d veiasai/server:latest
-    when:
-        branch: [ master, dev]
+        branch: [ master ]
 
   notify:
     image: drillster/drone-email

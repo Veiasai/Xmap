@@ -1,9 +1,8 @@
 <style>
   .searchInput{
     height: 7vh;
-    width: 680rpx;
+    width: 660rpx;
     margin-top: 2vh;
-    margin-left: 35rpx;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
@@ -55,15 +54,16 @@
   }
 
   .pathsAvailable view{
-    margin-left: ;
+
   }
 </style>
 
 <template>
-  <view>
+  <view style="display: flex; flex-direction: column; align-items: center">
     <!--search input box-->
-    <view style="height: 9vh">
+    <view style="height: 9vh; display: flex; flex-direction: row;">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+      <view @tap="dataSet" width="20rpx">选组</view>
     </view>
     <!--show the selected start node and end node-->
     <view class="nodeSelect">
@@ -122,6 +122,7 @@
       navigationBarTitleText: 'NodeView',
     }
     data = {
+      dataSet: null,
       nodes: [],  // 查找到的点位
       origin: null,
       end: null,

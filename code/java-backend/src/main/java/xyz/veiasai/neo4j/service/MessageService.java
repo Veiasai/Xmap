@@ -47,6 +47,7 @@ public class MessageService {
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
         return optionalMessage.orElse(null);
     }
+
     @Transactional(readOnly = true)
     public boolean existMessageAndAuthor(String authorId,String messageId){
         if(messageRepository.countMessageAndAuthor(authorId, messageId)!=0){
@@ -54,8 +55,4 @@ public class MessageService {
         }
         return false;
     }
-
-
-
-
 }

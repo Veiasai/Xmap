@@ -63,6 +63,7 @@ public class BuildingAdminController {
         }
         return result;
     }
+
     @GetMapping("/admin")
     public BuildingAdminResult getAdminByBuildingId(@RequestParam String buildingId) {
         BuildingAdminResult result = new BuildingAdminResult();
@@ -76,6 +77,7 @@ public class BuildingAdminController {
         result.setMessage("查询成功");      //进一步判断查询结果是否为空 to be continued
         return result;
     }
+
     @GetMapping("/building")
     public BuildingResult getBuildingByAdminId(@RequestParam String adminId){
         BuildingResult result =new BuildingResult();

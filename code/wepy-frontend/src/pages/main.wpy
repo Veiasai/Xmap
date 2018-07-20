@@ -1,10 +1,8 @@
 <style>
-
   .searchInput{
     height: 7vh;
-    width: 680rpx;
+    width: 660rpx;
     margin-top: 2vh;
-    margin-left: 35rpx;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
@@ -23,10 +21,25 @@
 </style>
 
 <template>
-  <view>
-    <view style="height: 10vh">
+  <view style="display: flex; flex-direction: column; align-items: center">
+    <view style="height: 10vh; display: flex; flex-direction: row;">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+      <view @tap="dataSet" width="20rpx">选组</view>
     </view>
+    <view style="width:700rpx; text-align: center">
+      管理员发布的消息
+      <view style="font-size: 30rpx">
+        申请成为管理员
+      </view>
+    </view>
+    <swiper style="height: 20vh; width: 700rpx; text-align: center; border: solid">
+      <repeat for="{{messages}}" index="index" item="item">
+        <swiper-item>
+          <view style="width:700rpx; font-size: 50rpx">{{item.title}}</view>
+          <view style="width:700rpx; font-size: 30rpx">{{item.content}}</view>
+        </swiper-item>
+      </repeat>
+    </swiper>
     <scroll-view  scroll-y bindscrolltolower="touchLow" class="pathGroup">
       <repeat for="{{paths}}" index="index" item="item">
         <Path :path="item"></Path>
@@ -42,13 +55,14 @@
 
   export default class Main extends wepy.page {
     onLoad() {
-      this.search({skip: this.skip});
+      this.searchPath({skip: this.skip});
     }
 
     config = {
       navigationBarTitleText: "Main"
     }
     data = {
+      messages: [{title:"wtf", content: "wtf"}, {title:"wtfxx", content: "wtxxf"}],
       paths: [],
       name: "",
       skip: 0,
@@ -58,7 +72,30 @@
       Path: path
     }
 
-    async search(data) {
+    methods = {
+      searchInput(e) {
+        let name = e.detail.value;
+        this.name = name;
+        this.skip = 0;
+        this.searchPath({name: name, skip: 0});
+      },
+
+      touchLow() {
+        this.searchPath({name: this.name, skip: this.skip});
+      }
+    }
+
+    events = {
+      'tap-path': (path, $event) => {
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
+        this.$preload('originToEnd', [path]);
+        wx.navigateTo({
+          url: '/pages/pathInfo',
+        })
+      }
+    }
+
+    async searchPath(data) {
       try {
         console.log(data);
         let res = await wepy.request({
@@ -74,13 +111,13 @@
           return {...item, img: imgHead + item.img}
         });
         if (paths.length > 0) {
-          if (this.skip === 0) {
+          if (data.skip === 0) {
             this.paths = paths;
           }
           else {
             this.paths = [...this.paths, ...paths];
           }
-          this.skip += 5;
+          this.skip += this.limit;
         }
         else {
           if (this.skip === 0) {
@@ -104,26 +141,24 @@
         console.log(e);
       }
     }
-    methods = {
-      searchInput(e) {
-        let name = e.detail.value;
-        this.name = name;
-        this.skip = 0;
-        this.search({name: name, skip: 0});
-      },
 
-      touchLow() {
-        this.search({name: this.name, skip: this.skip});
-      }
-    }
-
-    events = {
-      'tap-path': (path, $event) => {
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
-        this.$preload('originToEnd', [path]);
-        wx.navigateTo({
-          url: '/pages/pathInfo',
+    async searchMessage(data) {
+      try {
+        console.log(data);
+        let res = await wepy.request({
+          url: httpHead + '/messages',
+          data: {
+            ...data,
+            buildingId: this.$parent.globalData.building.id,
+            limit: this.limit,
+          }
         })
+        console.log(res.data);
+        this.messages = res.data.messages;
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
       }
     }
   }

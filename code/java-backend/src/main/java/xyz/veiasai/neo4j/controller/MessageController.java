@@ -72,7 +72,7 @@ public class MessageController {
             result.setCode(404);
             return result;
         }
-        if(messageService.existMessageAndAuthor(authorId, messageId)==false){
+        if(!messageService.existMessageAndAuthor(authorId, messageId)){
             result.setMessage("该用户无权限删除此信息");
             result.setCode(403);
             return result;

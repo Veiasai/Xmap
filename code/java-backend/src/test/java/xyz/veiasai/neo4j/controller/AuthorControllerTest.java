@@ -1,10 +1,9 @@
 package xyz.veiasai.neo4j.controller;
 
 import org.junit.Test;
-import org.neo4j.cypher.internal.frontend.v2_3.ast.functions.E;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import xyz.veiasai.neo4j.TestDefault;
 
 import static org.junit.Assert.*;
 

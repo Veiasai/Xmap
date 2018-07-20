@@ -1,11 +1,11 @@
 package xyz.veiasai.neo4j.controller;
 
-import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import xyz.veiasai.neo4j.TestDefault;
 import xyz.veiasai.neo4j.domain.Path;
 import xyz.veiasai.neo4j.pojo.Content;
 

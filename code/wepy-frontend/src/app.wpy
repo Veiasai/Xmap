@@ -17,14 +17,15 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/nodeViewer',
+        'pages/main',
         'pages/start',
+        'pages/nodeViewer',
         'pages/pathUpload/pathUpload',
         'pages/nodeUpload',
         'pages/pathUpload/nodeSelect',
         'pages/dataSetViewer',
         // 'pages/test',
-        'pages/main',
+
         'pages/pathInfo',
         'pages/uploadSelect',
         'pages/collection',
@@ -64,14 +65,12 @@
             "pagePath": "pages/user",
             "text": "用户"
           }
-
         ]
-
       }
     }
 
     globalData = {
-      building:{id:"05737372-a6fa-45f7-b254-52cb8b2c907a"}, //wx.chooselocation返回的buidling对象
+      building:{id:"ba974511-df18-4b7d-a8e0-9257b79b2bb8"}, //wx.chooselocation返回的buidling对象
       userInfo: null,
       paths: [],   // main页面的path记录
     };
@@ -111,6 +110,5 @@
         console.log(e);
       }
     }
-
   }
 </script>

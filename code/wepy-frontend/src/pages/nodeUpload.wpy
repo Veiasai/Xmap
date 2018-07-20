@@ -65,6 +65,7 @@
     width: 600 rpx;
     border-style: solid;
   }
+
 </style>
 <template>
   <view class="point">

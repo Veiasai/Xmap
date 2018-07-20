@@ -4,9 +4,10 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import xyz.veiasai.neo4j.TestDefault;
 
 
-public class NodeControllerTest extends TestDefault{
+public class NodeControllerTest extends TestDefault {
 
     @Test
     public void nodePost() throws  Exception{

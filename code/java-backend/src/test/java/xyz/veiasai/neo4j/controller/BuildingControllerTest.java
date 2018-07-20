@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import xyz.veiasai.neo4j.TestDefault;
 import xyz.veiasai.neo4j.domain.Building;
 
 import static org.junit.Assert.*;

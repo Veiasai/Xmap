@@ -9,6 +9,7 @@ import xyz.veiasai.neo4j.result.NodeResult;
 import xyz.veiasai.neo4j.result.Result;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingService;
+import xyz.veiasai.neo4j.service.DataSetService;
 import xyz.veiasai.neo4j.service.NodeService;
 
 import javax.validation.Valid;
@@ -24,6 +25,8 @@ public class NodeController {
     private BuildingService buildingService;
     @Autowired
     private AuthorService authorService;
+    @Autowired
+    private DataSetService dataSetService;
 
     @ApiOperation(value = "上传点位", notes="上传点位信息")
     @PostMapping("/node")
@@ -45,6 +48,7 @@ public class NodeController {
                               @RequestParam(required = false) String buildingId,
                               @RequestParam(required = false) String authorId,
                               @RequestParam(required = false) String originId,
+                              @RequestParam(required = false) String dataSetId,
                               @RequestParam(required = false) Integer skip,
                               @RequestParam(required = false) Integer limit)
     {
@@ -55,21 +59,21 @@ public class NodeController {
             limit = 5;
         }
         NodeResult result =new NodeResult();
-        if(authorId != null && buildingId !=null){
+        if (dataSetId != null)
+        {
+            result.setNodes(dataSetService.findNodesByNameLike(dataSetId, name, skip, limit));
+        }
+        else if(authorId != null && buildingId !=null){
             result.setNodes(nodeService.findByAuthorAndBuilding(authorId,buildingId,skip,limit));
-            return result;
         }
-        if(authorId !=null){
+        else if(authorId !=null){
             result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));
-            return result;
         }
-        if(buildingId !=null){
+        else if(buildingId !=null){
             result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));
-            return result;
         }
-        if (originId != null){
+        else if (originId != null){
             result.setNodes(nodeService.findByOriginNode(originId, name,skip,limit));
-            return result;
         }
         return result;
     }

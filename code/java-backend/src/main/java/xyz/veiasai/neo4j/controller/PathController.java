@@ -3,6 +3,7 @@ package xyz.veiasai.neo4j.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -12,10 +13,7 @@ import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.domain.Path;
 import xyz.veiasai.neo4j.result.PathResult;
 import xyz.veiasai.neo4j.result.Result;
-import xyz.veiasai.neo4j.service.AuthorService;
-import xyz.veiasai.neo4j.service.BuildingService;
-import xyz.veiasai.neo4j.service.NodeService;
-import xyz.veiasai.neo4j.service.PathService;
+import xyz.veiasai.neo4j.service.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -27,9 +25,7 @@ public class PathController {
     @Autowired
     private PathService pathService;
     @Autowired
-    private NodeService nodeService;
-    @Autowired
-    private BuildingService buildingService;
+    private DataSetService dataSetService;
     @Autowired
     private AuthorService authorService;
 
@@ -47,6 +43,7 @@ public class PathController {
     @GetMapping("/paths")
     public PathResult pathGet(@RequestParam String buildingId,
                                     @RequestParam(required = false,defaultValue = "") String name,
+                                    @RequestParam(required = false) String dataSetId,
                                     @RequestParam(required = false) Integer skip,
                                     @RequestParam(required = false)Integer limit) {
         if(skip == null){
@@ -56,7 +53,12 @@ public class PathController {
             limit = 5;
         }
         PathResult result =new PathResult();
-        result.setPaths(pathService.findByBuildingAndName(buildingId, name,skip,limit));
+        if (dataSetId != null){
+            result.setPaths(dataSetService.findPathByNameLike(dataSetId, name, skip, limit));
+        }
+        else{
+            result.setPaths(pathService.findByBuildingAndName(buildingId, name,skip,limit));
+        }
         return result;
     }
 

@@ -34,23 +34,18 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     )
     public void deleteRelationNodeAndDataSet(@Param("dataSetId") String dataSetId, @Param("nodeId") String nodeId);
 
-    @Query("Match (node:Node {name:{nodeName}})-[:NODE]->(dataset:DataSet {id:{dataSetId}})" +
-            "return node"
-    )
-    public Node SearchNode(@Param("dataSetId") String dataSetId, @Param("nodeName") String nodeName);
-
     @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}}) where node.name =~ ('.*'+{nodeName}+'.*')" +
             "RETURN node ORDER BY node.name SKIP {skip} LIMIT {limit}"
     )
-    public Collection<Node> SearchNodesByNameLike(@Param("dataSetId") String dataSetId,
-                                                  @Param("nodeName") String nodeName,
-                                                  @Param("skip")Integer skip,
-                                                  @Param("limit")Integer limit);
+    public Collection<Node> findNodesByNameLike(@Param("dataSetId") String dataSetId,
+                                                @Param("nodeName") String nodeName,
+                                                @Param("skip")Integer skip,
+                                                @Param("limit")Integer limit);
 
     @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}})" +
             "return node"
     )
-    public Collection<Node> SearchAllNodes(@Param("dataSetId") String dataSetId);
+    public Collection<Node> findAllNodes(@Param("dataSetId") String dataSetId);
 
 
     @Query("Match (p:Path {id:{pathId}}),(dataset:DataSet {id:{dataSetId}})" +
@@ -66,10 +61,10 @@ public interface DataSetRepository extends Neo4jRepository<DataSet,String> {
     @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}}) where p.name =~('.*'+{pathName}+'.*')" +
             "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}"
     )
-    public Collection<Path> SearchPathsByNameLike(@Param("dataSetId") String dataSetId,
-                                                  @Param("pathName") String pathName,
-                                                  @Param("skip")Integer skip,
-                                                  @Param("limit")Integer limit);
+    public Collection<Path> findPathsByNameLike(@Param("dataSetId") String dataSetId,
+                                                @Param("pathName") String pathName,
+                                                @Param("skip")Integer skip,
+                                                @Param("limit")Integer limit);
 
     @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}})" +
             "return p"
