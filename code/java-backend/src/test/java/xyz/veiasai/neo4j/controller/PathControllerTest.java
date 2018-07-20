@@ -43,20 +43,35 @@ public class PathControllerTest extends TestDefault {
 
     @Test
     public void pathGet() throws Exception{
+        // invalid param
+        mvc.perform(MockMvcRequestBuilders.get("/paths"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("404"));
+
+        // ok
         mvc.perform(MockMvcRequestBuilders.get("/paths")
                 .param("buildingId", building.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.paths[0].name").value("test"));
 
+        // by name, ok
         mvc.perform(MockMvcRequestBuilders.get("/paths")
                 .param("buildingId", building.getId())
                 .param("name", path.getName()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.paths[0].id").value(path.getId()));
 
+        // invalid Id
         mvc.perform(MockMvcRequestBuilders.get("/paths")
                 .param("buildingId", "NotExist")
                 .param("name", path.getName()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/paths")
+                .param("buildingId", building.getId())
+                .param("name", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
     }
@@ -81,9 +96,36 @@ public class PathControllerTest extends TestDefault {
     }
 
     @Test
+    public void pathGetByDataSet() throws Exception{
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/paths")
+                .param("dataSetId", dataSetPath.getId())
+                .param("name", path.getName()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths[0].id").value(path.getId()));
+
+        mvc.perform(MockMvcRequestBuilders.get("/paths")
+                .param("dataSetId", dataSetPath.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths[0].id").value(path.getId()));
+
+        // invalid dataSetId
+        mvc.perform(MockMvcRequestBuilders.get("/paths")
+                .param("dataSetId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/paths")
+                .param("dataSetId", dataSetPath.getId())
+                .param("name", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.paths").isEmpty());
+    }
+
+    @Test
     public void pathDeleteById() throws Exception{
         Path path2 = new Path();
-
         path2.setId(null);
         path2.setName("test1");
         path2.setCurves(10);

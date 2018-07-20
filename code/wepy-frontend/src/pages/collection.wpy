@@ -86,7 +86,7 @@
           <repeat for="{{pathList}}" key="index" item="item" index="index">
             <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
-                <view @tap = "notifi" class="path">
+                <view @tap = "tappath" data-path="{{item}}" class="path">
                   <view class="pathimg">
                     <image mode="aspectFill" src="{{item.img}}" />
                   </view>
@@ -152,6 +152,13 @@
       nodeTouchEnd(){
         this.searchNode(this.nodeSkip);
       },
+
+      tappath(e){
+        this.$preload('originToEnd', [e.currentTarget.dataset.path]);
+        wx.navigateTo({
+          url: '/pages/pathInfo',
+        })
+      }
     }
 
     async searchPath(skip) {

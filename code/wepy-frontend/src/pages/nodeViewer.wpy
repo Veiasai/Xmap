@@ -59,12 +59,17 @@
 </style>
 
 <template>
-  <view style="display: flex; flex-direction: column; align-items: center">
+  <view>
     <!--search input box-->
     <view style="height: 9vh; display: flex; flex-direction: row;">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
-      <view @tap="dataSet" width="20rpx">选组</view>
+      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
+        <view class="picker">
+          {{dataSet === null ? "选组" : dataSet.name}}
+        </view>
+      </picker>
     </view>
+
     <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
@@ -90,12 +95,12 @@
       </scroll-view>
     </view>
     <view wx:else>
-      <scroll-view style="height: 60vh;" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+      <scroll-view style="height: 60vh;" scroll-y bindscrolltolower="touchLowPath" class="nodeGroup">
         <repeat  for="{{originToEndList}}" index="index" item="item">
-          <view class="pathsAvailable" id="{{index}}" @tap="pathView">
-            <view id="{{index}}" style="font-size: 40rpx">路线 {{index+1}}</view>
-            <view id="{{index}}" style="font-size: 32rpx;font-weight: lighter;color: #383838">由 {{(item.paths.length-1)/2}} 条路线拼接而成</view>
-            <view id="{{index}}" style="font-size: 32rpx;font-weight: lighter;color: #383838">共经过 {{(item.paths.length+1)/2}} 个点</view>
+          <view class="pathsAvailable"  data-paths="{{item.paths}}" @tap="pathView">
+            <view style="font-size: 40rpx">路线 {{index+1}}</view>
+            <view style="font-size: 32rpx;font-weight: lighter;color: #383838">由 {{(item.paths.length-1)/2}} 条路线拼接而成</view>
+            <view style="font-size: 32rpx;font-weight: lighter;color: #383838">共经过 {{(item.paths.length+1)/2}} 个点</view>
           </view>
         </repeat>
       </scroll-view>
@@ -123,6 +128,9 @@
     }
     data = {
       dataSet: null,
+      dataSetList: [],
+      dataSetNameList: ["1","1","1","1","1","1","1","1","1","1","1",],
+      showDataSet: false,
       nodes: [],  // 查找到的点位
       origin: null,
       end: null,
@@ -184,13 +192,19 @@
         this.searchNode(data);
       },
 
+      touchLowPath() {
+        this.searchPath(this.pathSkip);
+      },
+
       pathView(e) {
-        let index =  parseInt(e.target.id);
-        console.log(index);
-        this.$preload("originToEnd", this.originToEndList[index].paths);
+        this.$preload("originToEnd", e.currentTarget.dataset.paths);
         wx.navigateTo({
           url: '/pages/pathInfo',
         })
+      },
+
+      bindDataSetChange() {
+        this.showDataSet = true;
       }
     }
 
@@ -252,11 +266,20 @@
           }
         }
         else {
-          wx.showToast({
-            title: '没有满足条件的点位',
-            icon: 'none',
-          })
-          this.nodes = [];
+          if (data.skip === 0)
+          {
+            wx.showToast({
+              title: '没有满足条件的点位',
+              icon: 'none',
+            })
+            this.nodes = [];
+          }
+          else{
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
         }
         this.$apply();
       } catch (e) {
@@ -285,9 +308,48 @@
           }
           this.pathSkip += this.limit;
         }
+        else{
+          if (skip === 0)
+          {
+            wx.showToast({
+              title: '没有满足条件的路线',
+              icon: 'none',
+            })
+            this.paths = [];
+          }
+          else{
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
         this.$apply();
       }
       catch (e) {
+        console.log(e);
+      }
+    }
+
+    async searchDataSet() {
+      try{
+        let res = await wepy.request({
+          url: httpHead + '/nodes/twonodes/v2',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+          }
+        })
+
+        this.dataSetList = res.data.dataSets.filter((item)=>{
+          return item.type === 'node';
+        });
+
+        this.dataSetNameList = this.dataSetList.map((item)=>{
+          return item.name;
+        })
+
+      }catch (e)
+      {
         console.log(e);
       }
     }

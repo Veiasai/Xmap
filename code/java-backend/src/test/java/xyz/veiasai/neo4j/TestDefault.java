@@ -3,7 +3,6 @@ package xyz.veiasai.neo4j;
 import com.google.gson.Gson;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,12 +45,14 @@ public class TestDefault {
     public BuildingAdminRepository buildingAdminRepository;
 
     protected static Building building = new Building();
+    protected static Building building2 = new Building();
     protected static Address address = new Address();
     protected static Author author = new Author();
     protected static Node node = new Node();
     protected static Node node2 = new Node();
     protected static Path path = new Path();
-    protected static DataSet dataSet = new DataSet();
+    protected static DataSet dataSetNode = new DataSet();
+    protected static DataSet dataSetPath = new DataSet();
     protected static Gson gson = new Gson();
     protected static Author buildingAdmin = new Author();
 
@@ -64,6 +65,12 @@ public class TestDefault {
         address.setAddress("test");
         building.setAddress(address);
         building = buildingRepository.save(building);
+
+        building2.setId("testBuilding2");
+        building2.setName("test2");
+        address.setAddress("test2");
+        building.setAddress(address);
+        building2 = buildingRepository.save(building2);
 
         // 初始化author
         author.setId("testUser");
@@ -98,22 +105,32 @@ public class TestDefault {
         pathRepository.addRelationOriginAndEnd(path.getId(), node.getId(), node2.getId());
 
         // 初始化dataSet
-        dataSet.setName("test");
-        dataSet.setState(1);
-        dataSet.setType("node");
-        dataSet = dataSetRepository.save(dataSet);
-        dataSetRepository.addRelationNodeAndDataSet(dataSet.getId(), node.getId());
+        dataSetNode.setName("test");
+        dataSetNode.setState(1);
+        dataSetNode.setType("node");
+        dataSetNode = dataSetRepository.save(dataSetNode);
+        dataSetRepository.addRelationNodeAndDataSet(dataSetNode.getId(), node.getId());
+        dataSetRepository.addRelationAuthorAndBuilding(dataSetNode.getId(), building.getId(), author.getId());
+
+        dataSetPath.setName("test");
+        dataSetPath.setState(1);
+        dataSetPath.setType("path");
+        dataSetPath = dataSetRepository.save(dataSetPath);
+        dataSetRepository.addRelationPathAndDataSet(dataSetPath.getId(), path.getId());
+        dataSetRepository.addRelationAuthorAndBuilding(dataSetPath.getId(), building.getId(), author.getId());
 
         // 初始化favorite
         authorRepository.addFavorite(author.getId(), path.getId());
         authorRepository.addFavorite(author.getId(), node.getId());
-        authorRepository.addFavorite(author.getId(), dataSet.getId());
+        authorRepository.addFavorite(author.getId(), dataSetNode.getId());
 
         // 初始化building admin
         buildingAdmin.setId("bAdmin");
         authorRepository.save(buildingAdmin);
-
+        buildingAdminRepository.applyBuildingAdmin(building.getId(), buildingAdmin.getId());
+        buildingAdminRepository.applyBuildingAdmin(building2.getId(), buildingAdmin.getId());
         buildingAdminRepository.setBuildingAdmin(building.getId(), buildingAdmin.getId());
+
     }
 
     @After

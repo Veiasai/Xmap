@@ -267,7 +267,7 @@
 
         this.hiddenPathName = true;
         let content = "请确认路线制作完成，点击确定上传"
-        if (this.origin === "" && this.end === "") {
+        if (this.origin === null && this.end === null) {
           content = "该路线未绑定任何点位，是否继续上传？";
         }
         try {
@@ -307,8 +307,8 @@
           let res = await wepy.request({
             url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
             + '&buildingId=' + this.$parent.globalData.building.id +
-            '&origin=' + this.origin.id
-            + '&end=' + this.end.id,
+            this.origin !== null ? ('&origin=' + this.origin.id) : ""
+            + this.end !== null ? ('&end=' + this.end.id) : "",
             method: 'POST',
             header: {
               'content-type': 'application/json'

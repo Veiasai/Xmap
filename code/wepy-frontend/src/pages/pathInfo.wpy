@@ -75,6 +75,10 @@
               method: "DELETE"
             })
             this.favoriteArray[index] = 0;
+            wx.showToast({
+              title: '取消收藏成功',
+              icon: 'none',
+            })
           }
           else{
             wepy.request({
@@ -82,10 +86,18 @@
               method: "POST"
             })
             this.favoriteArray[index] = 1;
+            wx.showToast({
+              title: '收藏成功',
+              icon: 'none',
+            })
           }
           this.$apply();
         } catch (e) {
           console.log(e);
+          wx.showToast({
+            title: '网络异常',
+            icon: 'none',
+          })
         }
       }
     }
