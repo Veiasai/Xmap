@@ -15,10 +15,12 @@ public class NodeService {
     @Autowired
     private NodeRepository nodeRepository;
 
-    public Node addNode(Node node) {
+    public Node addNode(Node node, String buildingId, String authorId) {
         node.setId(null);
         node.setState(1);
-        return nodeRepository.save(node);
+        node = nodeRepository.save(node);
+        nodeRepository.addRelationAuthorAndBuilding(node.getId(), buildingId, authorId);
+        return node;
     }
 
     @Transactional(readOnly = true)

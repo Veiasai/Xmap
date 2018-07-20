@@ -30,6 +30,7 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
     public int countApplyBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
     @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building)  return b")
+
     public Collection<Building> findBuildingByAdmin(@Param("authorId") String authorId);
 
     @Query("Match (a:Author)-[r:BUILDINGADMIN {state:1}]-(b:Building {id:{buildingId}}) return a")

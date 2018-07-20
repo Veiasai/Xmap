@@ -41,25 +41,6 @@ public class Path {
     @Relationship(type = "BUILDING", direction = Relationship.INCOMING)
     private Building building;
 
-    @JsonIgnore
-    @Relationship(type = "PATH", direction = Relationship.INCOMING)
-    private Node origin;
-
-    @JsonIgnore
-    @Relationship(type = "PATH")
-    private Node end;
-
-    @JsonIgnoreProperties
-    @Relationship(type = "PATH")
-    private PATH path2node;
-
-    public PATH getPath2node() {
-        return path2node;
-    }
-
-    public void setPath2node(PATH path2node) {
-        this.path2node = path2node;
-    }
 
     public String getImg() {
         return img;
@@ -102,22 +83,6 @@ public class Path {
 
     public void setContents(List<Content> contents) {
         this.contents = contents;
-    }
-
-    public Node getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(Node origin) {
-        this.origin = origin;
-    }
-
-    public Node getEnd() {
-        return end;
-    }
-
-    public void setEnd(Node end) {
-        this.end = end;
     }
 
     public Author getAuthor() {

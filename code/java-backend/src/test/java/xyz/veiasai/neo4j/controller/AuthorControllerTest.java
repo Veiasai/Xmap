@@ -157,7 +157,7 @@ public class AuthorControllerTest extends TestDefault {
                 .param("authorId", author.getId())
                 .param("dataSetName", ""))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.dataSets[0].id").value(dataSet.getId()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dataSets[0].id").value(dataSetNode.getId()));
 
         // invalid author
         mvc.perform(MockMvcRequestBuilders.get("/favorite/dataset")

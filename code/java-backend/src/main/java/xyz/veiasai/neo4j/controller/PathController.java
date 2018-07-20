@@ -44,22 +44,25 @@ public class PathController {
     }
 
     @GetMapping("/paths")
-    public PathResult pathGet(@RequestParam String buildingId,
-                                    @RequestParam(required = false,defaultValue = "") String name,
-                                    @RequestParam(required = false) String dataSetId,
-                                    @RequestParam(required = false, defaultValue = "0") Integer skip,
-                                    @RequestParam(required = false, defaultValue = "5")Integer limit) {
-        PathResult result =new PathResult();
-        if (dataSetId != null){
+    public PathResult pathGet(@RequestParam(required = false) String buildingId,
+                              @RequestParam(required = false, defaultValue = "") String name,
+                              @RequestParam(required = false) String dataSetId,
+                              @RequestParam(required = false, defaultValue = "0") Integer skip,
+                              @RequestParam(required = false, defaultValue = "5") Integer limit) {
+        PathResult result = new PathResult();
+        if (dataSetId != null) {
             if (dataSetService.getDataSetById(dataSetId) == null) {
                 result.setMessage("数据组不存在");
                 result.setCode(404);
-            }
-            else{
+            } else {
                 result.setPaths(dataSetService.findPathByNameLike(dataSetId, name, skip, limit));
-                result.setCode(404);
+                result.setCode(200);
             }
-
+        }
+        else if (buildingId == null)
+        {
+            result.setCode(404);
+            result.setMessage("参数错误");
         }
         else if (buildingService.getBuildingById(buildingId) == null) {
             result.setCode(404);
@@ -82,7 +85,7 @@ public class PathController {
             result.setCode(404);
             result.setMessage("路线不存在");
         }  else {
-            //pathService.deletePathById(authorId, pathId);
+            pathService.deletePathById(authorId, pathId);
             result.setCode(200);
             result.setMessage("删除路线成功");
         }

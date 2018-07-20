@@ -28,7 +28,7 @@
     </view>
     <view style="width:700rpx; text-align: center">
       管理员发布的消息
-      <view style="font-size: 30rpx">
+      <view style="font-size: 30rpx" @tap="applyAdmin">
         申请成为管理员
       </view>
     </view>
@@ -82,6 +82,22 @@
 
       touchLow() {
         this.searchPath({name: this.name, skip: this.skip});
+      },
+
+      async applyAdmin(){
+        try{
+          let res = wepy.request({
+            url: httpHead + "/apply/buildingadmin",
+            data: {
+              authorId: this.$parent.globalData.userInfo,
+              buildingId: this.$parent.globalData.building.id,
+            }
+          })
+          wx.showToast({
+            title: '已发起申请，等待审核',
+            icon: 'none',
+          })
+        }
       }
     }
 

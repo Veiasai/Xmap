@@ -1,10 +1,13 @@
 package xyz.veiasai.neo4j.controller;
 
 import org.junit.Test;
+import org.junit.runners.Parameterized;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import xyz.veiasai.neo4j.TestDefault;
+
+import java.util.Collection;
 
 
 public class NodeControllerTest extends TestDefault {
@@ -64,6 +67,7 @@ public class NodeControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.jsonPath("nodes").isEmpty());
     }
 
+
     @Test
     public void nodeGetByAuthorAndBuilding() throws Exception{
         // ok
@@ -119,4 +123,34 @@ public class NodeControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
     }
+
+    @Test
+    public void nodeGetByDataSet() throws Exception{
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/nodes")
+                .param("dataSetId", dataSetNode.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes[0].id").value(node.getId()));
+
+        mvc.perform(MockMvcRequestBuilders.get("/nodes")
+                .param("dataSetId", dataSetNode.getId())
+                .param("name", node.getName()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes[0].id").value(node.getId()));
+
+        // invalid dataSetId
+        mvc.perform(MockMvcRequestBuilders.get("/nodes")
+                .param("dataSetId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
+
+        // invalid name
+        mvc.perform(MockMvcRequestBuilders.get("/nodes")
+                .param("dataSetId", dataSetNode.getId())
+                .param("name", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
+    }
+
+
 }

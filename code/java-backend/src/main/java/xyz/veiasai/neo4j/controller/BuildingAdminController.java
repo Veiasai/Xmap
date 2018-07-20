@@ -54,7 +54,6 @@ public class BuildingAdminController {
     public BuildingResult getBuildingByAdminId(@RequestParam String adminId) {
         BuildingResult result = new BuildingResult();
         if (authorService.getAuthorById(adminId) == null) {
-
             result.setMessage("用户不存在");
             result.setCode(405);
         } else {
