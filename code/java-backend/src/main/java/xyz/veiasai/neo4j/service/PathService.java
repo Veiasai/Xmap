@@ -61,6 +61,13 @@ public class PathService {
         return pathRepository.findByAuthorId(authorId, name, skip, limit);
     }
 
+    @Transactional(readOnly = true)
+    public boolean existPathAndAuthor(String authorId,String pathId){
+        if(pathRepository.countPathByAuthorId(authorId, pathId)!=0){
+            return true;
+        }
+        return false;
+    }
     /* 废弃接口
     @Transactional(readOnly = true)
     public Collection<Path> findByOriginAndEnd(String originId, String endId) {

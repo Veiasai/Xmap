@@ -70,6 +70,9 @@ public class PathController {
         } else if (pathService.findById(pathId) == null) {
             result.setCode(404);
             result.setMessage("路线不存在");
+        } else if (!pathService.existPathAndAuthor(authorId, pathId)) {
+            result.setCode(403);
+            result.setMessage("该用户无权限删除");
         } else {
             pathService.deletePathById(authorId, pathId);
             result.setCode(200);

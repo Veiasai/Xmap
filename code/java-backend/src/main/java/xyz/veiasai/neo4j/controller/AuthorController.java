@@ -115,11 +115,12 @@ public class AuthorController {
                                       @RequestParam(required = false, defaultValue = "") @ApiParam(name = "favoriteName", value = "收藏事物的名称") String favoriteName,
                                       @RequestParam(required = false, defaultValue = "0") @ApiParam(name = "skip", value = "指定查询收藏偏移量") Integer skip,
                                       @RequestParam(required = false, defaultValue = "5") @ApiParam(name = "limit", value = "指定查询收藏结果数") Integer limit) {
-        FavoriteResult result = authorService.findFavoriteByNameLike(authorId, favoriteName, skip, limit);
+        FavoriteResult result = new FavoriteResult();
         if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
             result.setCode(404);
         }
+        result = authorService.findFavoriteByNameLike(authorId, favoriteName, skip, limit);
         return result;
     }
 
