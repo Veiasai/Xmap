@@ -11,6 +11,8 @@ import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.result.*;
 import xyz.veiasai.neo4j.service.AuthorService;
+import xyz.veiasai.neo4j.service.BuildingAdminService;
+import xyz.veiasai.neo4j.service.BuildingService;
 
 import javax.validation.Valid;
 
@@ -19,8 +21,36 @@ import javax.validation.Valid;
 @RequestMapping("/")
 public class AuthorController {
     @Autowired
+    private BuildingService buildingService;
+    @Autowired
     private AuthorService authorService;
 
+    @Autowired
+    private BuildingAdminService buildingAdminService;
+
+    @ApiOperation(value = "申请建筑管理员",notes = "申请成为建筑管理员")
+    @PostMapping("/apply/buildingadmin")
+    public Result applyBuildingAdmin(@RequestParam String buildingId,@RequestParam String authorId){
+        Result result =new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setMessage("建筑不存在");
+            result.setCode(404);
+        } else if (authorService.getAuthorById(authorId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(405);
+        }else if(buildingAdminService.existValidBuildingAdmin(buildingId, authorId)){
+            result.setMessage("该用户已为该建筑管理员");
+            result.setCode(406);
+        }else if(buildingAdminService.existApplyBuildingAdmin(buildingId, authorId)){
+            result.setMessage("该用户已有待审核的申请");
+            result.setCode(407);
+        }else {
+            buildingAdminService.applyBuildingAdmin(buildingId, authorId);
+            result.setMessage("申请成功");
+            result.setCode(200);
+        }
+        return result;
+    }
     @ApiOperation(value = "收藏", notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等;\r\n404:不存在;\r\n200:删除成功")
     @PostMapping("/favorite")
     public Result postFavorite(@RequestParam @ApiParam(name = "authorId", value = "用户的Id") String authorId,

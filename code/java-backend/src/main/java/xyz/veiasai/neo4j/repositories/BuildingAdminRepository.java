@@ -41,6 +41,10 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
             "set r.state = 2 ") //2 means refused
     public void refuseBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
+    @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)" +
+            "set r.state = 1 ") //1 means success
+    public void setBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
+
     @Query("Match (a:Author {id:{authorId}})-[r:BUILDINGADMIN]-(b:Building) return count(r)")
     public int countBuildingByAdmin(@Param("authorId")String authorId);
 }

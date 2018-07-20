@@ -23,26 +23,6 @@ public class BuildingAdminController {
     @Autowired
     BuildingAdminService buildingAdminService;
 
-    @PostMapping("/buildingadmin")
-    public Result postBuildingAdmin(@RequestParam String buildingId, @RequestParam String authorId, @RequestParam String _sign) {
-        Result result = new Result();
-        if (_sign != "123456") {
-            result.setMessage("无权限访问");
-            result.setCode(403);
-        } else if (buildingService.getBuildingById(buildingId) == null) {
-            result.setMessage("建筑不存在");
-            result.setCode(404);
-        } else if (authorService.getAuthorById(authorId) == null) {
-            result.setMessage("用户不存在");
-            result.setCode(405);
-        } else {
-            buildingAdminService.addBuildingAdmin(buildingId, authorId);
-            result.setCode(200);
-            result.setMessage("设置建筑管理员成功");
-        }
-        return result;
-    }
-
     @PostMapping("/buildingadmin/login")
     public Result loginBuildingAdmin(@RequestParam String authorId) {
         Result result = new Result();
@@ -56,54 +36,8 @@ public class BuildingAdminController {
         return result;
     }
 
-    @PostMapping("/buildingadmin/handleapply")
-    public Result handleApply(@RequestParam String buildingId, @RequestParam String authorId, @RequestParam boolean refuse) {
-        Result result = new Result();
-        if (buildingService.getBuildingById(buildingId) == null) {
-            result.setMessage("建筑不存在");
-            result.setCode(404);
-        } else if (authorService.getAuthorById(authorId) == null) {
-            result.setMessage("用户不存在");
-            result.setCode(405);
-        } else if (buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {
-            result.setMessage("该用户已为该建筑管理员");
-            result.setCode(406);
-        } else if (!buildingAdminService.existApplyBuildingAdmin(buildingId, authorId)) {
-            result.setMessage("此用户未申请该建筑管理员");
-            result.setCode(403);
-        } else if (refuse) {
-            buildingAdminService.refuseBuildingAdmin(buildingId, authorId);
-            result.setCode(201);
-            result.setMessage("拒绝成功");
-        } else {
-            buildingAdminService.addBuildingAdmin(buildingId, authorId);
-            result.setCode(200);
-            result.setMessage("接受申请");
-        }
-        return result;
-    }
 
-    @DeleteMapping("/buildingadmin")
-    public Result deleteBuildingAdmin(@RequestParam String buildingId, @RequestParam String authorId) {
-        Result result = new Result();
-        if (buildingService.getBuildingById(buildingId) == null) {
-            result.setMessage("建筑不存在");
-            result.setCode(404);
-        } else if (authorService.getAuthorById(authorId) == null) {
-            result.setMessage("用户不存在");
-            result.setCode(405);
-        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {
-            result.setMessage("该用户不是此建筑的管理员");
-            result.setCode(403);
-        } else {
-            buildingAdminService.deleteBuildingAdmin(buildingId, authorId);
-            result.setCode(200);
-            result.setMessage("删除建筑管理员成功");
-        }
-        return result;
-    }
-
-    @GetMapping("/buildingadmin/admin")       //to be continued
+    @GetMapping("/buildingadmin/findadmin")       //to be continued
     public BuildingAdminResult getAdminByBuildingId(@RequestParam String buildingId) {
         BuildingAdminResult result = new BuildingAdminResult();
         if (buildingService.getBuildingById(buildingId) == null) {
@@ -117,7 +51,7 @@ public class BuildingAdminController {
         return result;
     }
 
-    @GetMapping("/buildingadmin/building")    //to be continued
+    @GetMapping("/buildingadmin/findbuilding")    //to be continued
     public BuildingResult getBuildingByAdminId(@RequestParam String adminId) {
         BuildingResult result = new BuildingResult();
         if (authorService.getAuthorById(adminId) == null) {

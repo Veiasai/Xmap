@@ -28,8 +28,12 @@ public class BuildingAdminService {
     private BuildingAdminRepository buildingAdminRepository;
 
     @Transactional(readOnly = true)
-    public void addBuildingAdmin(String buildingId, String authorId) {
+    public void applyBuildingAdmin(String buildingId, String authorId) {
         buildingAdminRepository.applyBuildingAdmin(buildingId, authorId);
+    }
+    @Transactional(readOnly = true)
+    public void setBuildingAdmin(String buildingId, String authorId) {
+        buildingAdminRepository.setBuildingAdmin(buildingId, authorId);
     }
 
     @Transactional(readOnly = true)
