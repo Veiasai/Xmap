@@ -34,7 +34,7 @@ public class PathController {
 
     @PostMapping("/path")
     public PathResult pathPost(@RequestBody Path path, @RequestParam String buildingId, @RequestParam String author,
-                               @RequestParam(required = false) String origin, @RequestParam(required = false) String end) throws Exception {
+                               @RequestParam(required = false) String origin, @RequestParam(required = false) String end){
         path = pathService.addPath(path);
         String id = path.getId();
         pathService.addRelation(id, buildingId, author, origin, end);
@@ -78,14 +78,11 @@ public class PathController {
         if (authorService.getAuthorById(authorId) == null) {
             result.setCode(404);
             result.setMessage("用户不存在");
-        } else if (pathService.findById(pathId) == null) {
+        } else if (pathService.getPathById(pathId) == null) {
             result.setCode(404);
             result.setMessage("路线不存在");
-        } else if (!pathService.existPathAndAuthor(authorId, pathId)) {
-            result.setCode(403);
-            result.setMessage("该用户无权限删除");
-        } else {
-            pathService.deletePathById(authorId, pathId);
+        }  else {
+            //pathService.deletePathById(authorId, pathId);
             result.setCode(200);
             result.setMessage("删除路线成功");
         }

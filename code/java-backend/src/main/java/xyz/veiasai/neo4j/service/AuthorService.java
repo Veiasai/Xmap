@@ -8,6 +8,9 @@ import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.repositories.AuthorRepository;
+import xyz.veiasai.neo4j.repositories.DataSetRepository;
+import xyz.veiasai.neo4j.repositories.NodeRepository;
+import xyz.veiasai.neo4j.repositories.PathRepository;
 import xyz.veiasai.neo4j.result.DataSetResult;
 import xyz.veiasai.neo4j.result.FavoriteResult;
 import xyz.veiasai.neo4j.result.NodeResult;
@@ -22,6 +25,15 @@ import java.util.Optional;
 public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private NodeRepository nodeRepository;
+
+    @Autowired
+    private PathRepository pathRepository;
+
+    @Autowired
+    private DataSetRepository dataSetRepository;
 
     @Transactional(readOnly = true)
     public Author addAuthor(Author author) {
@@ -43,7 +55,7 @@ public class AuthorService {
 
     @Transactional(readOnly = true)
     public boolean FavoriteIsExistInDb(String favoriteId) {          //判断favorite是否存在
-        if (authorRepository.FavorExistInDb(favoriteId) != 0) {
+        if(authorRepository.FavorExistInDb(favoriteId)!=0){
             return true;
         }
         return false;
