@@ -1,10 +1,10 @@
 FROM java:jre
 
-ADD ./code/java-backend/target/Xmap.jar /usr/local/
+ADD ./target/Xmap-1.0.0.jar /usr/local/
 
 ENTRYPOINT ["java"]
 
-CMD ["-jar","/usr/local/Xmap.jar --spring.profiles.active=prodC"]
+CMD ["-jar","/usr/local/Xmap-1.0.0.jar --spring.profiles.active=prodC"]
 
 EXPOSE 8080
 
