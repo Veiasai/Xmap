@@ -238,6 +238,14 @@
 
       //点击结束按钮，弹出确认窗，上传路线
       done() {
+        if (this.pathArray.length === 0)
+        {
+          wx.showToast({
+            title: '路线内容为空',
+            icon: 'none',
+          });
+          return;
+        }
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});
@@ -264,7 +272,6 @@
           });
           return;
         }
-
         this.hiddenPathName = true;
         let content = "请确认路线制作完成，点击确定上传"
         if (this.origin === null && this.end === null) {
@@ -296,19 +303,19 @@
                 });
                 return;
               }
-              let imgPath = imgArray[j];
+              pathContent.push({type: "img", message: imgArray[j]});
               j++;
-              pathContent.push({type: "img", message: imgPath});
             }
             else {
               pathContent.push(rawContent[i]);
             }
           }
+
           let res = await wepy.request({
             url: httpHead + '/path' + '?author=' + this.$parent.globalData.userInfo
             + '&buildingId=' + this.$parent.globalData.building.id +
-            this.origin !== null ? ('&origin=' + this.origin.id) : ""
-            + this.end !== null ? ('&end=' + this.end.id) : "",
+            (this.origin !== null ? ('&origin=' + this.origin.id) : "")
+            + (this.end !== null ? ('&end=' + this.end.id) : ""),
             method: 'POST',
             header: {
               'content-type': 'application/json'
