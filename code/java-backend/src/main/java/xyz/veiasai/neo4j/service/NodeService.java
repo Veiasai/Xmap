@@ -58,6 +58,10 @@ public class NodeService {
         nodeRepository.deleteNodeById(auhtorId, nodeId);
     }
 
+    @Transactional(readOnly = true)
+    public void deleteNodeByAdmin(String buildingId, String nodeId) {
+        nodeRepository.deleteNodeByAdmin(buildingId, nodeId);
+    }
     /*废弃接口
 
     @Transactional(readOnly = true)

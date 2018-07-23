@@ -47,5 +47,7 @@ public interface NodeRepository extends Neo4jRepository<Node, String> {
     )
     public void addRelationBuildingAndAuthor(@Param("nodeId") String nodeId, @Param("buildingId") String buildingId, @Param("author") String author);
 
+    @Query("Match (n:Node {id:{nodeId}})-[:BUILDING]-(b:BuildingId) detach delete n")
+    public void deleteNodeByAdmin(@Param("buildingId")String buildingId,@Param("nodeId")String nodeId);
 
 }

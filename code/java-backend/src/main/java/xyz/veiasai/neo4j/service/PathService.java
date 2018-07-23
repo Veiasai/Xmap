@@ -57,7 +57,7 @@ public class PathService {
         pathRepository.addRelationOriginAndEnd(pathId, origin, end);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void deletePathById(String authorId, String pathId) {
         pathRepository.deletePathById(authorId, pathId);
     }
@@ -73,6 +73,10 @@ public class PathService {
             return true;
         }
         return false;
+    }
+    @Transactional(readOnly = true)
+    public void deletePathByAdmin(String buildingId,String pathId){
+        pathRepository.deletePathByAdmin(buildingId, pathId);
     }
     /* 废弃接口
     @Transactional(readOnly = true)
