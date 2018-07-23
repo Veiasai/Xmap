@@ -3,12 +3,14 @@ package xyz.veiasai.neo4j.controller;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.veiasai.neo4j.domain.CountSum;
 import xyz.veiasai.neo4j.result.BuildingAdminResult;
 import xyz.veiasai.neo4j.result.BuildingResult;
+import xyz.veiasai.neo4j.result.CountSumResult;
 import xyz.veiasai.neo4j.result.Result;
-import xyz.veiasai.neo4j.service.AuthorService;
-import xyz.veiasai.neo4j.service.BuildingAdminService;
-import xyz.veiasai.neo4j.service.BuildingService;
+import xyz.veiasai.neo4j.service.*;
+
+import java.util.Collection;
 
 @Api(value = "buildingAdmin-controller")
 @RestController
@@ -21,7 +23,13 @@ public class BuildingAdminController {
     private BuildingService buildingService;
 
     @Autowired
-    BuildingAdminService buildingAdminService;
+    private BuildingAdminService buildingAdminService;
+
+    @Autowired
+    private NodeService nodeService;
+
+    @Autowired
+    private PathService pathService;
 
     @PostMapping("/building/admin/login")
     public Result loginBuildingAdmin(@RequestParam String authorId) {
@@ -50,6 +58,52 @@ public class BuildingAdminController {
         return result;
     }
 
+    @DeleteMapping("builiding/admin/node")
+    public Result deleteNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String nodeId) {
+        Result result = new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(405);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (nodeService.findById(nodeId) == null) {
+            result.setCode(403);
+            result.setMessage("点位不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(402);
+            result.setMessage("该用户不是该建筑管理员");
+        } else {
+            result.setCode(200);
+            result.setMessage("删除成功");
+            nodeService.deleteNodeByAdmin(buildingId, nodeId);
+        }
+        return result;
+    }
+
+    @DeleteMapping("building/admin/path")
+    public Result deletePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String pathId) {
+        Result result = new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(405);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (pathService.findById(pathId) == null) {
+            result.setCode(403);
+            result.setMessage("路线不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(402);
+            result.setMessage("该用户不是该建筑管理员");
+        } else {
+            result.setCode(200);
+            result.setMessage("删除成功");
+            pathService.deletePathByAdmin(buildingId, pathId);
+        }
+        return result;
+    }
+
     @GetMapping("/building/admin/building")    //to be continued
     public BuildingResult getBuildingByAdminId(@RequestParam String adminId) {
         BuildingResult result = new BuildingResult();
@@ -58,6 +112,20 @@ public class BuildingAdminController {
             result.setCode(405);
         } else {
             result.setBuildings(buildingAdminService.findBuildingByAdmin(adminId));
+            result.setCode(200);
+            result.setMessage("查询成功");
+        }
+        return result;
+    }
+
+    @GetMapping("building/admin/buildingandcount")
+    public CountSumResult getBuildingAndCountByAdminId(@RequestParam String adminId) {
+        CountSumResult result = new CountSumResult();
+        if (authorService.getAuthorById(adminId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(405);
+        } else {
+            result.setCountSums(buildingAdminService.findBuildingAndCountByAdmin(adminId));
             result.setCode(200);
             result.setMessage("查询成功");
         }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.repositories.NodeRepository;
-import xyz.veiasai.neo4j.repositories.TestRepository;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class NodeService {
         node.setId(null);
         node.setState(1);
         node = nodeRepository.save(node);
-        nodeRepository.addRelationAuthorAndBuilding(node.getId(), buildingId, authorId);
+        nodeRepository.addRelationBuildingAndAuthor(node.getId(), buildingId, authorId);
         return node;
     }
 
@@ -44,8 +43,8 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Node> findByAuthorAndBuilding(String authorId, String buildingId, Integer skip, Integer limit) {
-        return nodeRepository.findByAuthorAndBuilding(authorId, buildingId, skip, limit);
+    public Collection<Node> findByBuildingAndAuthor(String buildingId, String authorId, Integer skip, Integer limit) {
+        return nodeRepository.findByBuildingAndAuthor(buildingId, authorId, skip, limit);
 
     }
 
@@ -59,6 +58,10 @@ public class NodeService {
         nodeRepository.deleteNodeById(auhtorId, nodeId);
     }
 
+    @Transactional(readOnly = true)
+    public void deleteNodeByAdmin(String buildingId, String nodeId) {
+        nodeRepository.deleteNodeByAdmin(buildingId, nodeId);
+    }
     /*废弃接口
 
     @Transactional(readOnly = true)

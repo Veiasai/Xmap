@@ -16,12 +16,12 @@ public interface MessageRepository extends Neo4jRepository<Message, String> {
 
     @Query("Match (m:Message {id:{messageId}})-[r:AUTHOR]-(a:Author {id:{authorId}})" +
             "return count(r)")
-    public int countMessageAndAuthor(@Param("authorId") String authorId, @Param("messageId") String messageId);
+    public int countAuthorAndMessage(@Param("authorId") String authorId, @Param("messageId") String messageId);
 
     @Query("Match (a:Author {id:{authorId}})-[:AUTHOR]-(m:Message)-[:BUILDING]-(b:Building {id:{buildingId}}) return m " +
             "order by m.Date SKIP{skip} LIMIT{limit}") // Date!!
-    public Collection<Message> findMessageByAuthorAndBuilding(@Param("buildingId") String buildingId, @Param("authorId") String authorId, @Param("title") String title, @Param("skip") Integer skip,
-                                                                   @Param("limit") Integer limit);
+    public Collection<Message> findMessageByBuildingAndAuthor(@Param("buildingId") String buildingId, @Param("authorId") String authorId, @Param("title") String title, @Param("skip") Integer skip,
+                                                              @Param("limit") Integer limit);
 
     @Query("Match (a:Author {id:{authorId}})-[:AUTHOR]-(m:Message) where m.title =~('.*'+{title}+'.*') return m " +
             "order by m.Date SKIP{skip} LIMIT{limit}") // Date!!

@@ -101,7 +101,7 @@ public class TestDefault {
         contents.add(temp);
         path.setContents(contents);
         path = pathRepository.save(path);
-        pathRepository.addRelationAuthorAndBuilding(path.getId(), building.getId(), author.getId());
+        pathRepository.addRelationBuildingAndAuthor(path.getId(), building.getId(), author.getId());
         pathRepository.addRelationOriginAndEnd(path.getId(), node.getId(), node2.getId());
 
         // 初始化dataSet
@@ -109,15 +109,15 @@ public class TestDefault {
         dataSetNode.setState(1);
         dataSetNode.setType("node");
         dataSetNode = dataSetRepository.save(dataSetNode);
-        dataSetRepository.addRelationNodeAndDataSet(dataSetNode.getId(), node.getId());
-        dataSetRepository.addRelationAuthorAndBuilding(dataSetNode.getId(), building.getId(), author.getId());
+        dataSetRepository.addRelationDataSetAndNode(dataSetNode.getId(), node.getId());
+        dataSetRepository.addRelationBuildingAndAuthor(dataSetNode.getId(), building.getId(), author.getId());
 
         dataSetPath.setName("test");
         dataSetPath.setState(1);
         dataSetPath.setType("path");
         dataSetPath = dataSetRepository.save(dataSetPath);
-        dataSetRepository.addRelationPathAndDataSet(dataSetPath.getId(), path.getId());
-        dataSetRepository.addRelationAuthorAndBuilding(dataSetPath.getId(), building.getId(), author.getId());
+        dataSetRepository.addRelationDataSetAndPath(dataSetPath.getId(), path.getId());
+        dataSetRepository.addRelationBuildingAndAuthor(dataSetPath.getId(), building.getId(), author.getId());
 
         // 初始化favorite
         authorRepository.addFavorite(author.getId(), path.getId());

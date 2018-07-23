@@ -23,7 +23,7 @@ public class DataSetService {
         dataSet.setId(null);
         dataSet = dataSetRepository.save(dataSet);
         String dataSetId = dataSet.getId();
-        dataSetRepository.addRelationAuthorAndBuilding(dataSetId, buildingId, authorId);
+        dataSetRepository.addRelationBuildingAndAuthor(dataSetId, buildingId, authorId);
         return dataSet;
     }
 
@@ -54,12 +54,12 @@ public class DataSetService {
 
     @Transactional(readOnly = true)
     public void addRelationNode(String dataSetId, String nodeId) {
-        dataSetRepository.addRelationNodeAndDataSet(dataSetId, nodeId);
+        dataSetRepository.addRelationDataSetAndNode(dataSetId, nodeId);
     }
 
     @Transactional(readOnly = true)
     public void deleteRelationNode(String dataSetId, String nodeId) {
-        dataSetRepository.deleteRelationNodeAndDataSet(dataSetId, nodeId);
+        dataSetRepository.deleteRelationDataSetAndNode(dataSetId, nodeId);
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class DataSetService {
 
     @Transactional(readOnly = true)
     public void deleteRelationPath(String dataSetId, String pathId) {
-        dataSetRepository.deleteRelationPathAndDataSet(dataSetId, pathId);
+        dataSetRepository.deleteRelationDataSetAndPath(dataSetId, pathId);
     }
 
     @Transactional(readOnly = true)
@@ -98,7 +98,7 @@ public class DataSetService {
 
     @Transactional(readOnly = true)
     public void addRelationPath(String dataSetId, String pathId) {
-        dataSetRepository.addRelationPathAndDataSet(dataSetId, pathId);
+        dataSetRepository.addRelationDataSetAndPath(dataSetId, pathId);
     }
 
     @Transactional(readOnly = true)

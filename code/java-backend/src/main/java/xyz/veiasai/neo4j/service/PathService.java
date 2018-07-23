@@ -10,6 +10,7 @@ import xyz.veiasai.neo4j.repositories.NodeRepository;
 import xyz.veiasai.neo4j.repositories.PathRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,6 +41,11 @@ public class PathService {
         return pathRepository.findById(pathId).orElse(null);
     }
 
+    @Transactional(readOnly = true)
+    public Path getPathById(String pathId){
+        Optional<Path> optionalPath=pathRepository.findById(pathId);
+        return optionalPath.orElse(null);
+    }
 
     @Transactional(readOnly = true)
     public Collection<Path> findByBuildingAndName(String buildingId, String name, Integer skip, Integer limit) {
@@ -47,7 +53,7 @@ public class PathService {
     }
 
     public void addRelation(String pathId, String buildingId, String author, String origin, String end) {
-        pathRepository.addRelationAuthorAndBuilding(pathId, buildingId, author);
+        pathRepository.addRelationBuildingAndAuthor(pathId, buildingId, author);
         pathRepository.addRelationOriginAndEnd(pathId, origin, end);
     }
 
@@ -67,6 +73,10 @@ public class PathService {
             return true;
         }
         return false;
+    }
+    @Transactional(readOnly = true)
+    public void deletePathByAdmin(String buildingId,String pathId){
+        pathRepository.deletePathByAdmin(buildingId, pathId);
     }
     /* 废弃接口
     @Transactional(readOnly = true)

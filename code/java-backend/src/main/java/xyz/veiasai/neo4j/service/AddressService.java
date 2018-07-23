@@ -17,6 +17,6 @@ public class AddressService {
     public Address addAddress(Address address)
     {
         Optional<Address> temp = addressRepository.findById(address.getAddress());
-        return temp.orElse(addressRepository.save(address));
+        return temp.orElseGet(()->addressRepository.save(address));
     }
 }

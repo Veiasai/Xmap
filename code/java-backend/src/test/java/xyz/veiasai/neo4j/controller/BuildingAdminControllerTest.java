@@ -43,8 +43,14 @@ public class BuildingAdminControllerTest extends TestDefault {
     public void getBuildingByAdminId() throws Exception{
         // ok
         mvc.perform(MockMvcRequestBuilders.get("/building/admin/admin")
-                .param("adminId", buildingAdmin.getId()))
+                .param("buildingId", building.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buildings[0].id").value(building.getId()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.buildingAdmins[0].id").value(buildingAdmin.getId()));
+
+        // invalid building id
+        mvc.perform(MockMvcRequestBuilders.get("/building/admin/admin")
+                .param("buildingId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
     }
 }

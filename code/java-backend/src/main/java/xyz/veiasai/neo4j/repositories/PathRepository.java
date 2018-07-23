@@ -26,7 +26,7 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
     @Query("match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (path: Path {id:{pathId}})" +
             "merge (author)-[:AUTHOR]-(path)-[:BUILDING]-(building)"
     )
-    public void addRelationAuthorAndBuilding(@Param("pathId") String pathId, @Param("buildingId") String buildingId, @Param("author") String author);
+    public void addRelationBuildingAndAuthor(@Param("pathId") String pathId, @Param("buildingId") String buildingId, @Param("author") String author);
 
     @Query("match (origin:Node {id:{origin}}), (end:Node {id:{end}}), (path: Path {id:{pathId}})" +
             "merge (origin)-[:PATH {node:{origin}, path:{pathId}}]->(path)-[:PATH {node:{end},path:{pathId}}]->(end)"
@@ -47,6 +47,10 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
     @Query("Match (p:Path {id:{pathId}})-[r:AUTHOR]-(a:Author {id:{authorId}}) return count(r)")
     public int countPathByAuthorId(@Param("authorId") String authorId, @Param("pathId") String pathId);
 
-    @Query("Match (p:Path {id:{pathId}})-[:AUTHOR]-(a:Author {id:{authorId}}) detach delete p")
+    @Query("Match (a:Author{id:{authorId}})-[:AUTHOR]-(p:Path {id:{pathId}}) detach delete p")
     public void deletePathById(@Param("authorId") String authorId, @Param("pathId") String pathId);
+
+    @Query("Match (b:Building {id:{buildingId}})-[:BUILDING]-(p:Path {id:{pathId}}) detach delete p")
+    public void deletePathByAdmin(@Param("buildingId") String buildingId, @Param("pathId") String pathId);
+
 }
