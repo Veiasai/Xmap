@@ -84,7 +84,10 @@ public class PathController {
         } else if (pathService.getPathById(pathId) == null) {
             result.setCode(404);
             result.setMessage("路线不存在");
-        }  else {
+        } else if(!pathService.existPathAndAuthor(authorId, pathId)){
+            result.setCode(403);
+            result.setMessage("用户和路线不匹配");
+        } else {
             pathService.deletePathById(authorId, pathId);
             result.setCode(200);
             result.setMessage("删除路线成功");

@@ -71,7 +71,7 @@ public class NodeController {
             }
         }
         else if(authorId != null && buildingId !=null){
-            result.setNodes(nodeService.findByAuthorAndBuilding(authorId,buildingId,skip,limit));
+            result.setNodes(nodeService.findByBuildingAndAuthor(buildingId,authorId,skip,limit));
         }
         else if(authorId !=null){
             result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));

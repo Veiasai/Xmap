@@ -53,7 +53,7 @@ public class PathService {
     }
 
     public void addRelation(String pathId, String buildingId, String author, String origin, String end) {
-        pathRepository.addRelationAuthorAndBuilding(pathId, buildingId, author);
+        pathRepository.addRelationBuildingAndAuthor(pathId, buildingId, author);
         pathRepository.addRelationOriginAndEnd(pathId, origin, end);
     }
 

@@ -44,7 +44,7 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public Collection<Message> findMessageByAuthorAndBuilding(String buildingId, String authorId, String title, Integer skip, Integer limit) {
-        return messageRepository.findMessageByAuthorAndBuilding(buildingId, authorId,title, skip, limit);
+        return messageRepository.findMessageByBuildingAndAuthor(buildingId, authorId,title, skip, limit);
     }
 
     @Transactional(readOnly = true)
@@ -59,6 +59,6 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public boolean existMessageAndAuthor(String authorId, String messageId) {
-        return messageRepository.countMessageAndAuthor(authorId, messageId) != 0;
+        return messageRepository.countAuthorAndMessage(authorId, messageId) != 0;
     }
 }

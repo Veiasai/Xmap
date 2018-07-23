@@ -85,7 +85,7 @@ public class DataSetController {
             result.setCode(404);
             return result;
         }
-        if (dataSet.getType().equals("node")) {
+        if (dataSet.getType().equals("node")) {     //没有判断list里面id的有效性
             result.setMessage("添加成功");
             result.setCode(200);
             dataSetService.addRelationNodes(dataSetId, NodeIds);

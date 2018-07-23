@@ -23,17 +23,17 @@ public interface DataSetRepository extends Neo4jRepository<DataSet, String> {
     @Query("match (building:Building {id:{buildingId}}),(author:Author {id:{authorId}}),(dataset:DataSet {id:{dataSetId}}) " +
             "merge (author)-[:AUTHOR]->(dataset)<-[:BUILDING]-(building)"
     )
-    public void addRelationAuthorAndBuilding(@Param("dataSetId") String dataSetId, @Param("buildingId") String buildingId, @Param("authorId") String authorId);
+    public void addRelationBuildingAndAuthor(@Param("dataSetId") String dataSetId, @Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
     @Query("Match (node:Node {id:{nodeId}}),(dataset:DataSet {id:{dataSetId}})" +
             "merge (node)-[:NODE]->(dataset)"
     )
-    public void addRelationNodeAndDataSet(@Param("dataSetId") String dataSetId, @Param("nodeId") String nodeId);
+    public void addRelationDataSetAndNode(@Param("dataSetId") String dataSetId, @Param("nodeId") String nodeId);
 
     @Query("Match (node:Node {id:{nodeId}})-[r:NODE]->(dataset:DataSet {id:{dataSetId}})" +
             "Delete r"
     )
-    public void deleteRelationNodeAndDataSet(@Param("dataSetId") String dataSetId, @Param("nodeId") String nodeId);
+    public void deleteRelationDataSetAndNode(@Param("dataSetId") String dataSetId, @Param("nodeId") String nodeId);
 
     @Query("Match (node:Node)-[:NODE]->(dataset:DataSet {id:{dataSetId}}) where node.name =~ ('.*'+{nodeName}+'.*')" +
             "RETURN node ORDER BY node.name SKIP {skip} LIMIT {limit}"
@@ -53,12 +53,12 @@ public interface DataSetRepository extends Neo4jRepository<DataSet, String> {
     @Query("Match (p:Path {id:{pathId}}),(dataset:DataSet {id:{dataSetId}})" +
             "merge (p)-[:PATH]->(dataset)"
     )
-    public void addRelationPathAndDataSet(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
+    public void addRelationDataSetAndPath(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
 
     @Query("Match (p:Path {id:{pathId}})-[r:PATH]->(dataset:DataSet {id:{dataSetId}})" +
             "Delete r"
     )
-    public void deleteRelationPathAndDataSet(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
+    public void deleteRelationDataSetAndPath(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
 
     @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}}) where p.name =~('.*'+{pathName}+'.*')" +
             "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}"

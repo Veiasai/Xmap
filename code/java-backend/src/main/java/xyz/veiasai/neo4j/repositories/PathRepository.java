@@ -26,7 +26,7 @@ public interface PathRepository extends Neo4jRepository<Path, String> {
     @Query("match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (path: Path {id:{pathId}})" +
             "merge (author)-[:AUTHOR]-(path)-[:BUILDING]-(building)"
     )
-    public void addRelationAuthorAndBuilding(@Param("pathId") String pathId, @Param("buildingId") String buildingId, @Param("author") String author);
+    public void addRelationBuildingAndAuthor(@Param("pathId") String pathId, @Param("buildingId") String buildingId, @Param("author") String author);
 
     @Query("match (origin:Node {id:{origin}}), (end:Node {id:{end}}), (path: Path {id:{pathId}})" +
             "merge (origin)-[:PATH {node:{origin}, path:{pathId}}]->(path)-[:PATH {node:{end},path:{pathId}}]->(end)"

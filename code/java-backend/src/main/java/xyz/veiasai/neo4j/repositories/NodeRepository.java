@@ -37,7 +37,7 @@ public interface NodeRepository extends Neo4jRepository<Node, String> {
 
     @Query("Match (n:Node)-[:AUTHOR]-(a:Author{id:{authorId}}), (n:Node)-[:BUILDING]-(b:Building{id:{buildingId}})" +
             "RETURN n ORDER BY n.name SKIP {skip} LIMIT{limit}")
-    public Collection<Node> findByAuthorAndBuilding(@Param("authorId") String authorId, @Param("buildingId") String buildingId, @Param("skip") Integer skip, @Param("limit") Integer limit);
+    public Collection<Node> findByBuildingAndAuthor(@Param("buildingId") String buildingId, @Param("authorId") String authorId, @Param("skip") Integer skip, @Param("limit") Integer limit);
 
     @Query("Match (n:Node {id:{nodeId}})-[:AUTHOR]-(a:Author {id:{authorId}}) detach delete n")
     public void deleteNodeById(@Param("authorId") String authorId, @Param("nodeId") String nodeId);
@@ -45,7 +45,7 @@ public interface NodeRepository extends Neo4jRepository<Node, String> {
     @Query("match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (node: Node {id:{nodeId}})" +
             "merge (author)-[:AUTHOR]-(node)-[:BUILDING]-(building)"
     )
-    public void addRelationAuthorAndBuilding(@Param("nodeId") String nodeId, @Param("buildingId") String buildingId, @Param("author") String author);
+    public void addRelationBuildingAndAuthor(@Param("nodeId") String nodeId, @Param("buildingId") String buildingId, @Param("author") String author);
 
 
 }

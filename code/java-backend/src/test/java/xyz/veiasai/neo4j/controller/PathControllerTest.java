@@ -165,7 +165,7 @@ public class PathControllerTest extends TestDefault {
 
         Assert.assertNotNull("delete failed", pathRepository.findById(path2.getId()).orElse(null));
 
-        pathRepository.addRelationAuthorAndBuilding(path2.getId(), author.getId(), building.getId());
+        pathRepository.addRelationBuildingAndAuthor(path2.getId(), building.getId(),author.getId());
 
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/path")
