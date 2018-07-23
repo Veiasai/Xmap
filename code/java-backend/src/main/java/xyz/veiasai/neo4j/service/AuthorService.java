@@ -38,7 +38,7 @@ public class AuthorService {
     @Transactional(readOnly = true)
     public Author addAuthor(Author author) {
         Optional<Author> optionalAuthor = authorRepository.findById(author.getId());
-        return optionalAuthor.orElse(authorRepository.save(author));
+        return optionalAuthor.orElseGet(()->authorRepository.save(author));
     }
 
     @Transactional(readOnly = true)

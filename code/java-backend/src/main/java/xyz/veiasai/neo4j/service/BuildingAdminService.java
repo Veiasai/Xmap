@@ -1,19 +1,16 @@
 package xyz.veiasai.neo4j.service;
 
-import org.neo4j.ogm.annotation.StartNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.Building;
+import xyz.veiasai.neo4j.domain.CountSum;
 import xyz.veiasai.neo4j.repositories.AuthorRepository;
 import xyz.veiasai.neo4j.repositories.BuildingAdminRepository;
 import xyz.veiasai.neo4j.repositories.BuildingRepository;
-import xyz.veiasai.neo4j.result.Result;
 
-import java.security.PublicKey;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -71,6 +68,11 @@ public class BuildingAdminService {
     @Transactional(readOnly = true)
     public Collection<Building> findBuildingByAdmin(String authorId) {   //authorId是否有效可放到controller层
         return buildingAdminRepository.findBuildingByAdmin(authorId);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<CountSum> findBuildingAndCountByAdmin(String authorId) {   //authorId是否有效可放到controller层
+        return buildingAdminRepository.findBuildingAndCountByAdmin(authorId);
     }
 
     @Transactional(readOnly = true)

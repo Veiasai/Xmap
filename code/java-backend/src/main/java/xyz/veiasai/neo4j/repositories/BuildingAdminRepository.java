@@ -5,6 +5,7 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
 import xyz.veiasai.neo4j.domain.Author;
 import xyz.veiasai.neo4j.domain.Building;
+import xyz.veiasai.neo4j.domain.CountSum;
 
 import java.util.Collection;
 
@@ -32,6 +33,13 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
     @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building)  return b")
 
     public Collection<Building> findBuildingByAdmin(@Param("authorId") String authorId);
+
+    @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building) " +
+            "return b as building," +
+            "size((:Node)-[:BUILDING]-(b)) as nodeSum,size((:Path)-[:BUILDING]-(b)) as pathSum, size((:Message)-[:BUILDING]-(b)) as MessageSum ")
+
+    public Collection<CountSum> findBuildingAndCountByAdmin(@Param("authorId") String authorId);
+
 
     @Query("Match (a:Author)-[r:BUILDINGADMIN {state:1}]-(b:Building {id:{buildingId}}) return a")
     public Collection<Author> findAdminByBuildingId(@Param("buildingId") String buildingId);

@@ -3,12 +3,16 @@ package xyz.veiasai.neo4j.controller;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.veiasai.neo4j.domain.CountSum;
 import xyz.veiasai.neo4j.result.BuildingAdminResult;
 import xyz.veiasai.neo4j.result.BuildingResult;
+import xyz.veiasai.neo4j.result.CountSumResult;
 import xyz.veiasai.neo4j.result.Result;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingAdminService;
 import xyz.veiasai.neo4j.service.BuildingService;
+
+import java.util.Collection;
 
 @Api(value = "buildingAdmin-controller")
 @RestController
@@ -58,6 +62,19 @@ public class BuildingAdminController {
             result.setCode(405);
         } else {
             result.setBuildings(buildingAdminService.findBuildingByAdmin(adminId));
+            result.setCode(200);
+            result.setMessage("查询成功");
+        }
+        return result;
+    }
+    @GetMapping("building/admin/buildingandcount")
+    public CountSumResult getBuildingAndCountByAdminId(@RequestParam String adminId){
+        CountSumResult result = new CountSumResult();
+        if (authorService.getAuthorById(adminId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(405);
+        } else {
+            result.setCountSums(buildingAdminService.findBuildingAndCountByAdmin(adminId));
             result.setCode(200);
             result.setMessage("查询成功");
         }
