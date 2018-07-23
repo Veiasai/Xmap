@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
 import {Card, Icon, Avatar} from 'antd';
+import {inject, observer} from "mobx-react/index";
+import {Control} from 'react-keeper'
+import {httpHead} from '../../../Consts'
 import "./Building.css"
 
-const { Meta } = Card
 
+@inject(['UserData'])
+@observer
 class Building extends Component
 {
     constructor(props){
         super(props);
+        this.UserData = this.props.UserData;
+    }
+
+    handleClick(){
+        this.UserData.currentBuilding = this.props.building;
+        Control.go('./Manage')
     }
 
 
@@ -17,13 +27,10 @@ class Building extends Component
             <div className={'building'}>
                 <Card
                     style={{ width: 300 }}
-                    cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
-                    actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}
+                    hoverable={true}
+                    onClick={() => this.handleClick()}
                 >
-                    <Meta
-                        title={this.props.name}
-                        description="This is the description"
-                    />
+                    <p className={'buildingName'}>{this.props.building.name}</p>
                 </Card>
             </div>
             
