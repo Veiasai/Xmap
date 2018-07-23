@@ -17,85 +17,7 @@ class Building extends Component
 
     handleClick(){
         this.UserData.currentBuilding = this.props.building;
-        this.getBuildingPathList();
-        this.getBuildingNodeList();
-        this.getBuildingMessageList();
         Control.go('./Manage')
-    }
-
-    getBuildingPathList = async () => {
-        const url = httpHead + '';
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: this.UserData.currentBuilding.ID,
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                this.UserData.currentPathList = json.pathList;
-            }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
-
-    getBuildingNodeList = async () => {
-        const url = httpHead + '';
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: this.UserData.currentBuilding.ID,
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                this.UserData.currentNoteList = json.nodeList;
-            }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
-
-    getBuildingMessageList = async () => {
-        const url = httpHead + '';
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: this.UserData.currentBuilding.ID,
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                this.UserData.currentMessageList = json.messageList;
-            }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
     }
 
 
@@ -105,11 +27,10 @@ class Building extends Component
             <div className={'building'}>
                 <Card
                     style={{ width: 300 }}
-                    title={this.props.building.name}
                     hoverable={true}
                     onClick={() => this.handleClick()}
                 >
-                    {this.props.building.address}
+                    <p className={'buildingName'}>{this.props.building.name}</p>
                 </Card>
             </div>
             

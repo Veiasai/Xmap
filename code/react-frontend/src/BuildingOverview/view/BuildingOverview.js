@@ -19,26 +19,26 @@ class BuildingOverview extends Component {
                 <div className={'Overview'}>
                     <Row>
                         <div>
-                            {this.props.userData.currentBuilding.name + '信息概览'}
+                            {this.props.UserData.currentBuilding.name + '信息概览'}
                         </div>
                     </Row>
                     <Row>
                         <Col>
                             <Card
                                 style={{width: 300}}
-                                title={this.props.userData.currentBuilding.name + '现有路线总数'}
+                                title={this.props.UserData.currentBuilding.name + '现有路线总数'}
                                 hoverable={true}
                             >
-                                {this.props.userData.currentPathList.length}
+                                {this.props.UserData.currentBuilding.pathAmount}
                             </Card>
                         </Col>
                         <Col>
                             <Card
                                 style={{width: 300}}
-                                title={this.props.userData.currentBuilding.name + '现有点位总数'}
+                                title={this.props.UserData.currentBuilding.name + '现有点位总数'}
                                 hoverable={true}
                             >
-                                {this.props.userData.currentNoteList.length}
+                                {this.props.UserData.currentNoteList.nodeAmount}
                             </Card>
                         </Col>
                     </Row>

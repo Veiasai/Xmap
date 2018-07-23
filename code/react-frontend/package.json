@@ -11,9 +11,11 @@
     "react": "^16.4.1",
     "react-app-rewire-mobx": "^1.0.7",
     "react-dom": "^16.4.1",
+    "react-infinite-scroller": "^1.2.0",
     "react-keeper": "^2.1.8",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "reqwest": "^2.0.5"
   },
   "scripts": {
     "start": "react-app-rewired start",

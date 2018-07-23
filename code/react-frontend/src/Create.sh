@@ -18,6 +18,10 @@ import "./${fileName}.css"
 @observer
 class ${fileName} extends Component
 {
+     constructor(props) {
+        super(props);
+    }
+    
     render()
     {
         return(

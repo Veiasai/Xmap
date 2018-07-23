@@ -30,6 +30,7 @@ class SendMessage extends Component {
         const url = httpHead + '';
         let user = {
             name: {},
+            title: {},
             message: {},
         }
         user = {...values};
@@ -61,7 +62,6 @@ class SendMessage extends Component {
         return (
             <div className={'sendMessage'}>
                 <Form style={{width: '80%',alignItems:'left'}} onSubmit={this.handleSubmit} className="sendMessageForm">
-                    <Row>
                         <FormItem>
                             {getFieldDecorator('name', {
                                 rules: [{required: true, message: '请输入发布人！'}],
@@ -69,12 +69,18 @@ class SendMessage extends Component {
                                 <Input style={{width: '20%'}} placeholder="发布人"/>
                             )}
                         </FormItem>
-                    </Row>
+                    <FormItem>
+                        {getFieldDecorator('name', {
+                            rules: [{required: true, message: '请输入标题'}],
+                        })(
+                            <Input style={{width: '20%'}} placeholder='标题'/>
+                        )}
+                    </FormItem>
                     <FormItem>
                         {getFieldDecorator('message', {
                             rules: [{required: true, message: '请输入消息内容！'}],
                         })(
-                            <TextArea placeholder="请输入消息内容" minlength={'10'} maxlength={'140'} autosize={{ minRows: 2, maxRows: 3 }} />
+                            <TextArea placeholder="请输入消息内容" minLength={'10'} maxLength={'140'} autosize={{ minRows: 2, maxRows: 3 }} />
                         )}
                     </FormItem>
                     <FormItem>
