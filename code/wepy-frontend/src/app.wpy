@@ -17,8 +17,9 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/nodeViewer',
         'pages/start',
+        'pages/nodeViewer',
+        'pages/user',
 
         'pages/pathUpload/pathUpload',
         'pages/nodeUpload',
@@ -29,7 +30,7 @@
         'pages/pathInfo',
         'pages/uploadSelect',
         'pages/collection',
-        'pages/user',
+
       ],
       window: {
         backgroundTextStyle: 'light',

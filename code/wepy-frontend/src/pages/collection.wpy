@@ -115,9 +115,21 @@
         this.searchNode(0);
         this.searchPath(0);
     }
-
+    onPullDownRefresh(){
+      if (this.select === '0'){
+        this.nodeSkip = 0;
+        this.searchNode(0);
+      }
+      else{
+        this.pathSkip = 0;
+        this.searchPath(0);
+      }
+      wx.stopPullDownRefresh()
+    }
     config = {
-      navigationBarTitleText: "Collection"
+      navigationBarTitleText: "Collection",
+      enablePullDownRefresh: true,
+      backgroundColor: "#1cf001"
     }
 
     data = {
@@ -137,9 +149,40 @@
     }
 
     methods = {
-      handleDelItem (itemData) {
-        console.log(itemData);
-        this.cancelCollection(itemData);
+      async handleDelItem (itemData) {
+        try{
+          let res = await wepy.request({
+            url: httpHead + "/favorite" + "?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + itemData.id,
+            method: "DELETE",
+          })
+          console.log(res);
+          if (res.data.code === 200){
+            wx.showToast({
+              title: '取消收藏成功',
+              icon: 'none',
+            })
+            if (this.select === '0'){
+              this.nodeList = this.nodeList.filter((item)=>{
+                return item.id !== itemData.id;
+              })
+              this.nodeSkip = this.nodeList.length;
+            }
+            else{
+              this.pathList = this.pathList.filter((item)=>{
+                return item.id !== itemData.id;
+              })
+              this.pathSkip = this.pathList.length;
+            }
+            this.$apply();
+          }
+        }catch (e)
+        {
+          wx.showToast({
+            title: '删除失败，网络异常',
+            icon: 'none',
+          })
+          console.log(e);
+        }
       },
       select(e){
         console.log(e);
@@ -249,22 +292,6 @@
         this.$apply();
       }
       catch (e) {
-        console.log(e);
-      }
-    }
-
-    async cancelCollection(item) {
-      try{
-        let res = await wepy.request({
-          url: httpHead + "/favorite" + "?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + item.id,
-          method: "DELETE",
-        })
-      }catch (e)
-      {
-        wx.showToast({
-          title: '删除失败，网络异常',
-          icon: 'none',
-        })
         console.log(e);
       }
     }

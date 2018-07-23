@@ -24,7 +24,7 @@
     border-radius:50%;
   }
 
-  .nodeimg img{
+  .nodeimg image{
     width:100rpx;
     height:100rpx;
   }
@@ -33,7 +33,6 @@
     margin-top: 44rpx;
     margin-left: 22rpx;
     width: 428rpx;
-    height: ;
     text-align: center;
     font-size: 18px;
     color: #111111;

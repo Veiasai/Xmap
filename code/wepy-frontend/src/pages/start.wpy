@@ -16,7 +16,7 @@
   }
 
   .selectBuilding{
-    width: 200rpx;
+    width: 250rpx;
     height: 100rpx;
     background-color: #9BC1DF;
     color: #FFFEFE;
@@ -44,7 +44,7 @@
       <image src="../icons/startPage.svg" ></image>
     </view>
     <view class="buttonInfo">
-      <view class="selectBuilding" @tap="selectBuilding">选择建筑</view>
+      <button open-type="getUserInfo" class="selectBuilding" @tap="selectBuilding">选择建筑</button>
       <view style="font-size: 28rpx;color: gray;font-weight: lighter">欢迎体验Xmap，享受简单快捷的导航体验</view>
     </view>
   </view>

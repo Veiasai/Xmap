@@ -53,7 +53,7 @@
     </view>
     <view wx:elif="{{item.type==='actionS'}}" class='item action'>
       <view class="icon">
-        <image mode="aspectFill" src = "../icons/left.png"></image>
+        <image mode="aspectFill" src = "../icons/straight.svg"></image>
       </view>
       <view style="margin-left: 33rpx;">直行 {{item.message}} 步 </view>
     </view>

@@ -89,9 +89,16 @@
     <!--show the available node-->
     <view wx:if="{{originToEndList === null}}">
       <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
-        <repeat  for="{{nodes}}" index="index" item="item">
-          <Node  :node="item"></Node>
-        </repeat>
+        <view wx:if="{{origin === null}}">
+          <repeat  for="{{originNodes}}" index="index" item="item">
+            <oNode  :node="item"></oNode>
+          </repeat>
+        </view>
+        <view wx:else>
+          <repeat  for="{{endNodes}}" index="index" item="item">
+            <eNode  :node="item"></eNode>
+          </repeat>
+        </view>
       </scroll-view>
     </view>
     <view wx:else>
@@ -127,11 +134,13 @@
       navigationBarTitleText: 'NodeView',
     }
     data = {
+      name: "",
       dataSet: null,
       dataSetList: [],
       dataSetNameList: ["1","1","1","1","1","1","1","1","1","1","1",],
       showDataSet: false,
-      nodes: [],  // 查找到的点位
+      originNodes: [],  // 查找到的点位
+      endNodes:[],
       origin: null,
       end: null,
       originSkip: 0,
@@ -141,7 +150,8 @@
       originToEndList: null,
     }
     components = {
-      Node: node
+      oNode: node,
+      eNode: node
     }
 
     computed = {
@@ -152,11 +162,11 @@
 
     methods = {
       searchInput(e) {
-        let value = e.detail.value;
+        this.name = e.detail.value;
         this.originSkip = 0;
         this.endSkip = 0;
         let data = {
-          name: value,
+          name: this.name,
           skip: 0,
           limit: this.limit,
         }
@@ -212,7 +222,6 @@
       'tap-Node': (node, $event) => {
         if (this.origin === null) {
           this.origin = node;
-          this.nodes = [];
           let data = {
             originId: node.id,
             skip: this.endSkip,
@@ -234,14 +243,13 @@
             })
           }
         }
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
-        console.log("node", node);
         //$event.$destroy();
       }
     }
 
     async searchNode(data) {
       try {
+        console.log(data);
         let res = await wepy.request({
           url: httpHead + '/nodes',
           data: data
@@ -251,18 +259,23 @@
           let nodes = res.data.nodes.map((item) => {
             return {...item, img: imgHead + item.img}
           });
-
-          if (data.skip === 0) {
-            this.nodes = nodes;
-          }
-          else if (this.nodes.length === data.skip) {
-            this.nodes = [...this.nodes, ...nodes];
-          }
           if (data.originId) {
-            this.endSkip += this.limit;
+            if (data.skip === 0) {
+              this.endNodes = nodes;
+            }
+            else if (this.endNodes.length === data.skip) {
+              this.endNodes = [...this.endNodes, ...nodes];
+            }
+            this.endSkip += nodes.length;
           }
           else {
-            this.originSkip += this.limit;
+            if (data.skip === 0) {
+              this.originNodes = nodes;
+            }
+            else if (this.originNodes.length === data.skip) {
+              this.originNodes = [...this.originNodes, ...nodes];
+            }
+            this.originSkip += nodes.length;
           }
         }
         else {
@@ -272,7 +285,12 @@
               title: '没有满足条件的点位',
               icon: 'none',
             })
-            this.nodes = [];
+            if (data.originId) {
+              this.endNodes = [];
+            }
+            else{
+              this.originNodes = [];
+            }
           }
           else{
             wx.showToast({
@@ -306,7 +324,7 @@
           else{
             this.originToEndList = [...this.originToEndList, ...res.data];
           }
-          this.pathSkip += this.limit;
+          this.pathSkip += res.data.length;
         }
         else{
           if (skip === 0)

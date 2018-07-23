@@ -108,11 +108,17 @@
 <template>
   <view>
     <view class="userinfo">
-      <Node :node="user"></Node>
+      <Node :node.sync="user"></Node>
     </view>
     <view class="myfavor">
       <view class="favortext" @tap="toCollection">
         我的收藏
+      </view>
+      <view class="favoricon">
+        <image src="../images/收藏.png"></image>
+      </view>
+      <view class="favortext" @tap="toDataSet">
+        我的数据组
       </view>
       <view class="favoricon">
         <image src="../images/收藏.png"></image>
@@ -128,7 +134,7 @@
         </view>
       </view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd"  class="nodeView">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
             <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem" @manItem.user="handleManItem">
@@ -144,7 +150,7 @@
         </scroll-view>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd"  class="pathView">
           <repeat for="{{pathList}}" key="index" item="item" index="index">
             <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
@@ -176,13 +182,35 @@
 
 
   export default class user extends wepy.page {
-    onLoad() {
-      this.searchPath(0);
-      this.searchNode(0);
+    async onLoad() {
+      try {
+        this.searchPath(0);
+        this.searchNode(0);
+        let res = await  wepy.getUserInfo();
+        let user = res.userInfo;
+        console.log(res);
+        this.user = {img: user.avatarUrl, name: user.nickName}
+        this.$apply();
+      }catch (e){
+
+      }
+    }
+    onPullDownRefresh(){
+      if (this.select === '0'){
+        this.nodeSkip = 0;
+        this.searchNode(0);
+      }
+      else{
+        this.pathSkip = 0;
+        this.searchPath(0);
+      }
+      wx.stopPullDownRefresh()
     }
 
     config={
-      navigationBarTitleText: 'User'
+      navigationBarTitleText: 'User',
+      enablePullDownRefresh: true,
+      backgroundColor: "#1cf001"
     }
 
     components = {
@@ -214,12 +242,53 @@
           url: '/pages/collection',
         })
       },
+
+      toDataSet(){
+        wx.navigateTo({
+          url: '/pages/dataSetViewer',
+        })
+      },
+
       handleManItem(itemData) {
         console.log(itemData)
       },
 
-      handleDelItem (itemData) {
-        console.log(itemData)
+      async handleDelItem (itemData) {
+        try{
+          console.log(itemData)
+          let res = await wepy.showModal({
+            title: "提示",
+            content: "删除操作不可恢复，确认删除<" + itemData.name+ ">?",
+          })
+          console.log(res);
+          if (res.confirm)
+          {
+            let type = "/node";
+            if (itemData.contents !== undefined) {
+              type = "/path";
+            }
+            let del = await wepy.request({
+              url: httpHead + type + "?nodeId=" + itemData.id + "&pathId=" + itemData.id + "&authorId=" + this.$parent.globalData.userInfo,
+              method: "DELETE",
+            })
+            if (del.data.code === 200){
+              if (type === "/node"){
+                this.nodeList = this.nodeList.filter((item)=>{
+                  return item.id !== itemData.id;
+                })
+              }
+              else{
+                this.pathList = this.pathList.filter((item)=>{
+                  return item.id !== itemData.id;
+                })
+              }
+            }
+            console.log(del);
+            this.$apply();
+          }
+        }catch (e){
+          console.log(e);
+        }
       },
       select(e){
         console.log(e);
