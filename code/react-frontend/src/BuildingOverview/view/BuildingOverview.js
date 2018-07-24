@@ -29,7 +29,7 @@ class BuildingOverview extends Component {
                                 title={this.props.UserData.currentBuilding.name + '现有路线总数'}
                                 hoverable={true}
                             >
-                                {this.props.UserData.currentBuilding.pathAmount}
+                                {this.props.UserData.currentBuilding.pathSum}
                             </Card>
                         </Col>
                         <Col>
@@ -38,7 +38,7 @@ class BuildingOverview extends Component {
                                 title={this.props.UserData.currentBuilding.name + '现有点位总数'}
                                 hoverable={true}
                             >
-                                {this.props.UserData.currentNoteList.nodeAmount}
+                                {this.props.UserData.currentBuilding.nodeSum}
                             </Card>
                         </Col>
                     </Row>
