@@ -59,7 +59,7 @@ class Login extends Component {
     };
 
     getBuildingList = async (values) => {
-        const url = httpHead + '/building/admin/building?adminId='+values.authorId;
+        const url = httpHead + '/building/admin/buildingandcount?adminId='+values.authorId;
         try {
             const response = await fetch(url,
                 {
@@ -72,9 +72,14 @@ class Login extends Component {
             const json = await response.json();
 
             if (json.code === 200) {
-                this.UserData.buildingList = json.buildings;
+                this.UserData.buildingList = json.countSums.map((item)=>{
+                    let building=  item.building;
+                    delete item.building;
+                    return {...building,...item}
+                });
+                console.log(this.UserData.buildingList.toJS());
                 message.success('获取建筑列表成功')
-                console.log(json.buildings)
+                console.log(json.countSums)
             }
             else if (json.code === 404) {
             }

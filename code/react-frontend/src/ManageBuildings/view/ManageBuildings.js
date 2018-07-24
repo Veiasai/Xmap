@@ -13,7 +13,7 @@ class ManageBuildings extends Component {
         super(props);
         this.UserData = this.props.UserData;
     }
-
+l
 
     render() {
         return (

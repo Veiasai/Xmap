@@ -9,7 +9,7 @@ class UserData{
     @observable
     isLogin = false;
     @observable
-    userID ='';
+    userID ='oEzSZ5RA3PFN5Ho0J0Bz0i66Gp9k';
     @observable
     buildingList = [];
     @observable
