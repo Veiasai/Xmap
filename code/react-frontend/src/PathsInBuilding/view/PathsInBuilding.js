@@ -14,6 +14,7 @@ class PathsInBuilding extends Component {
         this.UserData = this.props.UserData;
         this.getData((res) => {
             this.UserData.currentPathList = res.paths;
+            message.success('获取路线成功')
             console.log(res.paths);
         });
 
@@ -37,39 +38,15 @@ class PathsInBuilding extends Component {
                 callback(res);
             },
         });
-    }
+    };
 
-    getBuildingPathList = async () => {
-        const url = httpHead + '';
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: this.UserData.currentBuilding.ID,
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                this.UserData.currentPathList = json.pathList;
-            }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
 
     handleInfiniteOnLoad = () => {
         let data = this.UserData.currentPathList;
         this.setState({
             loading: true,
         });
-        if (data.length > this.UserData.currentBuilding.pathAmount) {
+        if (data.length >= this.UserData.currentBuilding.pathSum) {
             message.warning('没有更多路径了');
             this.setState({
                 hasMore: false,
@@ -100,7 +77,7 @@ class PathsInBuilding extends Component {
                     useWindow={false}
                 >
                     <List
-                        dataSource={this.UserData.currentPathList}
+                        dataSource={this.UserData.currentPathList.toJS()}
                         renderItem={item => (
                             <List.Item key={item.id}>
                                 <List.Item.Meta

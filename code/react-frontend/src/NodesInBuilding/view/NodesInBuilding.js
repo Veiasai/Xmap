@@ -13,11 +13,11 @@ class NodesInBuilding extends Component {
         super(props);
         this.UserData = this.props.UserData;
         this.getData((res) => {
-            this.UserData.currentNodeList = res.nodes;
-            message.success('获取点位成功')
             console.log(res.nodes);
+            this.UserData.currentNodeList = res.nodes;
+            console.log(this.UserData.currentNodeList);
+            message.success('获取点位成功')
         });
-
     }
 
     state = {
@@ -38,39 +38,15 @@ class NodesInBuilding extends Component {
                 callback(res);
             },
         });
-    }
+    };
 
-    getBuildingNodeList = async () => {
-        const url = httpHead + '';
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: this.UserData.currentBuilding.ID,
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                this.UserData.currentNodeList = json.NodeList;
-            }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
 
     handleInfiniteOnLoad = () => {
         let data = this.UserData.currentNodeList;
         this.setState({
             loading: true,
         });
-        if (data.length > this.UserData.currentBuilding.pathAmount) {
+        if (data.length >= this.UserData.currentBuilding.nodesSum) {
             message.warning('没有更多点位了');
             this.setState({
                 hasMore: false,

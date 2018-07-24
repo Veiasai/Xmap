@@ -20,7 +20,7 @@ class UserData{
     @observable
     currentPathList = [];
     @observable
-    currentNoteList = [];
+    currentNodeList = [];
     @observable
     currentMessageList = [];
     //
