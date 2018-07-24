@@ -1,13 +1,15 @@
 package xyz.veiasai.neo4j.controller;
 
 import org.junit.Test;
-import org.junit.runners.Parameterized;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.TestDefault;
 
 import java.util.Collection;
+
+import static org.junit.Assert.*;
 
 
 public class NodeControllerTest extends TestDefault {
@@ -28,13 +30,19 @@ public class NodeControllerTest extends TestDefault {
                 .content("{\"name\": \"test\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
+
         // ok
+        assertFalse(nodeRepository.findByBuildingAndNameLike(building.getId(), "testPost", 0, 5).iterator().hasNext());
+
         mvc.perform(MockMvcRequestBuilders.post("/node")
                 .param("buildingId", building.getId())
                 .param("author", author.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"test\"}"))
+                .content("{\"name\": \"testPost\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+        assertTrue(nodeRepository.findByBuildingAndNameLike(building.getId(), "testPost", 0, 5).iterator().hasNext());
+
     }
 
     @Test
@@ -64,7 +72,7 @@ public class NodeControllerTest extends TestDefault {
         mvc.perform(MockMvcRequestBuilders.get("/nodes")
                 .param("authorId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("nodes").isEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
     }
 
 
@@ -152,5 +160,18 @@ public class NodeControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nodes").isEmpty());
     }
 
+    @Test
+    public void nodeDelete() throws Exception{
+        // ok
+        assertTrue(nodeRepository.findById(node.getId()).isPresent());
+
+        mvc.perform(MockMvcRequestBuilders.delete("/node")
+                .param("authorId", author.getId())
+                .param("nodeId", node.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+
+        assertFalse(nodeRepository.findById(node.getId()).isPresent());
+    }
 
 }

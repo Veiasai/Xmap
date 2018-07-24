@@ -83,7 +83,7 @@ public class MessageController {
                                     @RequestParam(required = false, defaultValue = "5") Integer limit) {
         MessageResult result = new MessageResult();
         if (buildingId != null && authorId != null) {
-            result.setMessages(messageService.findMessageByAuthorAndBuilding(buildingId,title, authorId, skip, limit));
+            result.setMessages(messageService.findMessageByAuthorAndBuilding(buildingId, authorId, title, skip, limit));
             result.setMessage("查询成功");      //区别singleMessage方法
             result.setCode(200);
         } else if (buildingId != null) {
@@ -94,7 +94,6 @@ public class MessageController {
             result.setMessages(messageService.findMessageByAuthorAndTitle(authorId,title,skip, limit));
             result.setMessage("查询成功");      //区别singleMessage方法
             result.setCode(200);
-
         } else {
             result.setMessage("找不到信息");
             result.setCode(404);

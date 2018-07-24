@@ -24,16 +24,16 @@ public class BuildingAdminService {
     @Autowired
     private BuildingAdminRepository buildingAdminRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void applyBuildingAdmin(String buildingId, String authorId) {
         buildingAdminRepository.applyBuildingAdmin(buildingId, authorId);
     }
-    @Transactional(readOnly = true)
+    @Transactional()
     public void setBuildingAdmin(String buildingId, String authorId) {
         buildingAdminRepository.setBuildingAdmin(buildingId, authorId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void deleteBuildingAdmin(String buildingId, String authorId) {
         buildingAdminRepository.deleteBuildingAdmin(buildingId, authorId);
     }
@@ -45,25 +45,16 @@ public class BuildingAdminService {
 
     @Transactional(readOnly = true)
     public boolean isBuildingAdmin(String authorId){
-        if(buildingAdminRepository.countBuildingByAdmin(authorId)!=0){
-            return true;
-        }
-        return false;
+        return buildingAdminRepository.countBuildingByAdmin(authorId) != 0;
     }
     @Transactional(readOnly = true)
     public boolean existValidBuildingAdmin(String buildingId, String authorId) {
-        if (buildingAdminRepository.countValidBuildingAdmin(buildingId, authorId) != 0) {
-            return true;    //buildlingId和authorId都有效且相连state=1的时候 才为true
-        }
-        return false;
+        return buildingAdminRepository.countValidBuildingAdmin(buildingId, authorId) != 0;
     }
 
     @Transactional(readOnly = true)
     public boolean existApplyBuildingAdmin(String buildingId, String authorId) {
-        if (buildingAdminRepository.countApplyBuildingAdmin(buildingId, authorId) != 0) {
-            return true;    //buildlingId和authorId都有效且相连state=0的时候 才为true
-        }
-        return false;
+        return buildingAdminRepository.countApplyBuildingAdmin(buildingId, authorId) != 0;
     }
     @Transactional(readOnly = true)
     public Collection<Building> findBuildingByAdmin(String authorId) {   //authorId是否有效可放到controller层

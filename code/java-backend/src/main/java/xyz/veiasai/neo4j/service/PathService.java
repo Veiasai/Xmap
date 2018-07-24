@@ -29,7 +29,7 @@ public class PathService {
         return pathRepository.findByNameLike(name, skip, limit);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public Path addPath(Path path) {
         path.setId(null);
         path.setState(1);
@@ -57,7 +57,7 @@ public class PathService {
         pathRepository.addRelationOriginAndEnd(pathId, origin, end);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void deletePathById(String authorId, String pathId) {
         pathRepository.deletePathById(authorId, pathId);
     }

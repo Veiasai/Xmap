@@ -1,10 +1,11 @@
 package xyz.veiasai.neo4j.controller;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.TestDefault;
 import xyz.veiasai.neo4j.domain.Path;
 import xyz.veiasai.neo4j.pojo.Content;
@@ -125,22 +126,22 @@ public class PathControllerTest extends TestDefault {
 
     @Test
     public void pathDeleteById() throws Exception{
-        Path path2 = new Path();
-        path2.setId(null);
-        path2.setName("test1");
-        path2.setCurves(10);
-        path2.setImg("test1");
-        path2.setSteps(10);
-        path2.setState(1);
-        ArrayList<Content> contents = new ArrayList<>();
-        Content temp = new Content();
-        temp.setMessage("test1");
-        temp.setType("actionr");
-        contents.add(temp);
-        path2.setContents(contents);
-        path2 = pathRepository.save(path2);
+//        Path path2 = new Path();
+//        path2.setId(null);
+//        path2.setName("test1");
+//        path2.setCurves(10);
+//        path2.setImg("test1");
+//        path2.setSteps(10);
+//        path2.setState(1);
+//        ArrayList<Content> contents = new ArrayList<>();
+//        Content temp = new Content();
+//        temp.setMessage("test1");
+//        temp.setType("actionr");
+//        contents.add(temp);
+//        path2.setContents(contents);
+//        path2 = pathRepository.save(path2);
 
-        Assert.assertEquals(path2.getId(), pathRepository.findById(path2.getId()).orElse(new Path()).getId());
+        assertTrue(pathRepository.findById(path.getId()).isPresent());
 
         // invalid pathId
         mvc.perform(MockMvcRequestBuilders.delete("/path")
@@ -149,31 +150,32 @@ public class PathControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
+        assertTrue(pathRepository.findById(path.getId()).isPresent());
+
         // invalid authorId
         mvc.perform(MockMvcRequestBuilders.delete("/path")
                 .param("authorId",  "NotExist")
-                .param("pathId", path2.getId()))
+                .param("pathId", path.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
+        assertTrue(pathRepository.findById(path.getId()).isPresent());
+
         // invalid author-[r]-path
         mvc.perform(MockMvcRequestBuilders.delete("/path")
-                .param("authorId", author.getId())
-                .param("pathId", path2.getId()))
+                .param("authorId", author2.getId())
+                .param("pathId", path.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
 
-        Assert.assertNotNull("delete failed", pathRepository.findById(path2.getId()).orElse(null));
-
-        pathRepository.addRelationBuildingAndAuthor(path2.getId(), building.getId(),author.getId());
-
+        assertTrue(pathRepository.findById(path.getId()).isPresent());
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/path")
                 .param("authorId", author.getId())
-                .param("pathId", path2.getId()))
+                .param("pathId", path.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
 
-        Assert.assertNull("delete failed", pathRepository.findById(path2.getId()).orElse(null));
+        assertFalse("delete failed", pathRepository.findById(path.getId()).isPresent());
     }
 }

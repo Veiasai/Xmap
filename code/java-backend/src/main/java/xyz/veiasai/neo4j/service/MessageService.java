@@ -21,7 +21,7 @@ public class MessageService {
     @Autowired
     private BuildingRepository buildingRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public Message addMessage(Message message) {
         message.setId(null);
         message.setState(1);    //状态默认设为1即有效
@@ -31,7 +31,7 @@ public class MessageService {
         return message;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void deleteMessage(String authorId, String messageId) {
         messageRepository.deleteMessage(authorId, messageId);
     }

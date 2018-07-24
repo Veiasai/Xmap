@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.*;
 import xyz.veiasai.neo4j.pojo.Content;
 import xyz.veiasai.neo4j.repositories.*;
@@ -19,35 +20,30 @@ import java.util.ArrayList;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TestDefault {
-
     @Autowired
     public MockMvc mvc;
-
     @Autowired
     public BuildingRepository buildingRepository;
-
     @Autowired
     public AuthorRepository authorRepository;
-
     @Autowired
     public NodeRepository nodeRepository;
-
     @Autowired
     public TestRepository testRepository;
-
     @Autowired
     public PathRepository pathRepository;
-
     @Autowired
     public DataSetRepository dataSetRepository;
-
     @Autowired
     public BuildingAdminRepository buildingAdminRepository;
+    @Autowired
+    public MessageRepository messageRepository;
 
     protected static Building building = new Building();
     protected static Building building2 = new Building();
     protected static Address address = new Address();
     protected static Author author = new Author();
+    protected static Author author2 = new Author();
     protected static Node node = new Node();
     protected static Node node2 = new Node();
     protected static Path path = new Path();
@@ -55,6 +51,7 @@ public class TestDefault {
     protected static DataSet dataSetPath = new DataSet();
     protected static Gson gson = new Gson();
     protected static Author buildingAdmin = new Author();
+    protected static Message message = new Message();
 
     @Before
     public void setup() {
@@ -75,6 +72,8 @@ public class TestDefault {
         // 初始化author
         author.setId("testUser");
         author = authorRepository.save(author);
+        author2.setId("testUser2");
+        author2 = authorRepository.save(author2);
 
         // 初始化node
         node.setId(null);
@@ -126,11 +125,18 @@ public class TestDefault {
 
         // 初始化building admin
         buildingAdmin.setId("bAdmin");
-        authorRepository.save(buildingAdmin);
+        buildingAdmin = authorRepository.save(buildingAdmin);
         buildingAdminRepository.applyBuildingAdmin(building.getId(), buildingAdmin.getId());
         buildingAdminRepository.applyBuildingAdmin(building2.getId(), buildingAdmin.getId());
         buildingAdminRepository.setBuildingAdmin(building.getId(), buildingAdmin.getId());
 
+        // 初始化message
+        message.setState(1);
+        message.setTitle("test");
+        message.setContent("test");
+        message.setBuilding(building);
+        message.setAuthor(buildingAdmin);
+        message = messageRepository.save(message);
     }
 
     @After

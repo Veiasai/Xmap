@@ -38,7 +38,7 @@ public class BuildingAdminController {
             result.setCode(200);
             result.setMessage("登录成功");
         } else {
-            result.setCode(404);
+            result.setCode(403);
             result.setMessage("不是建筑管理员");       //authorId是否存在不应该判断。存在可能泄密
         }
         return result;
@@ -58,20 +58,20 @@ public class BuildingAdminController {
         return result;
     }
 
-    @DeleteMapping("builiding/admin/node")
+    @DeleteMapping("building/admin/node")
     public Result deleteNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String nodeId) {
         Result result = new Result();
         if (buildingService.getBuildingById(buildingId) == null) {
-            result.setCode(405);
+            result.setCode(404);
             result.setMessage("建筑不存在");
         } else if (authorService.getAuthorById(adminId) == null) {
             result.setCode(404);
             result.setMessage("用户不存在");
         } else if (nodeService.findById(nodeId) == null) {
-            result.setCode(403);
+            result.setCode(404);
             result.setMessage("点位不存在");
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
-            result.setCode(402);
+            result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
         } else {
             result.setCode(200);
@@ -85,16 +85,16 @@ public class BuildingAdminController {
     public Result deletePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String pathId) {
         Result result = new Result();
         if (buildingService.getBuildingById(buildingId) == null) {
-            result.setCode(405);
+            result.setCode(404);
             result.setMessage("建筑不存在");
         } else if (authorService.getAuthorById(adminId) == null) {
             result.setCode(404);
             result.setMessage("用户不存在");
         } else if (pathService.findById(pathId) == null) {
-            result.setCode(403);
+            result.setCode(404);
             result.setMessage("路线不存在");
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
-            result.setCode(402);
+            result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
         } else {
             result.setCode(200);

@@ -108,19 +108,20 @@ public class DataSetController {
         if (dataSet == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
-            return result;
         }
-        if (dataSet.getType().equals("node")) {
+        else if (dataSet.getType().equals("node")) {
             result.setMessage("删除点位成功");
             result.setCode(200);
             dataSetService.deleteRelationNodes(dataSetId, Ids);
-            return result;
         }
-        if (dataSet.getType().equals("path")) {
+        else if (dataSet.getType().equals("path")) {
             result.setMessage("删除路线成功");
             result.setCode(200);
             dataSetService.deleteRelationPaths(dataSetId, Ids);
-            return result;
+        }
+        else {
+            result.setMessage("数据错误");
+            result.setCode(403);
         }
         return result;
     }
