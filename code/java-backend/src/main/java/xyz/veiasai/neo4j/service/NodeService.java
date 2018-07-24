@@ -14,6 +14,7 @@ public class NodeService {
     @Autowired
     private NodeRepository nodeRepository;
 
+    @Transactional(readOnly = true)
     public Node addNode(Node node, String buildingId, String authorId) {
         node.setId(null);
         node.setState(1);
@@ -59,8 +60,21 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
-    public void deleteNodeByAdmin(String buildingId, String nodeId) {
-        nodeRepository.deleteNodeByAdmin(buildingId, nodeId);
+    public void deleteNodeByAdmin(String nodeId) {
+        nodeRepository.deleteNodeByAdmin(nodeId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existBuildingAndNode(String buildingId,String nodeId){
+        if(nodeRepository.countBuildingAndNode(buildingId, nodeId)!=0){
+            return true;
+        }
+        return false;
+    }
+    @Transactional(readOnly = true)
+    public void updateNodeByAdmin(Node node){
+        nodeRepository.save(node);
+
     }
     /*废弃接口
 

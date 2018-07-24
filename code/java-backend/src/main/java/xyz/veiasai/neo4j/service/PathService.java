@@ -75,8 +75,19 @@ public class PathService {
         return false;
     }
     @Transactional(readOnly = true)
-    public void deletePathByAdmin(String buildingId,String pathId){
-        pathRepository.deletePathByAdmin(buildingId, pathId);
+    public void deletePathByAdmin(String pathId){
+        pathRepository.deletePathByAdmin(pathId);
+    }
+    @Transactional(readOnly = true)
+    public boolean existBuildingAndPath(String buildingId,String pathId){
+        if(pathRepository.countBuildingAndPath(buildingId, pathId)!=0){
+            return true;
+        }
+        return false;
+    }
+    @Transactional(readOnly = true)
+    public void updatePathByAdmin(Path path){
+        pathRepository.save(path);
     }
     /* 废弃接口
     @Transactional(readOnly = true)

@@ -26,13 +26,11 @@ import java.util.Set;
 public class Node {
     @Id
     @GeneratedValue(strategy = UuidStrategy.class)
-    @ApiModelProperty(hidden = true)
     private String id;
 
     @ApiModelProperty(value = "点位名称", required = true)
     private String name;
 
-    @ApiModelProperty(hidden = true)
     private Integer state;
 
     @ApiModelProperty(value = "点位图片的uuid", required = true)

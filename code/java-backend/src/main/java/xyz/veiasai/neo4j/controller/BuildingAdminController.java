@@ -4,6 +4,9 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.CountSum;
+import xyz.veiasai.neo4j.domain.Node;
+import xyz.veiasai.neo4j.domain.Path;
+import xyz.veiasai.neo4j.domain.relation.PATH;
 import xyz.veiasai.neo4j.result.BuildingAdminResult;
 import xyz.veiasai.neo4j.result.BuildingResult;
 import xyz.veiasai.neo4j.result.CountSumResult;
@@ -73,10 +76,39 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(402);
             result.setMessage("该用户不是该建筑管理员");
+        } else if (!nodeService.existBuildingAndNode(buildingId, nodeId)) {
+            result.setCode(401);
+            result.setMessage("该点位不属于该建筑");
         } else {
             result.setCode(200);
             result.setMessage("删除成功");
-            nodeService.deleteNodeByAdmin(buildingId, nodeId);
+            nodeService.deleteNodeByAdmin(nodeId);
+        }
+        return result;
+    }
+
+    @PutMapping("building/admin/node")
+    public Result updateNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Node node) {
+        Result result = new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(405);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (nodeService.findById(node.getId()) == null) {
+            result.setCode(403);
+            result.setMessage("点位不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(402);
+            result.setMessage("该用户不是该建筑管理员");
+        } else if (!nodeService.existBuildingAndNode(buildingId, node.getId())) {
+            result.setCode(401);
+            result.setMessage("该点位不属于该建筑");
+        } else {
+            nodeService.updateNodeByAdmin(node);
+            result.setCode(200);
+            result.setMessage("更新成功");
         }
         return result;
     }
@@ -96,10 +128,39 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(402);
             result.setMessage("该用户不是该建筑管理员");
+        } else if (!pathService.existBuildingAndPath(buildingId, pathId)) {
+            result.setCode(401);
+            result.setMessage("该路线不属于该建筑");
         } else {
             result.setCode(200);
             result.setMessage("删除成功");
-            pathService.deletePathByAdmin(buildingId, pathId);
+            pathService.deletePathByAdmin(pathId);
+        }
+        return result;
+    }
+
+    @PutMapping("building/admin/path")
+    public Result updatePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Path path) {
+        Result result = new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(405);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (pathService.findById(path.getId()) == null) {
+            result.setCode(403);
+            result.setMessage("路线不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(402);
+            result.setMessage("该用户不是该建筑管理员");
+        } else if (!pathService.existBuildingAndPath(buildingId, path.getId())) {
+            result.setCode(401);
+            result.setMessage("该路线不属于该建筑");
+        } else {
+            result.setCode(200);
+            result.setMessage("更新成功");
+            pathService.updatePathByAdmin(path);
         }
         return result;
     }

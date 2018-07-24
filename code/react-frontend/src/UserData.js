@@ -1,7 +1,5 @@
 import {observable, action} from 'mobx';
-import {message} from 'antd'
-import React, { Component } from 'react';
-import {Control} from "react-keeper";
+import React from 'react';
 
 class UserData{
     init = false;
