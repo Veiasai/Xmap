@@ -61,7 +61,7 @@ public class BuildingAdminController {
         return result;
     }
 
-    @DeleteMapping("builiding/admin/node")
+    @DeleteMapping("building/admin/node")
     public Result deleteNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String nodeId) {
         Result result = new Result();
         if (buildingService.getBuildingById(buildingId) == null) {

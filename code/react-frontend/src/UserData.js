@@ -1,13 +1,13 @@
 import {observable, action} from 'mobx';
 import React from 'react';
 
-class UserData{
+class UserData {
     init = false;
 
     @observable
     isLogin = false;
     @observable
-    userID ='';
+    userID = '';
     @observable
     buildingList = [];
     @observable
@@ -21,6 +21,13 @@ class UserData{
     currentNoteList = [];
     @observable
     currentMessageList = [];
+    @observable
+    qrNodeList = ['Racing car sprays burning fuel into crowd.',
+        'Japanese princess to wed commoner.',
+        'Australian walks 100km after outback crash.',
+        'Man charged over missing wedding girl.',
+        'Los Angeles battles huge wildfires.',];
+
     //
     // @action.bound
     // init() {

@@ -8,7 +8,7 @@ import {view as BuildingOverview} from "../../BuildingOverview";
 import {view as PathsInBuilding} from "../../PathsInBuilding";
 import {view as NodesInBuilding} from "../../NodesInBuilding";
 import {view as ManageMessages} from "../../ManageMessages";
-
+import {view as ShoppingCart} from "../../ShoppingCart"
 const {Header, Sider, Content} = Layout;
 
 
@@ -27,6 +27,7 @@ class Manage extends Component {
                                 <Route path={"/PathsInBuilding"} component={PathsInBuilding}/>
                                 <Route path={"/NodesInBuilding"} component={NodesInBuilding}/>
                                 <Route path={"/ManageMessages"} component={ManageMessages}/>
+                                <Route path={"/ShoppingCart"} component={ShoppingCart}/>
                             </Col>
                         </Row>
                     </Content>
