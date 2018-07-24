@@ -21,19 +21,18 @@ class SendMessage extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                this.Login(values);
+                this.sendMessage(values);
             }
         });
     };
 
-    Login = async (values) => {
-        const url = httpHead + '';
-        let user = {
-            name: {},
+    sendMessage = async (values) => {
+        const url = httpHead + '/message?buildingId=' + this.UserData.currentBuilding.id + '&authorId=' + this.UserData.userID;
+        let message = {
             title: {},
-            message: {},
+            content: {},
         }
-        user = {...values};
+        message = {...values};
         try {
             const response = await fetch(url,
                 {
@@ -42,14 +41,18 @@ class SendMessage extends Component {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-                    body: values.name,
+                    body: JSON.stringify(message),
                 });
             const json = await response.json();
 
             if (json.code === 200) {
-
+                message.success('发布成功');
+                this.UserData.currentMessageList = [...this.UserData.currentMessageList,json.singleMessage];
+                this.UserData.currentBuilding.messageSum += 1;
+                this.props.form.resetFields()
             }
-            else if (json.code === 404) {
+            else{
+                message.error('出错了')
             }
         }
         catch (e) {
@@ -62,22 +65,15 @@ class SendMessage extends Component {
         return (
             <div className={'sendMessage'}>
                 <Form style={{width: '80%',alignItems:'left'}} onSubmit={this.handleSubmit} className="sendMessageForm">
-                        <FormItem>
-                            {getFieldDecorator('name', {
-                                rules: [{required: true, message: '请输入发布人！'}],
-                            })(
-                                <Input style={{width: '20%'}} placeholder="发布人"/>
-                            )}
-                        </FormItem>
                     <FormItem>
-                        {getFieldDecorator('name', {
+                        {getFieldDecorator('title', {
                             rules: [{required: true, message: '请输入标题'}],
                         })(
                             <Input style={{width: '20%'}} placeholder='标题'/>
                         )}
                     </FormItem>
                     <FormItem>
-                        {getFieldDecorator('message', {
+                        {getFieldDecorator('content', {
                             rules: [{required: true, message: '请输入消息内容！'}],
                         })(
                             <TextArea placeholder="请输入消息内容" minLength={'10'} maxLength={'140'} autosize={{ minRows: 2, maxRows: 3 }} />
