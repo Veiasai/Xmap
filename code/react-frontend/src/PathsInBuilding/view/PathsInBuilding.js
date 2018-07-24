@@ -11,7 +11,7 @@ import reqwest from "reqwest";
 class PathsInBuilding extends Component {
     constructor(props) {
         super(props);
-        this.UserData = this.props.UserData
+        this.UserData = this.props.UserData;
         this.getData((res) => {
             this.UserData.currentPathList = res.paths;
             console.log(res.paths);

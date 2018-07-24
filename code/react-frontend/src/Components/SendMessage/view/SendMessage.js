@@ -28,11 +28,11 @@ class SendMessage extends Component {
 
     sendMessage = async (values) => {
         const url = httpHead + '/message?buildingId=' + this.UserData.currentBuilding.id + '&authorId=' + this.UserData.userID;
-        let user = {
+        let message = {
             title: {},
             content: {},
         }
-        user = {...values};
+        message = {...values};
         try {
             const response = await fetch(url,
                 {
@@ -41,13 +41,15 @@ class SendMessage extends Component {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-                    body: JSON.stringify(user),
+                    body: JSON.stringify(message),
                 });
             const json = await response.json();
 
             if (json.code === 200) {
-                message.success('发布成功')
-                Control.go('/Manage');
+                message.success('发布成功');
+                this.UserData.currentMessageList = [...this.UserData.currentMessageList,json.singleMessage];
+                this.UserData.currentBuilding.messageSum += 1;
+                this.props.form.resetFields()
             }
             else{
                 message.error('出错了')

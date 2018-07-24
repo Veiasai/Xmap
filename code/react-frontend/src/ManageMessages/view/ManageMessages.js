@@ -76,43 +76,73 @@ class ManageMessages extends Component {
         });
     };
 
-    deleteMessage(messageId){
+    deleteMessage = async (item) => {
+        const url = httpHead + '/message?authorId=' + this.UserData.userID + '&messageId=' + item.id;
+        try {
+            const response = await fetch(url,
+                {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
 
+            const json = await response.json();
+            if (json.code === 200) {
+                message.success('删除成功');
+                let temp = this.UserData.currentMessageList.filter((i) => {
+                    return i.id !== item.id
+                });
+                this.UserData.currentMessageList = temp;
+                this.UserData.currentBuilding.messageSum -= 1;
+                this.setState({skip: this.UserData.currentMessageList.length});
+
+            }
+            else if (json.code === 401) {
+                message.warning('无法删除其他管理员发布的消息！')
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     render() {
         return (
-            <div className="demo-infinite-container">
-                <InfiniteScroll
-                    initialLoad={false}
-                    pageStart={0}
-                    loadMore={this.handleInfiniteOnLoad}
-                    hasMore={!this.state.loading && this.state.hasMore}
-                    useWindow={false}
-                >
-                    <List
-                        itemLayout="vertical"
-                        dataSource={this.UserData.currentMessageList}
-                        renderItem={item => (
-                            <List.Item
-                                key={item.id}
-                                actions={[<IconText type="delete" text="删除"/>]}
-                            >
-                                <List.Item.Meta
-                                    title={item.title}
-                                    description={item.date}
-                                />
-                                {item.content}
-                            </List.Item>
-                        )}
+            <div>
+                <div className='messageContainer'>
+                    <InfiniteScroll
+                        initialLoad={false}
+                        pageStart={0}
+                        loadMore={this.handleInfiniteOnLoad}
+                        hasMore={!this.state.loading && this.state.hasMore}
+                        useWindow={false}
                     >
-                        {this.state.loading && this.state.hasMore && (
-                            <div className="demo-loading-container">
-                                <Spin/>
-                            </div>
-                        )}
-                    </List>
-                </InfiniteScroll>
+                        <List
+                            itemLayout="vertical"
+                            dataSource={this.UserData.currentMessageList}
+                            renderItem={item => (
+                                <List.Item
+                                    key={item.id}
+                                    actions={[<Icon onClick={() => this.deleteMessage(item)} type="delete" />]}
+                                >
+                                    <List.Item.Meta
+                                        title={item.title}
+                                        description={item.date}
+                                    />
+                                    {item.content}
+                                </List.Item>
+                            )}
+                        >
+                            {this.state.loading && this.state.hasMore && (
+                                <div className="loadingContainer">
+                                    <Spin/>
+                                </div>
+                            )}
+                        </List>
+                    </InfiniteScroll>
+                </div>
                 <SendMessage/>
             </div>
 

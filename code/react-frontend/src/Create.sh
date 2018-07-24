@@ -20,6 +20,7 @@ class ${fileName} extends Component
 {
      constructor(props) {
         super(props);
+        this.UserData = this.props.UserData;
     }
     
     render()
