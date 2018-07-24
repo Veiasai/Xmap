@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {List, Button} from 'antd';
 import {inject, observer} from "mobx-react/index";
 import "./ShoppingCart.css"
-
+import $ from 'jquery'
 const QRCode = require('qrcode.react');
 
 
@@ -12,6 +12,18 @@ class ShoppingCart extends Component {
     constructor(props) {
         super(props);
 
+    }
+
+    qrcode () {
+        let qrcode = new QRCode('qrcode', {
+            width: 100,
+            height: 100, // 高度
+            text: '56663159' // 二维码内容
+            // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+            // background: '#f0f'
+            // foreground: '#ff0'
+        })
+        console.log(qrcode)
     }
     toUtf8(str) {
         var out, i, len, c;
@@ -33,12 +45,13 @@ class ShoppingCart extends Component {
         return out;
     }
     generateQrCode(){
-
+        this.qrcode();
     }
     render() {
         return (
 
             <div>
+                <div id="qrcode">二维码位置</div>
                 <List
                     header={<div>要导出二维码的点位</div>}
                     footer={<Button onClick={() =>this.generateQrCode()}>批量生成</Button>}
