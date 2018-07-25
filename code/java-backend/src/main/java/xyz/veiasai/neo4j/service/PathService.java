@@ -69,10 +69,7 @@ public class PathService {
 
     @Transactional(readOnly = true)
     public boolean existPathAndAuthor(String authorId,String pathId){
-        if(pathRepository.countPathByAuthorId(authorId, pathId)!=0){
-            return true;
-        }
-        return false;
+        return pathRepository.countPathByAuthorId(authorId, pathId)!=0;
     }
     @Transactional(readOnly = true)
     public void deletePathByAdmin(String pathId){
