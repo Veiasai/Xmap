@@ -6,16 +6,12 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.DataSet;
-import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.domain.Path;
 import xyz.veiasai.neo4j.result.DataSetResult;
-import xyz.veiasai.neo4j.result.NodeResult;
-import xyz.veiasai.neo4j.result.PathResult;
 import xyz.veiasai.neo4j.result.Result;
+import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.DataSetService;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 
 @Api(value = "dataset-controller")
@@ -25,28 +21,34 @@ public class DataSetController {
     @Autowired
     private DataSetService dataSetService;
 
+    @Autowired
+    private AuthorService authorService;
+
     @ApiOperation(value = "上传数据组", notes = "上传数据组信息")           //待加valid验证
     @PostMapping("/dataset")
     public DataSet postDataSet(@RequestBody @Valid DataSet dataSet,
                                @RequestParam @ApiParam(name = "buildingId", value = "数据组所在建筑物的id") String buildingId,
-                               @RequestParam @ApiParam(name = "authorId", value = "上传者的open-id") String authorId)
-    {
+                               @RequestParam @ApiParam(name = "authorId", value = "上传者的open-id") String authorId) {
         dataSet = dataSetService.addDataSet(dataSet, buildingId, authorId);
         return dataSet;
     }
 
     @ApiOperation(value = "删除数据组", notes = "删除数据组及其相关联系;\r\n404:不存在;\r\n200:删除成功")
     @DeleteMapping("/dataset")
-    public Result deleteDataSet(@RequestParam String dataSetId) {
+    public Result deleteDataSet(@RequestParam String authorId, @RequestParam String dataSetId) {
         Result result = new Result();
-        if (dataSetService.getDataSetById(dataSetId) == null) {
+        if (authorService.getAuthorById(authorId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(404);
+        } else if (dataSetService.getDataSetById(dataSetId) == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
             return result;
+        } else {
+            dataSetService.deleteDataSetByAuthor(authorId, dataSetId);
+            result.setMessage("删除数据组成功");
+            result.setCode(200);
         }
-        dataSetService.deleteDataSet(dataSetId);
-        result.setMessage("删除数据组成功");
-        result.setCode(200);
         return result;
     }
 

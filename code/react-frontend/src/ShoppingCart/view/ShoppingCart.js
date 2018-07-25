@@ -81,7 +81,7 @@ class ShoppingCart extends Component {
                         <Qrcode data={item} size={this.state.size}/>
                     </div>)
                 })}
-            </div>
+                </div>
         )
     }
 }

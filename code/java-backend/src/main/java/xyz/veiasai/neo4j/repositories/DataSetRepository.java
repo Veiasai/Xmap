@@ -68,8 +68,8 @@ public interface DataSetRepository extends Neo4jRepository<DataSet, String> {
                                                 @Param("skip")Integer skip,
                                                 @Param("limit")Integer limit);
 
-    @Query("Match (d:DataSet {id:{dataSetId}}) Detach Delete d")
-    public void deleteDataSetById(@Param("dataSetId") String dataSetId);
+    @Query("Match (a:Author {id:{authorId}})-[:AUTHOR]-(d:DataSet {id:{dataSetId}}) Detach Delete d")
+    public void deleteDataSetByAuthor(@Param("authorId")String authorId,@Param("dataSetId") String dataSetId);
 
     @Query("Match (d:DataSet)-[:BUILDING]-(b:Building {id:{buildingId}}) where d.name =~ ('.*'+{Name}+'.*')" +
             "RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}")
@@ -83,6 +83,11 @@ public interface DataSetRepository extends Neo4jRepository<DataSet, String> {
             "RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}")
     public Collection<DataSet> findByAuthorAndName(@Param("authorId") String authorId, @Param("Name") String Name, @Param("skip") Integer skip, @Param("limit") Integer limit);
 
+    @Query("Match (b:Building{id:{buildingId}})-[r:BUILDING]-(d:DataSet {id:{dataSetId}}) return count(r)")
+    public int countBuildingAndDataSet(@Param("buildingId")String buildingId, @Param("pathId") String dataSetId);
+
+    @Query("Match (d:DataSet {id:{dataSetId}}) Detach Delete d")
+    public void deleteDataSetByAdmin(@Param("dataSetId") String dataSetId);
 
     /* 废弃接口
     @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}})" +
