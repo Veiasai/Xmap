@@ -129,9 +129,25 @@
       }
       this.searchNode(data);
     }
+    onPullDownRefresh(){
+      let data = {
+        buildingId: this.$parent.globalData.building.id,
+        skip: 0,
+        limit: this.limit,
+      }
+      this.pathSkip = 0;
+      this.originSkip = 0;
+      this.endSkip = 0;
+      this.origin = null;
+      this.end = null;
+      this.searchNode(data);
+      wx.stopPullDownRefresh()
+    }
 
     config = {
       navigationBarTitleText: 'NodeView',
+      enablePullDownRefresh: true,
+      backgroundColor: "#1cf001"
     }
     data = {
       name: "",
@@ -249,6 +265,9 @@
 
     async searchNode(data) {
       try {
+        if (this.dataSet !== null){
+          data.dataSetId = this.dataSet.id;
+        }
         console.log(data);
         let res = await wepy.request({
           url: httpHead + '/nodes',
@@ -352,20 +371,19 @@
     async searchDataSet() {
       try{
         let res = await wepy.request({
-          url: httpHead + '/nodes/twonodes/v2',
+          url: httpHead + '/dataset',
           data: {
             buildingId: this.$parent.globalData.building.id,
+            limit: 50,
           }
         })
-
         this.dataSetList = res.data.dataSets.filter((item)=>{
           return item.type === 'node';
         });
-
         this.dataSetNameList = this.dataSetList.map((item)=>{
           return item.name;
         })
-
+        this.$apply();
       }catch (e)
       {
         console.log(e);

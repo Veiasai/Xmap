@@ -24,7 +24,11 @@
   <view style="display: flex; flex-direction: column; align-items: center">
     <view style="height: 10vh; display: flex; flex-direction: row;">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
-      <view @tap="dataSet" width="20rpx">选组</view>
+      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
+        <view class="picker">
+          {{dataSet === null ? "选组" : dataSet.name}}
+        </view>
+      </picker>
     </view>
     <view style="width:700rpx; text-align: center">
       管理员发布的消息
@@ -56,13 +60,28 @@
   export default class Main extends wepy.page {
     onLoad() {
       this.searchPath({skip: this.skip});
+      this.searchMessage(0);
+      this.searchDataSet();
+    }
+
+    onPullDownRefresh(){
+      this.searchDataSet();
+      this.skip = 0;
+      this.searchPath({skip: this.skip});
+      this.searchMessage();
+      wx.stopPullDownRefresh()
     }
 
     config = {
-      navigationBarTitleText: "Main"
+      navigationBarTitleText: "Main",
+      enablePullDownRefresh: true,
+      backgroundColor: "#1cf001"
     }
     data = {
-      messages: [{title:"wtf", content: "wtf"}, {title:"wtfxx", content: "wtxxf"}],
+      dataSet: null,
+      dataSetList: [],
+      dataSetNameList: ["1","1","1","1","1","1","1","1","1","1","1",],
+      messages: [],
       paths: [],
       name: "",
       skip: 0,
@@ -84,9 +103,13 @@
         this.searchPath({name: this.name, skip: this.skip});
       },
 
+      bindDataSetChange(e){
+        console.log(e);
+      },
+
       async applyAdmin(){
         try{
-          let res = wepy.request({
+          let res = await wepy.request({
             url: httpHead + "/apply/buildingadmin",
             data: {
               authorId: this.$parent.globalData.userInfo,
@@ -97,6 +120,12 @@
             title: '已发起申请，等待审核',
             icon: 'none',
           })
+        }catch (e){
+          wx.showToast({
+            title: '网络异常',
+            icon: 'none',
+          })
+          console.log(e);
         }
       }
     }
@@ -113,6 +142,9 @@
 
     async searchPath(data) {
       try {
+        if (this.dataSet !== null){
+          data.dataSetId = this.dataSet.id;
+        }
         console.log(data);
         let res = await wepy.request({
           url: httpHead + '/paths',
@@ -158,19 +190,38 @@
       }
     }
 
-    async searchMessage(data) {
+    async searchMessage() {
       try {
-        console.log(data);
         let res = await wepy.request({
-          url: httpHead + '/messages',
+          url: httpHead + '/message',
           data: {
-            ...data,
             buildingId: this.$parent.globalData.building.id,
-            limit: this.limit,
           }
         })
         console.log(res.data);
         this.messages = res.data.messages;
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
+    async searchDataSet(){
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/dataset',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+            limit: 50,
+          }
+        })
+        console.log(res.data);
+        this.dataSetList = res.data.dataSets.filter((item)=>{
+          return item.type === 'path';
+        });
+        this.dataSetNameList = res.data.dataSets.map((item)=>{
+          return item.name;
+        })
         this.$apply();
       }
       catch (e) {
