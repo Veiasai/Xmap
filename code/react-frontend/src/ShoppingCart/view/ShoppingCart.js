@@ -14,17 +14,32 @@ class ShoppingCart extends Component {
 
     }
 
-    qrcode () {
-        let qrcode = new QRCode('qrcode', {
-            width: 100,
-            height: 100, // 高度
-            text: '56663159' // 二维码内容
-            // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
-            // background: '#f0f'
-            // foreground: '#ff0'
-        })
-        console.log(qrcode)
+    makeCode () {
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width : 100,
+            height : 100
+        });
+        var elText = document.getElementById("text");
+
+        if (!elText.value) {
+            alert("Input a text");
+            elText.focus();
+            return;
+        }
+
+        qrcode.makeCode(elText.value);
     }
+    // qrcode () {
+    //     let qrcode = new QRCode(document.getElementById("qrcode"), {
+    //         width: 100,
+    //         height: 100, // 高度
+    //         text: '56663159', // 二维码内容
+    //         render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+    //         // background: '#f0f'
+    //         // foreground: '#ff0'
+    //     })
+    //     console.log(qrcode)
+    // }
     toUtf8(str) {
         var out, i, len, c;
         out = "";
@@ -45,13 +60,13 @@ class ShoppingCart extends Component {
         return out;
     }
     generateQrCode(){
-        this.qrcode();
+        this.makeCode();
     }
     render() {
         return (
 
             <div>
-                <div id="qrcode">二维码位置</div>
+                <input id="text" type="text" value="https://www.runoob.com" /><br />
                 <List
                     header={<div>要导出二维码的点位</div>}
                     footer={<Button onClick={() =>this.generateQrCode()}>批量生成</Button>}
@@ -59,6 +74,7 @@ class ShoppingCart extends Component {
                     dataSource={this.props.UserData.qrNodeList}
                     renderItem={item => (<List.Item>{item}</List.Item>)}
                 />
+                <div id="qrcode"></div>
             </div>
         )
     }

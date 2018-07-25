@@ -27,6 +27,10 @@ public class DataSetService {
         return dataSet;
     }
 
+    @Transactional
+    public DataSet findById(String dataSetId){
+        return dataSetRepository.findById(dataSetId).orElse(null);
+    }
     @Transactional(readOnly = true)
     public DataSet getDataSetById(String dataSetId) {
         return dataSetRepository.findDataSetById(dataSetId);
@@ -37,9 +41,13 @@ public class DataSetService {
         return dataSetRepository.findDataSetByName(dataSetName, skip, limit);
     }
 
-    @Transactional(readOnly = true)
-    public void deleteDataSet(String dataSetId) {
-        dataSetRepository.deleteDataSetById(dataSetId);
+    @Transactional
+    public void deleteDataSetByAuthor(String authorId,String dataSetId) {
+        dataSetRepository.deleteDataSetByAuthor(authorId,dataSetId);
+    }
+    @Transactional
+    public void deleteDataSetByAdmin(String dataSetId){
+        dataSetRepository.deleteDataSetByAdmin(dataSetId);
     }
 
     @Transactional(readOnly = true)
@@ -128,6 +136,11 @@ public class DataSetService {
     @Transactional(readOnly = true)
     public Collection<DataSet> findDataSetByAuthorAndName(String authorId, String dataSetName, Integer skip, Integer limit) {
         return dataSetRepository.findByAuthorAndName(authorId, dataSetName, skip, limit);
+    }
+
+    @Transactional
+    public boolean existBuildingAndDataSet(String buildingId,String dataSetId){
+        return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId)!=0;
     }
 
 }
