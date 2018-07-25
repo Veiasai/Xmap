@@ -1,15 +1,13 @@
 import {observable, action} from 'mobx';
-import {message} from 'antd'
-import React, { Component } from 'react';
-import {Control} from "react-keeper";
+import React from 'react';
 
-class UserData{
+class UserData {
     init = false;
 
     @observable
     isLogin = false;
     @observable
-    userID ='';
+    userID ='oEzSZ5RA3PFN5Ho0J0Bz0i66Gp9k';
     @observable
     buildingList = [];
     @observable
@@ -20,9 +18,16 @@ class UserData{
     @observable
     currentPathList = [];
     @observable
-    currentNoteList = [];
+    currentNodeList = [];
     @observable
     currentMessageList = [];
+    @observable
+    qrNodeList = ['Racing car sprays burning fuel into crowd.',
+        'Japanese princess to wed commoner.',
+        'Australian walks 100km after outback crash.',
+        'Man charged over missing wedding girl.',
+        'Los Angeles battles huge wildfires.',];
+
     //
     // @action.bound
     // init() {

@@ -19,18 +19,23 @@ public class Path {
     @Id
     @GeneratedValue(strategy = UuidStrategy.class)
     private String id;
+
     @NotNull
     private String name;
 
     private String img;
-    @ApiModelProperty(hidden = true)
+
     private Integer state;
 
+    @ApiModelProperty(hidden = true)
     private Integer steps;
+
+    @ApiModelProperty(hidden = true)
     private Integer curves;
 
     @NotNull
     @Convert(ContentConverter.class)
+    @JsonIgnore
     private List<Content> contents;
 
     @JsonIgnore

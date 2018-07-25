@@ -11,35 +11,34 @@ import xyz.veiasai.neo4j.domain.Path;
 import xyz.veiasai.neo4j.pojo.Content;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PathControllerTest extends TestDefault {
 
     @Test
     public void pathPost() throws Exception{
-        Path path1 = new Path();
-        path1.setId(null);
-        path1.setName("test1");
-        path1.setCurves(10);
-        path1.setImg("test1");
-        path1.setSteps(10);
-        path1.setState(1);
-        ArrayList<Content> contents = new ArrayList<>();
+        Path pathTemp = new Path();
+        pathTemp.setId(null);
+        pathTemp.setName("test1");
+        pathTemp.setCurves(10);
+        pathTemp.setImg("test1");
+        pathTemp.setSteps(10);
+        pathTemp.setState(1);
+        List<Content> contents = new ArrayList<>();
         Content temp = new Content();
         temp.setMessage("test1");
         temp.setType("actionr");
         contents.add(temp);
-        path1.setContents(contents);
+        pathTemp.setContents(contents);
 
-        gson.toJson(path1);
         mvc.perform(MockMvcRequestBuilders.post("/path")
                 .param("buildingId", building.getId())
                 .param("author", author.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(path1)))
+                .content(gson.toJson(pathTemp)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.path.name").value("test1"));
-
     }
 
     @Test

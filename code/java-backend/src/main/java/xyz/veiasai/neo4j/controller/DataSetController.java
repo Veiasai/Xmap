@@ -25,7 +25,7 @@ public class DataSetController {
     @Autowired
     private DataSetService dataSetService;
 
-    @ApiOperation(value = "上传数据组", notes = "上传数据组信息")
+    @ApiOperation(value = "上传数据组", notes = "上传数据组信息")           //待加valid验证
     @PostMapping("/dataset")
     public DataSet postDataSet(@RequestBody @Valid DataSet dataSet,
                                @RequestParam @ApiParam(name = "buildingId", value = "数据组所在建筑物的id") String buildingId,

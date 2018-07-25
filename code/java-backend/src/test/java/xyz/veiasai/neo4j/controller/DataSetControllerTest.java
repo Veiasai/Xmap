@@ -83,7 +83,7 @@ public class DataSetControllerTest extends TestDefault {
         dataSetRepository.deleteRelationDataSetAndNode(dataSetNode.getId(), node2.getId());
 
         // invalid dataSet type
-        mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
+        /*mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
                 .param("dataSetId", dataSetPath.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(ids)))
@@ -98,7 +98,7 @@ public class DataSetControllerTest extends TestDefault {
                 .content(gson.toJson(ids)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
-
+*/
     }
 
     @Test

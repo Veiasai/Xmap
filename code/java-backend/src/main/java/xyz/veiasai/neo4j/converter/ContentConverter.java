@@ -9,7 +9,9 @@ public class ContentConverter implements CompositeAttributeConverter<List<Conten
     @Override
     public Map<String, ?> toGraphProperties(List<Content> contents) {
         Map<String, List<String>> properties = new HashMap<>();
-        Iterator<Content> iterator = contents.listIterator();
+        if (contents == null)
+            return properties;
+        Iterator<Content> iterator = contents.iterator();
         List<String> types = new ArrayList<>();
         List<String> messages = new ArrayList<>();
         while (iterator.hasNext())

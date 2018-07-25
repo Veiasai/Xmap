@@ -4,23 +4,32 @@ import {inject, observer} from "mobx-react/index";
 import reqwest from 'reqwest';
 import InfiniteScroll from 'react-infinite-scroller';
 import "./NodesInBuilding.css"
-import {httpHead} from "../../Consts";
+import {httpHead, imgHead} from "../../Consts";
 
 @inject(['UserData'])
 @observer
 class NodesInBuilding extends Component {
     constructor(props) {
         super(props);
+        this.UserData = this.props.UserData;
+        this.getData((res) => {
+            console.log(res.nodes);
+            this.UserData.currentNodeList = res.nodes;
+            console.log(this.UserData.currentNodeList);
+            message.success('获取点位成功')
+        });
     }
 
     state = {
         loading: false,
         hasMore: true,
+        skip: 0,
+        limit: 10,
     }
 
     getData = (callback) => {
         reqwest({
-            url: httpHead + '',
+            url: httpHead + '/nodes?buildingId=' + this.UserData.currentBuilding.id + '&skip=' + this.state.skip + '&limit=' + this.state.limit,
             type: 'json',
             method: 'get',
             mode: 'cors',
@@ -29,23 +38,16 @@ class NodesInBuilding extends Component {
                 callback(res);
             },
         });
-    }
+    };
 
-    componentDidMount() {
-        this.getData((res) => {
-            this.setState({
-                data: res.results,
-            });
-        });
-    }
 
     handleInfiniteOnLoad = () => {
-        let data = this.state.data;
+        let data = this.UserData.currentNodeList;
         this.setState({
             loading: true,
         });
-        if (data.length > 14) {
-            message.warning('Infinite List loaded all');
+        if (data.length >= this.UserData.currentBuilding.nodesSum) {
+            message.warning('没有更多点位了');
             this.setState({
                 hasMore: false,
                 loading: false,
@@ -53,37 +55,15 @@ class NodesInBuilding extends Component {
             return;
         }
         this.getData((res) => {
-            data = data.concat(res.results);
-            this.setState({
-                data,
-                loading: false,
-            });
-        });
-    }
-
-    getBuildingNodeList = async () => {
-        const url = httpHead + '';
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: this.UserData.currentBuilding.ID,
+            if (this.state.skip === this.UserData.currentNodeList.length) {
+                data = data.concat(res.results.nodes);
+                this.UserData.currentNodeList = data;
+                this.setState({
+                    skip: this.UserData.currentNodeList.length,
+                    loading: false,
                 });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                this.UserData.currentNoteList = json.nodeList;
             }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
+        });
     }
 
     render() {
@@ -97,16 +77,16 @@ class NodesInBuilding extends Component {
                     useWindow={false}
                 >
                     <List
-                        dataSource={this.state.data}
+                        dataSource={this.UserData.currentNodeList}
                         renderItem={item => (
                             <List.Item key={item.id}>
                                 <List.Item.Meta
                                     avatar={<Avatar
-                                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
-                                    title={<a href="https://ant.design">{item.name.last}</a>}
-                                    description={item.email}
+                                        size='large'
+                                        src={imgHead + item.img}/>}
+                                    title={item.name}
                                 />
-                                <div>Content</div>
+                                <div></div>
                             </List.Item>
                         )}
                     >
@@ -118,7 +98,6 @@ class NodesInBuilding extends Component {
                     </List>
                 </InfiniteScroll>
             </div>
-
         )
     }
 }
