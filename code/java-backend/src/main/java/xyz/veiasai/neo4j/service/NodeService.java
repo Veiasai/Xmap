@@ -66,10 +66,7 @@ public class NodeService {
 
     @Transactional(readOnly = true)
     public boolean existBuildingAndNode(String buildingId,String nodeId){
-        if(nodeRepository.countBuildingAndNode(buildingId, nodeId)!=0){
-            return true;
-        }
-        return false;
+        return nodeRepository.countBuildingAndNode(buildingId, nodeId)!=0;
     }
     @Transactional(readOnly = true)
     public void updateNodeByAdmin(Node node){

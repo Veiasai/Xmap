@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import sun.awt.SunHints;
 import xyz.veiasai.neo4j.TestDefault;
 import xyz.veiasai.neo4j.domain.DataSet;
 
@@ -119,14 +120,30 @@ public class DataSetControllerTest extends TestDefault {
 
     @Test
     public void deleteDataSet() throws Exception{
-        // invalid id
+        // invalid authorId
         mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId","NotExist")
+                .param("dataSetId", dataSetNode.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid dataSetId
+        mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId",author.getId())
                 .param("dataSetId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
+        // invalid (a:Author)-[r]-(d:DataSet)
+        mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId",author2.getId())
+                .param("dataSetId", dataSetNode.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId",author.getId())
                 .param("dataSetId", dataSetNode.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));

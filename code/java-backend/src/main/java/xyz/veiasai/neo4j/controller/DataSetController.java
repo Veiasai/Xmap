@@ -43,7 +43,9 @@ public class DataSetController {
         } else if (dataSetService.getDataSetById(dataSetId) == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
-            return result;
+        } else if (!dataSetService.existAuthorAndDataSet(authorId, dataSetId)) {
+            result.setMessage("该用户无权限删除该数据组");
+            result.setCode(403);
         } else {
             dataSetService.deleteDataSetByAuthor(authorId, dataSetId);
             result.setMessage("删除数据组成功");
@@ -110,18 +112,15 @@ public class DataSetController {
         if (dataSet == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
-        }
-        else if (dataSet.getType().equals("node")) {
+        } else if (dataSet.getType().equals("node")) {
             result.setMessage("删除点位成功");
             result.setCode(200);
             dataSetService.deleteRelationNodes(dataSetId, Ids);
-        }
-        else if (dataSet.getType().equals("path")) {
+        } else if (dataSet.getType().equals("path")) {
             result.setMessage("删除路线成功");
             result.setCode(200);
             dataSetService.deleteRelationPaths(dataSetId, Ids);
-        }
-        else {
+        } else {
             result.setMessage("数据错误");
             result.setCode(403);
         }
