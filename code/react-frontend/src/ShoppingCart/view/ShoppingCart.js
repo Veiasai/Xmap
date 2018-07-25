@@ -1,67 +1,96 @@
 import React, {Component} from 'react';
-import {List, Button} from 'antd';
+import {List, Button, Slider, InputNumber,  Row, Col} from 'antd';
 import {inject, observer} from "mobx-react/index";
 import "./ShoppingCart.css"
-import $ from 'jquery'
-const QRCode = require('qrcode.react');
-
+import JsZip from 'jszip'
+import  FileSaver from 'file-saver'
+import {view as Qrcode} from '../../Components/Qrcode'
+import html2canvas from 'html2canvas'
 
 @inject(['UserData'])
 @observer
 class ShoppingCart extends Component {
     constructor(props) {
         super(props);
-
-    }
-
-    qrcode () {
-        let qrcode = new QRCode('qrcode', {
-            width: 100,
-            height: 100, // 高度
-            text: '56663159' // 二维码内容
-            // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
-            // background: '#f0f'
-            // foreground: '#ff0'
-        })
-        console.log(qrcode)
-    }
-    toUtf8(str) {
-        var out, i, len, c;
-        out = "";
-        len = str.length;
-        for (i = 0; i < len; i++) {
-            c = str.charCodeAt(i);
-            if ((c >= 0x0001) && (c <= 0x007F)) {
-                out += str.charAt(i);
-            } else if (c > 0x07FF) {
-                out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
-                out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
-                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-            } else {
-                out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
-                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-            }
+        this.state= {
+            size: 128,
         }
-        return out;
     }
-    generateQrCode(){
-        this.qrcode();
+
+    onChange = (value) => {
+        this.setState({
+            size: value,
+        });
+    }
+
+    async generateQrCode(){
+        let nodes = this.props.UserData.qrNodeList;
+        let len = nodes.length;
+        let imgs = [];
+        let zip = new JsZip();
+        let img = zip.folder("images")
+        for (let i = 0;i<len;i++){
+            //let temp = (<Qrcode data={nodes[i]}/>);
+            console.log(this.refs)
+            let temp = this.refs[nodes[i].id];
+            console.log(temp);
+            let res = await html2canvas(temp);
+            let url = res.toDataURL();
+            res.toBlob((blob)=>{
+                img.file(nodes[i].name+ ".png", blob)
+                if (i === len - 1){
+                    zip.generateAsync({type:"blob"}).then((content) =>{
+                        // see FileSaver.js
+                        FileSaver.saveAs(content, "images.zip");
+                    });
+                }
+            });
+            // img.file(nodes[i].name, url)
+            imgs.push(url);
+        }
+        console.log(imgs);
     }
     render() {
         return (
-
             <div>
-                <div id="qrcode">二维码位置</div>
-                <List
-                    header={<div>要导出二维码的点位</div>}
-                    footer={<Button onClick={() =>this.generateQrCode()}>批量生成</Button>}
-                    bordered
-                    dataSource={this.props.UserData.qrNodeList}
-                    renderItem={item => (<List.Item>{item}</List.Item>)}
-                />
+                <div id="qrcode" >二维码位置</div>
+                <Row>
+                    <Col span={6}>
+                        <text>调整二维码大小</text>
+                    </Col>
+                    <Col span={12}>
+                        <Slider min={64} max={512} onChange={this.onChange} value={this.state.size} />
+                    </Col>
+                    <Col span={4}>
+                        <InputNumber
+                            min={64}
+                            max={512}
+                            style={{ marginLeft: 16 }}
+                            value={this.state.size}
+                            onChange={this.onChange}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Button onClick={() =>this.generateQrCode()}>批量生成</Button>
+                </Row>
+                {this.props.UserData.qrNodeList.map((item)=>{
+                    return (<div  width={this.state.size*3} height={this.state.size*3} ref={item.id} style={{display:'inline-block', width:'auto', height:'auto', padding:'5px'}}>
+                        <Qrcode data={item} size={this.state.size}/>
+                    </div>)
+                })}
             </div>
         )
     }
 }
 
 export default ShoppingCart;
+
+/* <List
+                    header={<div>要导出二维码的点位</div>}
+                    footer={<Button onClick={() =>this.generateQrCode()}>批量生成</Button>}
+                    bordered
+                    dataSource={this.props.UserData.qrNodeList}
+                    renderItem={(item) => {return (<div ref="a"><Qrcode  data={item}/></div>)}}
+                />
+                */

@@ -22,11 +22,8 @@ class UserData {
     @observable
     currentMessageList = [];
     @observable
-    qrNodeList = ['Racing car sprays burning fuel into crowd.',
-        'Japanese princess to wed commoner.',
-        'Australian walks 100km after outback crash.',
-        'Man charged over missing wedding girl.',
-        'Los Angeles battles huge wildfires.',];
+    qrNodeList = [{id:"b",name: "1", img: "1"},
+        {id:"a", name: "2", img: "2"}];
 
     //
     // @action.bound
