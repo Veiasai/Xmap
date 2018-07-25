@@ -7,6 +7,8 @@ import "./NodesInBuilding.css"
 import {httpHead, imgHead} from "../../Consts";
 
 const confirm = Modal.confirm;
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+
 
 @inject(['UserData'])
 @observer
@@ -147,7 +149,7 @@ class NodesInBuilding extends Component {
                                 key={item.id}
                                 actions={[
                                     <Icon onClick={() => this.showDeleteConfirm(item)} type="delete"/>,
-                                    <Icon onClick={() => this.addExportList(item)} type="plus"/>,
+                                    <Icon onClick={() => this.addExportList(item)} type="folder-add"/>,
                                     <Icon onClick={() => this.editNode(item)} type="edit"/>,
                                 ]}
                             >
@@ -162,7 +164,7 @@ class NodesInBuilding extends Component {
                     >
                         {this.state.loading && this.state.hasMore && (
                             <div className="demo-loading-container">
-                                <Spin/>
+                                <Spin indicator={antIcon} />
                             </div>
                         )}
                     </List>

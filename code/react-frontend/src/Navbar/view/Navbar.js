@@ -1,17 +1,27 @@
 import React, {Component} from 'react';
-import {Menu} from 'antd';
+import {Menu, Icon, Avatar, Popover} from 'antd';
+import {Control, Link} from 'react-keeper'
 import "./Navbar.css"
 
 class Navbar extends Component {
     render() {
         return (
-            <Menu
-                theme="dark"
-                mode="horizontal"
-                style={{lineHeight: '64px'}}
-            >
-                <Menu.Item key="1">首页</Menu.Item>
-            </Menu>
+            <header>
+                <div className='logo'>
+
+                </div>
+                <Menu
+                    theme="dark"
+                    defaultSelectedKeys={[Control.path]}
+                    mode="horizontal"
+                    style={{lineHeight: '58px'}}
+                >
+                    <Menu.Item key="/ManageBuildings"><Link to='/ManageBuildings'>我管理的建筑</Link></Menu.Item>
+                    <Menu.Item key="/Manage"><Link to='/Manage'>当前建筑信息</Link></Menu.Item>
+                    <Menu.Item key="/ShoppingCart"><Link to='/ShoppingCart'><Icon type='shopping-cart'/>批量导出</Link></Menu.Item>
+                </Menu>
+            </header>
+
         )
     }
 }

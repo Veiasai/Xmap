@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {List, message, Avatar, Spin} from 'antd';
+import {List, message, Avatar, Spin, Icon, Drawer} from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import {inject, observer} from "mobx-react/index";
 import "./PathsInBuilding.css"
 import {httpHead, imgHead} from "../../Consts";
 import reqwest from "reqwest";
+
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 @inject(['UserData'])
 @observer
@@ -17,7 +19,6 @@ class PathsInBuilding extends Component {
             message.success('获取路线成功')
             console.log(res.paths);
         });
-
     }
 
     state = {
@@ -25,7 +26,23 @@ class PathsInBuilding extends Component {
         hasMore: true,
         skip: 0,
         limit: 10,
-    }
+        drawerVisible: false,
+        pathDisplay: {},
+    };
+
+    showDrawer = (item) => {
+        console.log(item)
+        this.setState({
+            drawerVisible: true,
+            pathDisplay: item,
+        });
+    };
+
+    onClose = () => {
+        this.setState({
+            drawerVisible: false,
+        });
+    };
 
     getData = (callback) => {
         reqwest({
@@ -79,7 +96,10 @@ class PathsInBuilding extends Component {
                     <List
                         dataSource={this.UserData.currentPathList.toJS()}
                         renderItem={item => (
-                            <List.Item key={item.id}>
+                            <List.Item
+                                key={item.id}
+                                actions={[<a onClick={() => this.showDrawer(item)}>查看路线详细信息</a>]}
+                            >
                                 <List.Item.Meta
                                     avatar={<Avatar
                                         size='large'
@@ -93,11 +113,20 @@ class PathsInBuilding extends Component {
                     >
                         {this.state.loading && this.state.hasMore && (
                             <div className="demo-loading-container">
-                                <Spin/>
+                                <Spin indicator={antIcon} />
                             </div>
                         )}
                     </List>
                 </InfiniteScroll>
+                <Drawer
+                    title={this.state.pathDisplay.name}
+                    placement="right"
+                    closable={false}
+                    onClose={this.onClose}
+                    visible={this.state.drawerVisible}
+                >
+
+                </Drawer>
             </div>
         )
     }
