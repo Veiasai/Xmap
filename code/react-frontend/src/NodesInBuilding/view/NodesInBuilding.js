@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {List, message, Avatar, Spin} from 'antd';
+import {List, message, Avatar, Spin, Icon, Modal} from 'antd';
 import {inject, observer} from "mobx-react/index";
 import reqwest from 'reqwest';
 import InfiniteScroll from 'react-infinite-scroller';
 import "./NodesInBuilding.css"
 import {httpHead, imgHead} from "../../Consts";
+
+const confirm = Modal.confirm;
 
 @inject(['UserData'])
 @observer
@@ -13,9 +15,7 @@ class NodesInBuilding extends Component {
         super(props);
         this.UserData = this.props.UserData;
         this.getData((res) => {
-            console.log(res.nodes);
             this.UserData.currentNodeList = res.nodes;
-            console.log(this.UserData.currentNodeList);
             message.success('获取点位成功')
         });
     }
@@ -46,7 +46,7 @@ class NodesInBuilding extends Component {
         this.setState({
             loading: true,
         });
-        if (data.length >= this.UserData.currentBuilding.nodesSum) {
+        if (data.length >= this.UserData.currentBuilding.nodeSum) {
             message.warning('没有更多点位了');
             this.setState({
                 hasMore: false,
@@ -64,7 +64,71 @@ class NodesInBuilding extends Component {
                 });
             }
         });
+    };
+
+    deleteNode = async (item) => {
+        const url = httpHead + '/builiding/admin/node?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&nodeId='+item.id;
+        try {
+            const response = await fetch(url,
+                {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+            const json = await response.json();
+
+            if (json.code === 200) {
+                let temp = this.UserData.currentNodeList.filter((i) =>{
+                    return i.id !== item.id;
+                    });
+                this.UserData.currentNodeList = temp;
+                this.UserData.currentBuilding.nodeSum -= 1;
+                this.setState({skip: this.UserData.currentMessageList.length});
+                message.success('删除成功');
+            }
+            else if (json.code === 204) {
+                message.error('点位不存在');
+            }
+            else if (json.code === 401) {
+                message.error('没有授权');
+            }
+            else if (json.code === 403) {
+                message.error('用户被禁止操作');
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+    };
+
+    showDeleteConfirm(item) {
+        confirm({
+            title: '确认删除点位？',
+            okText: '确认',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:() => {
+                this.deleteNode(item);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
+
+    addExportList(item){
+      let temp = this.UserData.qrNodeList;
+      temp.push(item);
+      this.UserData.qrNodeList = temp;
+      message.success('添加成功');
+    };
+
+    editNode(item){
+
     }
+
 
     render() {
         return (
@@ -79,14 +143,20 @@ class NodesInBuilding extends Component {
                     <List
                         dataSource={this.UserData.currentNodeList}
                         renderItem={item => (
-                            <List.Item key={item.id}>
+                            <List.Item
+                                key={item.id}
+                                actions={[
+                                    <Icon onClick={() => this.showDeleteConfirm(item)} type="delete"/>,
+                                    <Icon onClick={() => this.addExportList(item)} type="plus"/>,
+                                    <Icon onClick={() => this.editNode(item)} type="edit"/>,
+                                ]}
+                            >
                                 <List.Item.Meta
                                     avatar={<Avatar
                                         size='large'
                                         src={imgHead + item.img}/>}
                                     title={item.name}
                                 />
-                                <div></div>
                             </List.Item>
                         )}
                     >
