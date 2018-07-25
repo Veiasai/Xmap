@@ -7,6 +7,8 @@ import  FileSaver from 'file-saver'
 import {view as Qrcode} from '../../Components/Qrcode'
 import html2canvas from 'html2canvas'
 
+
+
 @inject(['UserData'])
 @observer
 class ShoppingCart extends Component {

@@ -23,7 +23,7 @@ class UserData {
     currentMessageList = [];
     @observable
     qrNodeList = [{id:"b",name: "1", img: "1"},
-        {id:"a", name: "2", img: "2"}];
+        {id:"a", name: "点位一", img: "2"}];
 
     //
     // @action.bound

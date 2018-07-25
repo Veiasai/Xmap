@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {List, message, Icon, Spin} from 'antd';
+import {List, message, Icon, Spin, Modal} from 'antd';
 import {inject, observer} from "mobx-react/index";
 import "./ManageMessages.css"
 import {httpHead, imgHead} from "../../Consts";
@@ -13,6 +13,9 @@ const IconText = ({type, text}) => (
         {text}
   </span>
 );
+
+const confirm = Modal.confirm;
+
 
 @inject(['UserData'])
 @observer
@@ -106,7 +109,22 @@ class ManageMessages extends Component {
         catch (e) {
             console.log(e)
         }
-    }
+    };
+
+    showDeleteConfirm(item) {
+        confirm({
+            title: '确认删除消息？',
+            okText: '确认',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:() => {
+                this.deleteMessage(item);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
 
     render() {
         return (
@@ -125,7 +143,7 @@ class ManageMessages extends Component {
                             renderItem={item => (
                                 <List.Item
                                     key={item.id}
-                                    actions={[<Icon onClick={() => this.deleteMessage(item)} type="delete" />]}
+                                    actions={[<Icon onClick={() => this.showDeleteConfirm(item)} type="delete" />]}
                                 >
                                     <List.Item.Meta
                                         title={item.title}
