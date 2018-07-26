@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {List, message, Avatar, Spin, Icon, Drawer} from 'antd';
+import {List, message, Avatar, Spin, Icon, Drawer, Modal} from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import {inject, observer} from "mobx-react/index";
 import "./PathsInBuilding.css"
 import {httpHead, imgHead} from "../../Consts";
 import reqwest from "reqwest";
 
+const confirm = Modal.confirm;
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 @inject(['UserData'])
@@ -27,14 +28,15 @@ class PathsInBuilding extends Component {
         skip: 0,
         limit: 10,
         drawerVisible: false,
-        pathDisplay: {},
+        pathDisplayName:'',
+        pathDisplayContent:[],
     };
 
     showDrawer = (item) => {
-        console.log(item)
         this.setState({
             drawerVisible: true,
-            pathDisplay: item,
+            pathDisplayName: item.name,
+            pathDisplayContent: item.contents,
         });
     };
 
@@ -81,7 +83,59 @@ class PathsInBuilding extends Component {
                 });
             }
         });
-    }
+    };
+
+    deletePath = async (item) => {
+        const url = httpHead + '/builiding/admin/path?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&pathId='+item.id;
+        try {
+            const response = await fetch(url,
+                {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+            const json = await response.json();
+
+            if (json.code === 200) {
+                let temp = this.UserData.currentPathList.filter((i) =>{
+                    return i.id !== item.id;
+                });
+                this.UserData.currentPathList = temp;
+                this.UserData.currentBuilding.pathSum -= 1;
+                this.setState({skip: this.UserData.currentPathList.length});
+                message.success('删除成功');
+            }
+            else if (json.code === 204) {
+                message.error('路线不存在');
+            }
+            else if (json.code === 401) {
+                message.error('没有授权');
+            }
+            else if (json.code === 403) {
+                message.error('用户被禁止操作');
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+    };
+
+    showDeleteConfirm(item) {
+        confirm({
+            title: '确认删除点位？',
+            okText: '确认',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:() => {
+                this.deletePath(item);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
 
     render() {
         return (
@@ -98,7 +152,7 @@ class PathsInBuilding extends Component {
                         renderItem={item => (
                             <List.Item
                                 key={item.id}
-                                actions={[<a onClick={() => this.showDrawer(item)}>查看路线详细信息</a>]}
+                                actions={[<Icon onClick={() => this.showDeleteConfirm(item)} type='delete'/>,<a onClick={() => this.showDrawer(item)}>查看路线详细信息</a>]}
                             >
                                 <List.Item.Meta
                                     avatar={<Avatar
@@ -119,13 +173,29 @@ class PathsInBuilding extends Component {
                     </List>
                 </InfiniteScroll>
                 <Drawer
-                    title={this.state.pathDisplay.name}
+                    title={this.state.pathDisplayName}
                     placement="right"
                     closable={false}
                     onClose={this.onClose}
                     visible={this.state.drawerVisible}
                 >
-
+                    <List
+                        dataSource={this.state.pathDisplayContent}
+                        renderItem={item => (
+                            <List.Item
+                                key={item.id}
+                            >
+                                <List.Item.Meta
+                                    avatar={(item.type !== 'comment')&&(item.type !== 'img')&&(<Avatar
+                                        size='large'
+                                        icon={(item.type === 'actionL')? 'arrow-left':(item.type === 'actionR'? 'arrow-right':'arrow-up')}/>)}
+                                />
+                                {(item.type === 'img')&&(<img width={210} height={280} alt="logo" src={imgHead + item.message}/>)}
+                                {(item.type !== 'img')&&(item.type !== 'content')&&('向前')+(item.type !== 'img')&&(item.message)+ ((item.type === 'actionL')? '步后左转':(item.type === 'actionR'? '步后右转':(item.type === 'actionS'? '保持直行':'')))}
+                            </List.Item>
+                        )}
+                    >
+                    </List>
                 </Drawer>
             </div>
         )

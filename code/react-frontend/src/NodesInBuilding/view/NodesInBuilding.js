@@ -87,7 +87,7 @@ class NodesInBuilding extends Component {
                     });
                 this.UserData.currentNodeList = temp;
                 this.UserData.currentBuilding.nodeSum -= 1;
-                this.setState({skip: this.UserData.currentMessageList.length});
+                this.setState({skip: this.UserData.currentNodeList.length});
                 message.success('删除成功');
             }
             else if (json.code === 204) {
