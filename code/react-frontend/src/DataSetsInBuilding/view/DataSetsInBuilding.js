@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {List, message, Avatar, Spin, Icon, Drawer} from 'antd';
+import {Button, List, message, Avatar, Spin, Icon, Drawer} from 'antd';
 import {inject, observer} from "mobx-react/index";
 import InfiniteScroll from 'react-infinite-scroller';
 import "./DataSetsInBuilding.css"
@@ -21,7 +21,7 @@ class DataSetsInBuilding extends Component {
             message.success('获取数据组成功')
             console.log(res.dataSets);
         });
-        this.dataSet='';
+        this.dataSet = '';
 
 
     }
@@ -33,15 +33,17 @@ class DataSetsInBuilding extends Component {
         limit: 10,
         drawerVisible: false,
         dataSetDisplay: {},
+        dataSetType:{}
     };
 
     showDrawer = (item) => {
         console.log(item)
-        this.dataSet =item;
+        this.dataSet = item;
         this.getDataSetDetail(item)
         this.setState({
             drawerVisible: true,
             dataSetDisplay: item,
+            dataSetType:item.type
         });
     };
 
@@ -84,7 +86,7 @@ class DataSetsInBuilding extends Component {
                     this.UserData.currentDataSetDetail = json.paths;
                 }
                 console.log(this.UserData.currentDataSetDetail);
-                if (JSON.stringify(this.UserData.currentDataSetDetail)!=='[]') {
+                if (JSON.stringify(this.UserData.currentDataSetDetail) !== '[]') {
                     message.success('查询成功');
                 }
                 else {
@@ -159,7 +161,7 @@ class DataSetsInBuilding extends Component {
         }
     };
     deleteDataSetDetail = async (item) => {     //item 为数据组内的点位或路线
-        const url = httpHead + '/building/admin/dataset/detail?buildingId=' + this.UserData.currentBuilding.id + '&adminId=' + this.UserData.userID + '&dataSetId=' + this.dataSet.id+'&Id='+item.id;
+        const url = httpHead + '/building/admin/dataset/detail?buildingId=' + this.UserData.currentBuilding.id + '&adminId=' + this.UserData.userID + '&dataSetId=' + this.dataSet.id + '&Id=' + item.id;
         try {
             const response = await fetch(url,
                 {
@@ -194,7 +196,7 @@ class DataSetsInBuilding extends Component {
 
     showDeleteConfirm(item) {
         confirm({
-            title: '确认删除数据组'+item.name+'？',
+            title: '确认删除数据组' + item.name + '？',
             okText: '确认',
             okType: 'danger',
             cancelText: '取消',
@@ -222,6 +224,18 @@ class DataSetsInBuilding extends Component {
         });
     };
 
+    showChildrenDrawer = () => {
+        this.setState({
+            childrenDrawer: true,
+        });
+    };
+
+    onChildrenDrawerClose = () => {
+        this.setState({
+            childrenDrawer: false,
+        });
+    };
+
     render() {
         return (
             <div className="demo-infinite-container">
@@ -239,7 +253,7 @@ class DataSetsInBuilding extends Component {
                                 key={item.id}
                                 actions={[
                                     <Icon onClick={() => this.showDeleteConfirm(item)} type="delete"/>,
-                                    <a onClick={() => this.showDrawer(item)}>查看数据组详细信息</a>]}
+                                    <a onClick={() => this.showDrawer(item)}>详细信息</a>]}
                             >
                                 <List.Item.Meta
                                     avatar={<Avatar
@@ -299,6 +313,40 @@ class DataSetsInBuilding extends Component {
                             )}
                         </List>
                     </InfiniteScroll>
+                    <Icon onClick={this.showChildrenDrawer} style={{ textAlign:"right",fontSize: 20, color: '#08c' }} type="plus"/>
+                    <Drawer
+                        title={this.state.dataSetType+"列表"}
+                        width={320}
+                        closable={false}
+                        onClose={this.onChildrenDrawerClose}
+                        visible={this.state.childrenDrawer}
+                    >
+                        <div
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                width: '100%',
+                                borderTop: '1px solid #e8e8e8',
+                                padding: '10px 16px',
+                                textAlign: 'right',
+                                left: 0,
+                                background: '#fff',
+                                borderRadius: '0 0 4px 4px',
+                            }}
+                        >
+                            <Button
+                                style={{
+                                    marginRight: 8,
+                                }}
+                                onClick={this.onChildrenDrawerClose}
+                            >
+                                Cancel
+                            </Button>
+                            <Button onClick={this.onChildrenDrawerClose} type="primary">
+                                Submit
+                            </Button>
+                        </div>
+                    </Drawer>
                 </Drawer>
             </div>
         )

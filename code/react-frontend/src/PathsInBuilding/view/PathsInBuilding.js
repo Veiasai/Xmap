@@ -34,7 +34,7 @@ class PathsInBuilding extends Component {
         console.log(item)
         this.setState({
             drawerVisible: true,
-            dataSetDisplay: item,
+            pathDisplay: item,
         });
     };
 
@@ -119,7 +119,7 @@ class PathsInBuilding extends Component {
                     </List>
                 </InfiniteScroll>
                 <Drawer
-                    title={this.state.dataSetDisplay.name}
+                    title={this.state.pathDisplay.name}
                     placement="right"
                     closable={false}
                     onClose={this.onClose}
