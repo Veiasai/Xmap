@@ -24,6 +24,8 @@ class UserData {
     @observable
     currentMessageList = [];
     @observable
+    currentDataSetDetail=[];
+    @observable
     qrNodeList = [{id: "b", name: "1", img: "1"},
         {id: "a", name: "点位一", img: "2"}];
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {List, message, Avatar, Spin, Icon, Drawer} from 'antd';
 import {inject, observer} from "mobx-react/index";
 import InfiniteScroll from 'react-infinite-scroller';
@@ -8,35 +8,40 @@ import {httpHead, imgHead} from "../../Consts";
 import {Modal} from "antd/lib/index";
 
 const confirm = Modal.confirm;
-const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
 
 @inject(['UserData'])
 @observer
-class DataSetsInBuilding extends Component
-{
-     constructor(props) {
+class DataSetsInBuilding extends Component {
+    constructor(props) {
         super(props);
         this.UserData = this.props.UserData;
-         this.getData((res) => {
-             this.UserData.currentDataSetList = res.dataSets;
-             message.success('获取数据组成功')
-             console.log(res.dataSets);
-         });
+        this.getData((res) => {
+            this.UserData.currentDataSetList = res.dataSets;
+            message.success('获取数据组成功')
+            console.log(res.dataSets);
+        });
+        this.dataSet='';
+
+
     }
+
     state = {
         loading: false,
         hasMore: true,
         skip: 0,
         limit: 10,
         drawerVisible: false,
-        pathDisplay: {},
+        dataSetDisplay: {},
     };
 
     showDrawer = (item) => {
         console.log(item)
+        this.dataSet =item;
+        this.getDataSetDetail(item)
         this.setState({
             drawerVisible: true,
-            pathDisplay: item,
+            dataSetDisplay: item,
         });
     };
 
@@ -59,6 +64,42 @@ class DataSetsInBuilding extends Component
         });
     };
 
+    getDataSetDetail = async (item) => {
+        const url = httpHead + '/' + item.type + 's?dataSetId=' + item.id + '&skip=' + this.state.skip + '&limit=' + this.state.limit;
+        try {
+            const response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+            const json = await response.json();
+            if (json.code === 200) {
+                if (item.type === "node") {
+                    this.UserData.currentDataSetDetail = json.nodes;
+                }
+                else {
+                    this.UserData.currentDataSetDetail = json.paths;
+                }
+                console.log(this.UserData.currentDataSetDetail);
+                if (JSON.stringify(this.UserData.currentDataSetDetail)!=='[]') {
+                    message.success('查询成功');
+                }
+                else {
+                    message.success('数据组内无数据');
+                }
+            }
+            else if (json.code === 404) {
+                message.error(item.type + '不存在');
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+
+    };
 
     handleInfiniteOnLoad = () => {
         let data = this.UserData.currentDataSetList;
@@ -84,8 +125,8 @@ class DataSetsInBuilding extends Component
             }
         });
     };
-    deleteDataSet = async (item) => {
-        const url = httpHead + '/building/admin/dataset?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&dataSetId='+item.id;
+    deleteDataSet = async (item) => {       //item 为数据组
+        const url = httpHead + '/building/admin/dataset?buildingId=' + this.UserData.currentBuilding.id + '&adminId=' + this.UserData.userID + '&dataSetId=' + item.id;
         try {
             const response = await fetch(url,
                 {
@@ -98,12 +139,12 @@ class DataSetsInBuilding extends Component
             const json = await response.json();
 
             if (json.code === 200) {
-                let temp = this.UserData.currentDataSetList.filter((i) =>{
+                let temp = this.UserData.currentDataSetList.filter((i) => {
                     return i.id !== item.id;
                 });
                 this.UserData.currentDataSetList = temp;
-                this.UserData.currentBuilding.nodeSum -= 1;
-                 this.setState({skip: this.UserData.currentMessageList.length});
+                // this.UserData.currentBuilding.nodeSum -= 1;
+                // this.setState({skip: this.UserData.currentMessageList.length});
                 message.success('删除成功');
             }
             else if (json.code === 404) {
@@ -117,13 +158,47 @@ class DataSetsInBuilding extends Component
             console.log(e)
         }
     };
+    deleteDataSetDetail = async (item) => {     //item 为数据组内的点位或路线
+        const url = httpHead + '/building/admin/dataset/detail?buildingId=' + this.UserData.currentBuilding.id + '&adminId=' + this.UserData.userID + '&dataSetId=' + this.dataSet.id+'&Id='+item.id;
+        try {
+            const response = await fetch(url,
+                {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+            const json = await response.json();
+
+            if (json.code === 200) {
+                let temp = this.UserData.currentDataSetDetail.filter((i) => {
+                    return i.id !== item.id;
+                });
+                this.UserData.currentDataSetDetail = temp;
+                // this.UserData.currentBuilding.nodeSum -= 1;
+                // this.setState({skip: this.UserData.currentMessageList.length});
+                message.success('删除成功');
+            }
+            else if (json.code === 404) {
+                message.error('点位不存在');
+            }
+            else if (json.code === 403) {
+                message.error('没有授权');
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+    };
+
     showDeleteConfirm(item) {
         confirm({
-            title: '确认删除数据组？',
+            title: '确认删除数据组'+item.name+'？',
             okText: '确认',
             okType: 'danger',
             cancelText: '取消',
-            onOk:() => {
+            onOk: () => {
                 this.deleteDataSet(item);
             },
             onCancel() {
@@ -131,9 +206,24 @@ class DataSetsInBuilding extends Component
             },
         });
     };
-    render()
-    {
-        return(
+
+    showDeleteConfirmDS(item) {
+        confirm({
+            title: '确认删除' + item.name + '?',
+            okText: '确认',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk: () => {
+                this.deleteDataSetDetail(item);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
+
+    render() {
+        return (
             <div className="demo-infinite-container">
                 <InfiniteScroll
                     initialLoad={false}
@@ -154,9 +244,9 @@ class DataSetsInBuilding extends Component
                                 <List.Item.Meta
                                     avatar={<Avatar
                                         size='large'
-                                        />}
+                                    />}
                                     title={item.name}
-                                    description={'类型 ：'+item.type}
+                                    description={'类型 ：' + item.type}
                                 />
                                 <div></div>
                             </List.Item>
@@ -164,19 +254,51 @@ class DataSetsInBuilding extends Component
                     >
                         {this.state.loading && this.state.hasMore && (
                             <div className="demo-loading-container">
-                                <Spin indicator={antIcon} />
+                                <Spin indicator={antIcon}/>
                             </div>
                         )}
                     </List>
                 </InfiniteScroll>
                 <Drawer
-                    title={this.state.pathDisplay.name}
+                    title={this.state.dataSetDisplay.name}
                     placement="right"
                     closable={false}
                     onClose={this.onClose}
                     visible={this.state.drawerVisible}
                 >
-
+                    <InfiniteScroll
+                        initialLoad={false}
+                        pageStart={0}
+                        loadMore={this.handleInfiniteOnLoad}
+                        hasMore={!this.state.loading && this.state.hasMore}
+                        useWindow={false}
+                    >
+                        <List
+                            dataSource={this.UserData.currentDataSetDetail.toJS()}
+                            renderItem={item => (
+                                <List.Item
+                                    key={item.id}
+                                    actions={[
+                                        <Icon onClick={() => this.showDeleteConfirmDS(item)} type="delete"/>]}
+                                >
+                                    <List.Item.Meta
+                                        avatar={<Avatar
+                                            size='large'
+                                            src={imgHead + item.img}
+                                        />}
+                                        title={item.name}
+                                    />
+                                    <div></div>
+                                </List.Item>
+                            )}
+                        >
+                            {this.state.loading && this.state.hasMore && (
+                                <div className="demo-loading-container">
+                                    <Spin indicator={antIcon}/>
+                                </div>
+                            )}
+                        </List>
+                    </InfiniteScroll>
                 </Drawer>
             </div>
         )
