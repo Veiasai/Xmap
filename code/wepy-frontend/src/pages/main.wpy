@@ -2,7 +2,6 @@
   .searchInput{
     height: 7vh;
     width: 660rpx;
-    margin-top: 2vh;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
@@ -11,36 +10,68 @@
     border: rgb(242,242,242);
     border-style: solid;
     border-width: 4rpx;
+    align-items: center;
+    justify-content: center
   }
 
   .pathGroup {
     width: 700 rpx;
-    height: 90vh;
+    height: 60vh;
     bottom: 0;
   }
+
+  .picker{
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center
+  }
+
+  .applyAdminButton{
+    width:350rpx;
+    height:80rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color:white;
+    background-color: #90b3d0;
+    border-radius: 50rpx;
+  }
+
+  .buildingMessages{
+    width: 700rpx;
+    height: 20vh;
+    background-color: #f6f6f6;
+    border-radius: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
 </style>
 
 <template>
   <view style="display: flex; flex-direction: column; align-items: center">
-    <view style="height: 10vh; display: flex; flex-direction: row;">
+    <view style="height: 10vh; display: flex; flex-direction: row; align-items: center; justify-content: center">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
-      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
+      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}" >
         <view class="picker">
-          {{dataSet === null ? "选组" : dataSet.name}}
+          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupselect.svg"></image>
         </view>
       </picker>
     </view>
-    <view style="width:700rpx; text-align: center">
-      管理员发布的消息
-      <view style="font-size: 30rpx" @tap="applyAdmin">
+    <view style="height: 10vh; display: flex;justify-content: center;align-items: center">
+      <view class="applyAdminButton" @tap="applyAdmin">
         申请成为管理员
       </view>
     </view>
-    <swiper style="height: 20vh; width: 700rpx; text-align: center; border: solid">
+    <swiper class="buildingMessages">
       <repeat for="{{messages}}" index="index" item="item">
-        <swiper-item>
-          <view style="width:700rpx; font-size: 50rpx">{{item.title}}</view>
-          <view style="width:700rpx; font-size: 30rpx">{{item.content}}</view>
+        <swiper-item style="width: 660rpx">
+          <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
+          <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
         </swiper-item>
       </repeat>
     </swiper>
@@ -75,8 +106,8 @@
     config = {
       navigationBarTitleText: "Main",
       enablePullDownRefresh: true,
-      backgroundColor: "#1cf001"
-    }
+      backgroundColor: "#f6f6f6"
+    };
     data = {
       dataSet: null,
       dataSetList: [],

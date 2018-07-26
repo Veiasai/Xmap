@@ -1,8 +1,7 @@
 <style>
   .searchInput{
     height: 7vh;
-    width: 660rpx;
-    margin-top: 2vh;
+    width: 640rpx;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
@@ -61,16 +60,19 @@
 <template>
   <view>
     <!--search input box-->
-    <view style="height: 9vh; display: flex; flex-direction: row;">
-      <view @tap="scanNode">扫码</view>
+    <view style="height: 9vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+      <view @tap="scanNode">
+        <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/qrCode.svg"></image>
+      </view>
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
+        <view class="picker">
+          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupselect.svg"></image>
+        </view>
+      </picker>
     </view>
 
-    <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
-      <view class="picker">
-        {{dataSet === null ? "选组" : dataSet.name}}
-      </view>
-    </picker>
+
     <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>

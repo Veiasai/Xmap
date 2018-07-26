@@ -86,7 +86,7 @@ class PathsInBuilding extends Component {
     };
 
     deletePath = async (item) => {
-        const url = httpHead + '/builiding/admin/path?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&pathId='+item.id;
+        const url = httpHead + '/building/admin/path?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&pathId='+item.id;
         try {
             const response = await fetch(url,
                 {
