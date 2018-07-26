@@ -119,14 +119,23 @@ public class DataSetControllerTest extends TestDefault {
 
     @Test
     public void deleteDataSet() throws Exception{
-        // invalid id
+        // invalid dataSet
         mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId", author.getId())
                 .param("dataSetId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid authorId
+        mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId", "NotExist")
+                .param("dataSetId", dataSetNode.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId", author.getId())
                 .param("dataSetId", dataSetNode.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));

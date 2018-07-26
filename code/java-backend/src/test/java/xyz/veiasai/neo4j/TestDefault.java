@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.veiasai.neo4j.domain.*;
 import xyz.veiasai.neo4j.pojo.Content;
+import xyz.veiasai.neo4j.pojo.Location;
 import xyz.veiasai.neo4j.repositories.*;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class TestDefault {
     @Autowired
     public MessageRepository messageRepository;
 
+    protected static Location location = new Location();
     protected static Building building = new Building();
     protected static Building building2 = new Building();
     protected static Address address = new Address();
@@ -61,6 +63,10 @@ public class TestDefault {
         building.setName("test");
         address.setAddress("test");
         building.setAddress(address);
+
+        location.setLatitude(110.1);
+        location.setLongitude(110.1);
+        building.setLocation(location);
         building = buildingRepository.save(building);
 
         building2.setId("testBuilding2");

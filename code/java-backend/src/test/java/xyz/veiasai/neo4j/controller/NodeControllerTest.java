@@ -18,17 +18,21 @@ public class NodeControllerTest extends TestDefault {
     public void nodePost() throws  Exception{
         // invalid author
         mvc.perform(MockMvcRequestBuilders.post("/node")
+                .param("author", "NotExist")
                 .param("buildingId", building.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"test\"}"))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
         // invalid buildingId
         mvc.perform(MockMvcRequestBuilders.post("/node")
                 .param("author", author.getId())
+                .param("buildingId", "NotExist")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"test\"}"))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
 
         // ok
@@ -58,6 +62,11 @@ public class NodeControllerTest extends TestDefault {
                 .param("buildingId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("nodes").isEmpty());
+
+        // invalid param
+        mvc.perform(MockMvcRequestBuilders.get("/nodes"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
     }
 
     @Test
@@ -162,9 +171,23 @@ public class NodeControllerTest extends TestDefault {
 
     @Test
     public void nodeDelete() throws Exception{
+        // invalid authorId
+        assertTrue(nodeRepository.findById(node.getId()).isPresent());
+        mvc.perform(MockMvcRequestBuilders.delete("/node")
+                .param("authorId", "NotExist")
+                .param("nodeId", node.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
         // ok
         assertTrue(nodeRepository.findById(node.getId()).isPresent());
+        mvc.perform(MockMvcRequestBuilders.delete("/node")
+                .param("authorId", author.getId())
+                .param("nodeId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
+        // ok
+        assertTrue(nodeRepository.findById(node.getId()).isPresent());
         mvc.perform(MockMvcRequestBuilders.delete("/node")
                 .param("authorId", author.getId())
                 .param("nodeId", node.getId()))
@@ -174,4 +197,13 @@ public class NodeControllerTest extends TestDefault {
         assertFalse(nodeRepository.findById(node.getId()).isPresent());
     }
 
+
+    @Test
+    public void nodeGetByTwoNodes() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/nodes/twonodes/v2")
+                .param("nId1", node.getId())
+                .param("nId2", node2.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty());
+    }
 }

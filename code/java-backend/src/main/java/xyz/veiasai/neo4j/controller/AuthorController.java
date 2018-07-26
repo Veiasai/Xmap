@@ -29,7 +29,7 @@ public class AuthorController {
     private BuildingAdminService buildingAdminService;
 
     @ApiOperation(value = "申请建筑管理员",notes = "申请成为建筑管理员")
-    @PostMapping("/apply/buildingadmin")
+    @GetMapping("/apply/buildingadmin")
     public Result applyBuildingAdmin(@RequestParam String buildingId,@RequestParam String authorId){
         Result result =new Result();
         if (buildingService.getBuildingById(buildingId) == null) {

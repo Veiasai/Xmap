@@ -62,14 +62,15 @@
   <view>
     <!--search input box-->
     <view style="height: 9vh; display: flex; flex-direction: row;">
+      <view @tap="scanNode">扫码</view>
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
-      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
-        <view class="picker">
-          {{dataSet === null ? "选组" : dataSet.name}}
-        </view>
-      </picker>
     </view>
 
+    <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
+      <view class="picker">
+        {{dataSet === null ? "选组" : dataSet.name}}
+      </view>
+    </picker>
     <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
@@ -128,6 +129,7 @@
         limit: this.limit,
       }
       this.searchNode(data);
+      this.searchDataSet();
     }
     onPullDownRefresh(){
       let data = {
@@ -135,12 +137,14 @@
         skip: 0,
         limit: this.limit,
       }
+      this.dataSet = null;
       this.pathSkip = 0;
       this.originSkip = 0;
       this.endSkip = 0;
       this.origin = null;
       this.end = null;
       this.searchNode(data);
+      this.searchDataSet();
       wx.stopPullDownRefresh()
     }
 
@@ -153,7 +157,7 @@
       name: "",
       dataSet: null,
       dataSetList: [],
-      dataSetNameList: ["1","1","1","1","1","1","1","1","1","1","1",],
+      dataSetNameList: [],
       showDataSet: false,
       originNodes: [],  // 查找到的点位
       endNodes:[],
@@ -231,6 +235,42 @@
 
       bindDataSetChange() {
         this.showDataSet = true;
+      },
+
+      async scanNode(){
+        try{
+          let res = await wepy.scanCode({
+            onlyFromCamera: true,
+            scanType: ['qrCode']
+          });
+          let node = JSON.parse(res.result);
+          node.img = imgHead + node.img;
+          this.origin = node;
+          this.end = null;
+          this.originSkip = 0;
+          this.endSkip = 0;
+          let data = {
+            name: this.name,
+            skip: 0,
+            limit: this.limit,
+          }
+          if (this.origin !== null) {
+            data.originId = this.origin.id;
+          }
+          else {
+            data.buildingId = this.$parent.globalData.building.id
+          }
+          wx.showToast({
+            title: '识别成功',
+            icon: 'none',
+          })
+          this.searchNode(data);
+        }catch (e){
+          wx.showToast({
+            title: '识别失败',
+            icon: 'none',
+          })
+        }
       }
     }
 
@@ -265,7 +305,7 @@
 
     async searchNode(data) {
       try {
-        if (this.dataSet !== null){
+        if (this.dataSet !== null && data.originId === undefined){
           data.dataSetId = this.dataSet.id;
         }
         console.log(data);
@@ -300,14 +340,18 @@
         else {
           if (data.skip === 0)
           {
-            wx.showToast({
-              title: '没有满足条件的点位',
-              icon: 'none',
-            })
             if (data.originId) {
+              wx.showToast({
+                title: '没有以该点为起点的路线',
+                icon: 'none',
+              })
               this.endNodes = [];
             }
             else{
+              wx.showToast({
+                title: '没有满足条件的点位',
+                icon: 'none',
+              })
               this.originNodes = [];
             }
           }

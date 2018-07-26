@@ -41,7 +41,7 @@ public class NodeController {
             result.setCode(404);
         } else if (authorService.getAuthorById(author) == null) {
             result.setMessage("用户不存在");
-            result.setCode(405);
+            result.setCode(404);
         }
         node = nodeService.addNode(node, buildingId, author);
         result.setNode(node);
