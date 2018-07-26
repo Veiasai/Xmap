@@ -7,7 +7,7 @@ class UserData {
     @observable
     isLogin = false;
     @observable
-    userID ='oEzSZ5RA3PFN5Ho0J0Bz0i66Gp9k';
+    userID = 'oEzSZ5RA3PFN5Ho0J0Bz0i66Gp9k';
     @observable
     buildingList = [];
     @observable
@@ -20,10 +20,12 @@ class UserData {
     @observable
     currentNodeList = [];
     @observable
+    currentDataSetList = [];
+    @observable
     currentMessageList = [];
     @observable
-    qrNodeList = [{id:"b",name: "1", img: "1"},
-        {id:"a", name: "点位一", img: "2"}];
+    qrNodeList = [{id: "b", name: "1", img: "1"},
+        {id: "a", name: "点位一", img: "2"}];
 
     //
     // @action.bound

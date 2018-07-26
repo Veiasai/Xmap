@@ -7,6 +7,7 @@ import {view as SideBar} from "../../SideBar";
 import {view as BuildingOverview} from "../../BuildingOverview";
 import {view as PathsInBuilding} from "../../PathsInBuilding";
 import {view as NodesInBuilding} from "../../NodesInBuilding";
+import {view as DataSetsInBuilding} from "../../DataSetsInBuilding";
 import {view as ManageMessages} from "../../ManageMessages";
 const {Header, Sider, Content} = Layout;
 
@@ -25,6 +26,7 @@ class Manage extends Component {
                                 <Route path={"/>"} component={BuildingOverview}/>
                                 <Route path={"/PathsInBuilding"} component={PathsInBuilding}/>
                                 <Route path={"/NodesInBuilding"} component={NodesInBuilding}/>
+                                <Route path={"/DataSetsInBuilding"} component={DataSetsInBuilding}/>
                                 <Route path={"/ManageMessages"} component={ManageMessages}/>
                             </Col>
                         </Row>
