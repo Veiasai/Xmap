@@ -84,7 +84,10 @@ public interface DataSetRepository extends Neo4jRepository<DataSet, String> {
     public Collection<DataSet> findByAuthorAndName(@Param("authorId") String authorId, @Param("Name") String Name, @Param("skip") Integer skip, @Param("limit") Integer limit);
 
     @Query("Match (b:Building{id:{buildingId}})-[r:BUILDING]-(d:DataSet {id:{dataSetId}}) return count(r)")
-    public int countBuildingAndDataSet(@Param("buildingId")String buildingId, @Param("pathId") String dataSetId);
+    public int countBuildingAndDataSet(@Param("buildingId")String buildingId, @Param("dataSetId") String dataSetId);
+
+    @Query("Match (a:Author{id:{authorId}})-[r:AUTHOR]-(d:DataSet {id:{dataSetId}}) return count(r)")
+    public int countAuthorAndDataSet(@Param("authorId")String authorId, @Param("dataSetId") String dataSetId);
 
     @Query("Match (d:DataSet {id:{dataSetId}}) Detach Delete d")
     public void deleteDataSetByAdmin(@Param("dataSetId") String dataSetId);

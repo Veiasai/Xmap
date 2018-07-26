@@ -143,4 +143,8 @@ public class DataSetService {
         return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId)!=0;
     }
 
+    @Transactional
+    public boolean existAuthorAndDataSet(String authorId,String dataSetId){
+        return dataSetRepository.countAuthorAndDataSet(authorId, dataSetId)!=0;
+    }
 }

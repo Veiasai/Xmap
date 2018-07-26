@@ -67,7 +67,6 @@ public class NodeController {
             }
             else{
                 result.setNodes(dataSetService.findNodesByNameLike(dataSetId, name, skip, limit));
-                result.setCode(404);
             }
         }
         else if(authorId != null && buildingId !=null){

@@ -15,6 +15,7 @@ const IconText = ({type, text}) => (
 );
 
 const confirm = Modal.confirm;
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 
 @inject(['UserData'])
@@ -155,7 +156,7 @@ class ManageMessages extends Component {
                         >
                             {this.state.loading && this.state.hasMore && (
                                 <div className="loadingContainer">
-                                    <Spin/>
+                                    <Spin indicator={antIcon} />
                                 </div>
                             )}
                         </List>

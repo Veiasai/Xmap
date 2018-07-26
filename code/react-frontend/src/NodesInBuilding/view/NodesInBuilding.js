@@ -7,6 +7,8 @@ import "./NodesInBuilding.css"
 import {httpHead, imgHead} from "../../Consts";
 
 const confirm = Modal.confirm;
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+
 
 @inject(['UserData'])
 @observer
@@ -67,7 +69,7 @@ class NodesInBuilding extends Component {
     };
 
     deleteNode = async (item) => {
-        const url = httpHead + '/builiding/admin/node?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&nodeId='+item.id;
+        const url = httpHead + '/building/admin/node?buildingId='+this.UserData.currentBuilding.id+'&adminId='+this.UserData.userID+'&nodeId='+item.id;
         try {
             const response = await fetch(url,
                 {
@@ -85,7 +87,7 @@ class NodesInBuilding extends Component {
                     });
                 this.UserData.currentNodeList = temp;
                 this.UserData.currentBuilding.nodeSum -= 1;
-                this.setState({skip: this.UserData.currentMessageList.length});
+                this.setState({skip: this.UserData.currentNodeList.length});
                 message.success('删除成功');
             }
             else if (json.code === 204) {
@@ -147,7 +149,7 @@ class NodesInBuilding extends Component {
                                 key={item.id}
                                 actions={[
                                     <Icon onClick={() => this.showDeleteConfirm(item)} type="delete"/>,
-                                    <Icon onClick={() => this.addExportList(item)} type="plus"/>,
+                                    <Icon onClick={() => this.addExportList(item)} type="folder-add"/>,
                                     <Icon onClick={() => this.editNode(item)} type="edit"/>,
                                 ]}
                             >
@@ -162,7 +164,7 @@ class NodesInBuilding extends Component {
                     >
                         {this.state.loading && this.state.hasMore && (
                             <div className="demo-loading-container">
-                                <Spin/>
+                                <Spin indicator={antIcon} />
                             </div>
                         )}
                     </List>
