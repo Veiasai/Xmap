@@ -3,18 +3,15 @@ package xyz.veiasai.neo4j.controller;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import xyz.veiasai.neo4j.domain.CountSum;
 import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Node;
 import xyz.veiasai.neo4j.domain.Path;
-import xyz.veiasai.neo4j.domain.relation.PATH;
 import xyz.veiasai.neo4j.result.BuildingAdminResult;
 import xyz.veiasai.neo4j.result.BuildingResult;
 import xyz.veiasai.neo4j.result.CountSumResult;
 import xyz.veiasai.neo4j.result.Result;
 import xyz.veiasai.neo4j.service.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @Api(value = "buildingAdmin-controller")
@@ -185,7 +182,7 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
-        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
             result.setCode(403);
             result.setMessage("该数据组不属于该建筑");
         } else {
@@ -211,7 +208,7 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
-        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
             result.setCode(403);
             result.setMessage("该数据组不属于该建筑");
         } else {
@@ -237,7 +234,7 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
-        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
             result.setCode(403);
             result.setMessage("该数据组不属于该建筑");
         } else if(dataSet.getType().equals("node")) {

@@ -26,12 +26,12 @@ public class LoginController {
         String authorJson = template.getForObject(head + code, String.class);
         JSONObject jsonObject = JSONObject.fromObject(authorJson);
         try {
-            String authorId = jsonObject.getString("openid");
             Author author = new Author();
+            String authorId = jsonObject.getString("openid");
             author.setId(authorId);
             authorService.addAuthor(author);
-        } catch (Exception e) {
-            return jsonObject;
+        } catch (Exception ignored) {
+
         }
         return jsonObject;
     }

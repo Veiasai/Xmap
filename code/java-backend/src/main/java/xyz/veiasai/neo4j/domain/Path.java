@@ -6,7 +6,6 @@ import org.neo4j.ogm.annotation.*;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import org.neo4j.ogm.id.UuidStrategy;
 import xyz.veiasai.neo4j.converter.ContentConverter;
-import xyz.veiasai.neo4j.domain.relation.PATH;
 import xyz.veiasai.neo4j.pojo.Content;
 
 import javax.validation.constraints.NotNull;
@@ -35,7 +34,6 @@ public class Path {
 
     @NotNull
     @Convert(ContentConverter.class)
-    @JsonIgnore
     private List<Content> contents;
 
     @JsonIgnore

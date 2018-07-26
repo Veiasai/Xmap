@@ -37,13 +37,13 @@ public class AuthorController {
             result.setCode(404);
         } else if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
-            result.setCode(405);
+            result.setCode(404);
         }else if(buildingAdminService.existValidBuildingAdmin(buildingId, authorId)){
             result.setMessage("该用户已为该建筑管理员");
-            result.setCode(406);
+            result.setCode(405);
         }else if(buildingAdminService.existApplyBuildingAdmin(buildingId, authorId)){
             result.setMessage("该用户已有待审核的申请");
-            result.setCode(407);
+            result.setCode(403);
         }else {
             buildingAdminService.applyBuildingAdmin(buildingId, authorId);
             result.setMessage("申请成功");
@@ -98,7 +98,7 @@ public class AuthorController {
             result.setCode(404);
         } else if (!authorService.FavoriteIsExistInDb(favoriteId)) {
             result.setMessage("收藏不存在");
-            result.setCode(403);
+            result.setCode(404);
         } else if (authorService.FavoriteIsExistInAuthor(authorId, favoriteId)) {
             result.setMessage("1");
             result.setCode(200);        //200代表查询成功

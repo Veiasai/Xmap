@@ -65,16 +65,15 @@ public class DataSetService {
         dataSetRepository.addRelationDataSetAndNode(dataSetId, nodeId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void deleteRelationNode(String dataSetId, String nodeId) {
         dataSetRepository.deleteRelationDataSetAndNode(dataSetId, nodeId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void deleteRelationNodes(String dataSetId, List<String> NodeIds) {
-        Iterator it = NodeIds.iterator();
-        while (it.hasNext()) {
-            String nodeId = it.next().toString();
+        for (Object NodeId : NodeIds) {
+            String nodeId = NodeId.toString();
             deleteRelationNode(dataSetId, nodeId);
         }
     }
@@ -89,16 +88,15 @@ public class DataSetService {
         return dataSetRepository.findAllNodes(dataSetId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void deleteRelationPath(String dataSetId, String pathId) {
         dataSetRepository.deleteRelationDataSetAndPath(dataSetId, pathId);
     }
 
     @Transactional(readOnly = true)
     public void addRelationPaths(String dataSetId, List<String> PathIds) {
-        Iterator it = PathIds.iterator();
-        while (it.hasNext()) {
-            String pathId = it.next().toString();
+        for (Object PathId : PathIds) {
+            String pathId = PathId.toString();
             addRelationPath(dataSetId, pathId);
         }
 
@@ -111,9 +109,8 @@ public class DataSetService {
 
     @Transactional(readOnly = true)
     public void deleteRelationPaths(String dataSetId, List<String> PathIds) {
-        Iterator it = PathIds.iterator();
-        while (it.hasNext()) {
-            String pathId = it.next().toString();
+        for (Object PathId : PathIds) {
+            String pathId = PathId.toString();
             deleteRelationPath(dataSetId, pathId);
         }
     }
@@ -140,7 +137,7 @@ public class DataSetService {
 
     @Transactional
     public boolean existBuildingAndDataSet(String buildingId,String dataSetId){
-        return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId)!=0;
+        return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId) == 0;
     }
 
     @Transactional
