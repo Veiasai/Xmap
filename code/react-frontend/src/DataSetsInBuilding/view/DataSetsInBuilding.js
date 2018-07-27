@@ -9,7 +9,11 @@ import {Modal} from "antd/lib/index";
 
 const confirm = Modal.confirm;
 const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
-
+message.config({
+    top: 100,
+    duration: 1,
+    maxCount: 3,
+});
 @inject(['UserData'])
 @observer
 class DataSetsInBuilding extends Component {
@@ -21,7 +25,6 @@ class DataSetsInBuilding extends Component {
             message.success('获取数据组成功')
             console.log(res.dataSets);
         });
-        this.dataSet = '';
 
 
     }
@@ -33,7 +36,9 @@ class DataSetsInBuilding extends Component {
         limit: 10,
         drawerVisible: false,
         dataSetDisplay: {},
-        dataSetType:{}
+        dataSetType: {},
+        dataSetRestDetail: [],
+        dataSetId:{}
     };
 
     showDrawer = (item) => {
@@ -43,7 +48,8 @@ class DataSetsInBuilding extends Component {
         this.setState({
             drawerVisible: true,
             dataSetDisplay: item,
-            dataSetType:item.type
+            dataSetType: item.type,
+            dataSetId:item.id
         });
     };
 
@@ -224,10 +230,36 @@ class DataSetsInBuilding extends Component {
         });
     };
 
+    arrayMinus(arr1, arr2) {
+        var arr3 = new Array();
+        for (var i = 0; i < arr1.length; i++) {
+            var flag = true;
+            for (var j = 0; j < arr2.length; j++) {
+                if (arr1[i].id === arr2[j].id)
+                    flag = false;
+            }
+            if (flag)
+                arr3.push(arr1[i]);
+        }
+        ;
+        return arr3;
+    }
+
     showChildrenDrawer = () => {
         this.setState({
             childrenDrawer: true,
         });
+        if (this.state.dataSetType === "node") {
+            var arr3 = this.arrayMinus(this.UserData.currentNodeList, this.UserData.currentDataSetDetail);
+            this.UserData.dataSetRestDetail = arr3;
+            console.log(this.UserData.dataSetRestDetail);
+        }
+        else if (this.state.dataSetType === "path") {
+            var arr3 = this.arrayMinus(this.UserData.currentPathList, this.UserData.currentDataSetDetail);
+            this.UserData.dataSetRestDetail = arr3;
+            console.log(this.UserData.dataSetRestDetail);
+        }
+
     };
 
     onChildrenDrawerClose = () => {
@@ -236,10 +268,45 @@ class DataSetsInBuilding extends Component {
         });
     };
 
+    addToDataSet = async (item) => {
+        let temp = this.UserData.dataSetRestDetail.filter((i) => {
+            return i.id !== item.id;
+        });
+        this.UserData.dataSetRestDetail = temp;
+        this.UserData.currentDataSetDetail.push(item);
+        try {
+            const url = httpHead + '/building/admin/dataset/detail?buildingId=' + this.UserData.currentBuilding.id + '&adminId=' + this.UserData.userID + '&dataSetId=' +this.state.dataSetId+ '&Id='+item.id;
+            const response = await fetch(url,
+                {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+            const json = await response.json();
+
+            if (json.code === 200) {
+                // this.UserData.currentBuilding.nodeSum -= 1;
+                // this.setState({skip: this.UserData.currentMessageList.length});
+                message.success('添加成功');
+            }
+            else if (json.code === 404) {
+                message.error('不存在');
+            }
+            else if (json.code === 403) {
+                message.error('没有授权');
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+
     render() {
         return (
             <div className="demo-infinite-container">
-                <InfiniteScroll
+                <InfiniteScroll     //数据组
                     initialLoad={false}
                     pageStart={0}
                     loadMore={this.handleInfiniteOnLoad}
@@ -288,7 +355,7 @@ class DataSetsInBuilding extends Component {
                         useWindow={false}
                     >
                         <List
-                            dataSource={this.UserData.currentDataSetDetail.toJS()}
+                            dataSource={this.UserData.currentDataSetDetail.toJS()}      //数据组中点位或路线
                             renderItem={item => (
                                 <List.Item
                                     key={item.id}
@@ -312,15 +379,41 @@ class DataSetsInBuilding extends Component {
                                 </div>
                             )}
                         </List>
+                        <Icon onClick={this.showChildrenDrawer}
+                              style={{textAlign: 'right', fontSize: 20, color: '#08c'}}
+                              type="plus"/>
                     </InfiniteScroll>
-                    <Icon onClick={this.showChildrenDrawer} style={{ textAlign:"right",fontSize: 20, color: '#08c' }} type="plus"/>
                     <Drawer
-                        title={this.state.dataSetType+"列表"}
+                        title={this.state.dataSetType + "列表"}       //二级抽屉  剩余点位或路线(可添加到数据组）
                         width={320}
                         closable={false}
                         onClose={this.onChildrenDrawerClose}
                         visible={this.state.childrenDrawer}
                     >
+                        <List
+                            dataSource={this.UserData.dataSetRestDetail}
+                            renderItem={item => (
+                                <List.Item
+                                    key={item.id}
+                                    actions={[
+                                        <Icon onClick={() => this.addToDataSet(item)} type="folder-add"/>,
+                                    ]}
+                                >
+                                    <List.Item.Meta
+                                        avatar={<Avatar
+                                            size='large'
+                                            src={imgHead + item.img}/>}
+                                        title={item.name}
+                                    />
+                                </List.Item>
+                            )}
+                        >
+                            {this.state.loading && this.state.hasMore && (
+                                <div className="demo-loading-container">
+                                    <Spin indicator={antIcon}/>
+                                </div>
+                            )}
+                        </List>
                         <div
                             style={{
                                 position: 'absolute',
@@ -342,9 +435,9 @@ class DataSetsInBuilding extends Component {
                             >
                                 Cancel
                             </Button>
-                            <Button onClick={this.onChildrenDrawerClose} type="primary">
-                                Submit
-                            </Button>
+                            {/*<Button onClick={this.onChildrenDrawerClose} type="primary">*/}
+                                {/*Submit*/}
+                            {/*</Button>*/}
                         </div>
                     </Drawer>
                 </Drawer>
