@@ -262,6 +262,13 @@ class DataSetsInBuilding extends Component {
 
     };
 
+    exportToShop =()=>{
+        let temp =this.UserData.qrNodeList;
+        console.log(temp);
+        this.UserData.qrNodeList =[...temp,...this.UserData.currentDataSetDetail];
+        message.success("添加成功")
+
+    }
     onChildrenDrawerClose = () => {
         this.setState({
             childrenDrawer: false,
@@ -379,9 +386,32 @@ class DataSetsInBuilding extends Component {
                                 </div>
                             )}
                         </List>
-                        <Icon onClick={this.showChildrenDrawer}
-                              style={{textAlign: 'right', fontSize: 20, color: '#08c'}}
-                              type="plus"/>
+                        <div
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                width: '100%',
+                                borderTop: '1px solid #e8e8e8',
+                                padding: '10px 16px',
+                                textAlign: 'right',
+                                left: 0,
+                                background: '#fff',
+                                borderRadius: '0 0 4px 4px',
+                            }}
+                        >
+                            {this.state.dataSetType==="node"&&
+                            <Button
+                                style={{
+                                    marginRight: 8,
+                                }}
+                                onClick={this.exportToShop}
+                            >
+                                批量导出
+                            </Button>}
+                            <Button onClick={this.showChildrenDrawer} type="primary">
+                                添加
+                            </Button>
+                        </div>
                     </InfiniteScroll>
                     <Drawer
                         title={this.state.dataSetType + "列表"}       //二级抽屉  剩余点位或路线(可添加到数据组）
