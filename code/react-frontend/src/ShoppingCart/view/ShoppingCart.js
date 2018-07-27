@@ -6,6 +6,7 @@ import JsZip from 'jszip'
 import  FileSaver from 'file-saver'
 import {view as Qrcode} from '../../Components/Qrcode'
 import html2canvas from 'html2canvas'
+import {Control} from "react-keeper";
 
 
 
@@ -14,6 +15,10 @@ import html2canvas from 'html2canvas'
 class ShoppingCart extends Component {
     constructor(props) {
         super(props);
+        if(this.props.UserData.isLogin === false)
+        {
+            Control.go('/')
+        }
         this.state= {
             size: 128,
         }

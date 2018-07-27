@@ -72,7 +72,7 @@
       <view style="margin-left: 33rpx">右转</view>
     </view>
     <view wx:elif="{{item.type==='comment'}}" class='item'>
-      <view>{{item.message}}</view>
+      <view style="margin-left: 5%">{{item.message}}</view>
     </view>
   </view>
 </template>

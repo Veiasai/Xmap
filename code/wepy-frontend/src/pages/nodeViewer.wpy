@@ -67,7 +67,7 @@
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
       <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
         <view class="picker">
-          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupselect.svg"></image>
+          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupSelector.svg"></image>
         </view>
       </picker>
     </view>
@@ -153,14 +153,13 @@
     config = {
       navigationBarTitleText: 'NodeView',
       enablePullDownRefresh: true,
-      backgroundColor: "#1cf001"
+      backgroundColor: "#f5f5f5"
     }
     data = {
       name: "",
       dataSet: null,
       dataSetList: [],
       dataSetNameList: [],
-      showDataSet: false,
       originNodes: [],  // 查找到的点位
       endNodes:[],
       origin: null,
@@ -235,8 +234,21 @@
         })
       },
 
-      bindDataSetChange() {
-        this.showDataSet = true;
+      bindDataSetChange(e) {
+        console.log(e);
+        this.dataSet = this.dataSetList[parseInt(e.detail.value)];
+        console.log(this.dataSet)
+        this.pathSkip = 0;
+        this.originSkip = 0;
+        this.endSkip = 0;
+        this.origin = null;
+        this.end = null;
+        let data = {
+          buildingId: this.$parent.globalData.building.id,
+          skip: 0,
+          limit: this.limit,
+        }
+        this.searchNode(data);
       },
 
       async scanNode(){

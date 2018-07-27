@@ -58,7 +58,7 @@
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
       <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}" >
         <view class="picker">
-          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupselect.svg"></image>
+          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupSelector.svg"></image>
         </view>
       </picker>
     </view>

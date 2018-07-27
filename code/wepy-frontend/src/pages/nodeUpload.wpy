@@ -75,7 +75,7 @@
     <view class="buttonView">
       <view class="addImage" @tap="choosePhoto">
         <view>
-          <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
+          <image mode="widthFix" style="margin-top:5rpx;width: 60rpx;height: 60rpx" src="../icons/camera.svg"></image>
         </view>
       </view>
       <view class="submitButton" @tap="submit">提交点位</view>
