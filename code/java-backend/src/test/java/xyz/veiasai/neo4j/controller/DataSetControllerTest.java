@@ -17,7 +17,9 @@ public class DataSetControllerTest extends TestDefault {
 
     @Test
     public void postDataSet() throws Exception{
-       /* DataSet dataSetTemp = new DataSet();
+        DataSet dataSetTemp = new DataSet();
+        dataSetTemp.setType("node");
+        dataSetTemp.setName("test");
         // ok
         mvc.perform(MockMvcRequestBuilders.post("/dataset")
                 .param("buildingId", building.getId())
@@ -25,11 +27,9 @@ public class DataSetControllerTest extends TestDefault {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(dataSetTemp)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
-                */
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                "$.code").value(200));
     }
-
-
 
     @Test
     public void getDataSets() throws Exception{
@@ -83,14 +83,28 @@ public class DataSetControllerTest extends TestDefault {
         assertEquals(node2.getId(), dataSetRepository.findNodesByNameLike(dataSetNode.getId(), node2.getName(), 0, 5).iterator().next().getId());
         dataSetRepository.deleteRelationDataSetAndNode(dataSetNode.getId(), node2.getId());
 
-        // invalid dataSet type
-        /*mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
+        ids.clear();
+        ids.add(path.getId());
+        // ok
+        mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
+                .param("authorId",author.getId())
                 .param("dataSetId", dataSetPath.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(ids)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
 
+
+        // invalid id
+        mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
+                .param("authorId",author.getId())
+                .param("dataSetId", "NotExist")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(ids)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        /*
         // invalid id
         ids.clear();
         mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
@@ -98,14 +112,13 @@ public class DataSetControllerTest extends TestDefault {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(ids)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
-*/
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));*/
     }
 
     @Test
     public void deleteNodes() throws Exception{
+        // ok
         assertFalse(dataSetRepository.findAllNodes(dataSetNode.getId()).isEmpty());
-
         List<String> ids = new ArrayList<>();
         ids.add(node.getId());
         mvc.perform(MockMvcRequestBuilders.put("/dataset")
@@ -115,8 +128,29 @@ public class DataSetControllerTest extends TestDefault {
                 .content(gson.toJson(ids)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
-
         assertTrue(dataSetRepository.findAllNodes(dataSetNode.getId()).isEmpty());
+
+        // ok
+        ids.clear();
+        ids.add(path.getId());
+        assertFalse(dataSetRepository.findAllPaths(dataSetPath.getId()).isEmpty());
+        mvc.perform(MockMvcRequestBuilders.put("/dataset")
+                .param("authorId",author.getId())
+                .param("dataSetId", dataSetPath.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(ids)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+        assertTrue(dataSetRepository.findAllPaths(dataSetPath.getId()).isEmpty());
+
+        // invalid dataSet
+        mvc.perform(MockMvcRequestBuilders.put("/dataset")
+                .param("authorId",author.getId())
+                .param("dataSetId", "NotExist")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(ids)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
     }
 
     @Test
@@ -134,6 +168,13 @@ public class DataSetControllerTest extends TestDefault {
                 .param("dataSetId", dataSetNode.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid auth
+        mvc.perform(MockMvcRequestBuilders.delete("/dataset")
+                .param("authorId", author2.getId())
+                .param("dataSetId", dataSetNode.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
 
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/dataset")

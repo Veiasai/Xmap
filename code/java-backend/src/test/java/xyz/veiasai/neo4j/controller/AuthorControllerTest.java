@@ -65,6 +65,19 @@ public class AuthorControllerTest extends TestDefault {
 
     @Test
     public void favorIsexist () throws Exception {
+        // not exist
+        mvc.perform(MockMvcRequestBuilders.get("/favorexist")
+                .param("authorId", "NotExist")
+                .param("favoriteId", node.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        mvc.perform(MockMvcRequestBuilders.get("/favorexist")
+                .param("authorId", author.getId())
+                .param("favoriteId","NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
         // ok
         mvc.perform(MockMvcRequestBuilders.get("/favorexist")
                 .param("authorId", author.getId())
@@ -172,5 +185,36 @@ public class AuthorControllerTest extends TestDefault {
                 .param("dataSetName", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dataSets").isEmpty());
+    }
+
+    @Test
+    public void applyBuildingAdmin() throws Exception{
+        // not exist
+        mvc.perform(MockMvcRequestBuilders.get("/apply/buildingadmin")
+                .param("buildingId", building.getId())
+                .param("authorId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        mvc.perform(MockMvcRequestBuilders.get("/apply/buildingadmin")
+                .param("buildingId", "NotExist")
+                .param("authorId", author.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // has been admin
+        mvc.perform(MockMvcRequestBuilders.get("/apply/buildingadmin")
+                .param("buildingId", building.getId())
+                .param("authorId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(405));
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/apply/buildingadmin")
+                .param("buildingId", building.getId())
+                .param("authorId", author.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+
     }
 }

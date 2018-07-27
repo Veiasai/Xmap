@@ -20,6 +20,24 @@ public class MessageControllerTest extends TestDefault {
         messageTemp.setTitle("test");
         messageTemp.setContent("test");
 
+        // not exist
+        mvc.perform(MockMvcRequestBuilders.post("/message")
+                .param("buildingId", building.getId())
+                .param("authorId", "NotExist")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(messageTemp)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // not exist
+        mvc.perform(MockMvcRequestBuilders.post("/message")
+                .param("buildingId", "NotExist")
+                .param("authorId", buildingAdmin.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(messageTemp)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
         // invalid admin
         mvc.perform(MockMvcRequestBuilders.post("/message")
                 .param("buildingId", building.getId())

@@ -49,18 +49,23 @@ public interface DataSetRepository extends Neo4jRepository<DataSet, String> {
     )
     public Collection<Node> findAllNodes(@Param("dataSetId") String dataSetId);
 
+    @Query("Match (path:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}})" +
+            "return path"
+    )
+    public Collection<Path> findAllPaths(@Param("dataSetId") String dataSetId);
+
 
     @Query("Match (p:Path {id:{pathId}}),(dataset:DataSet {id:{dataSetId}})" +
-            "merge (p)-[:PATH]->(dataset)"
+            "merge (p)-[:PATH]-(dataset)"
     )
     public void addRelationDataSetAndPath(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
 
-    @Query("Match (p:Path {id:{pathId}})-[r:PATH]->(dataset:DataSet {id:{dataSetId}})" +
+    @Query("Match (p:Path {id:{pathId}})-[r:PATH]-(dataset:DataSet {id:{dataSetId}})" +
             "Delete r"
     )
     public void deleteRelationDataSetAndPath(@Param("dataSetId") String dataSetId, @Param("pathId") String pathId);
 
-    @Query("Match (p:Path)-[:PATH]->(dataset:DataSet {id:{dataSetId}}) where p.name =~('.*'+{pathName}+'.*')" +
+    @Query("Match (p:Path)-[:PATH]-(dataset:DataSet {id:{dataSetId}}) where p.name =~('.*'+{pathName}+'.*')" +
             "RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}"
     )
     public Collection<Path> findPathsByNameLike(@Param("dataSetId") String dataSetId,

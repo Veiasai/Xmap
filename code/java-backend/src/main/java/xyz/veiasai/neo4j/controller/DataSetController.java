@@ -26,11 +26,13 @@ public class DataSetController {
 
     @ApiOperation(value = "上传数据组", notes = "上传数据组信息")           //待加valid验证
     @PostMapping("/dataset")
-    public DataSet postDataSet(@RequestBody @Valid DataSet dataSet,
-                               @RequestParam @ApiParam(name = "buildingId", value = "数据组所在建筑物的id") String buildingId,
-                               @RequestParam @ApiParam(name = "authorId", value = "上传者的open-id") String authorId) {
-        dataSet = dataSetService.addDataSet(dataSet, buildingId, authorId);
-        return dataSet;
+    public DataSetResult postDataSet(@RequestBody @Valid DataSet dataSet,
+                                     @RequestParam @ApiParam(name = "buildingId", value = "数据组所在建筑物的id") String buildingId,
+                                     @RequestParam @ApiParam(name = "authorId", value = "上传者的open-id") String authorId) {
+        DataSetResult result = new DataSetResult();
+        result.setDataSet(dataSetService.addDataSet(dataSet, buildingId, authorId));
+        result.setCode(200);
+        return result;
     }
 
     @ApiOperation(value = "删除数据组", notes = "删除数据组及其相关联系;\r\n404:不存在;\r\n200:删除成功")
@@ -71,9 +73,6 @@ public class DataSetController {
             result.setDataSets(dataSetService.findDataSetByBuildingAndName(buildingId, dataSetName, skip, limit));
         } else if (authorId != null) {
             result.setDataSets(dataSetService.findDataSetByAuthorAndName(authorId, dataSetName, skip, limit));
-        } else {
-            result.setCode(404);
-            result.setMessage("找不到数据组");
         }
         return result;
     }
@@ -113,6 +112,7 @@ public class DataSetController {
     public Result deleteNodes(@RequestParam String dataSetId, @RequestParam String authorId, @RequestBody @ApiParam(name = "NodeIds", value = "删除所需的点位id List") List<String> Ids) {
         Result result = new Result();
         DataSet dataSet = dataSetService.getDataSetById(dataSetId);
+        result.setCode(403);
         if (dataSet == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
@@ -130,9 +130,6 @@ public class DataSetController {
             result.setMessage("删除路线成功");
             result.setCode(200);
             dataSetService.deleteRelationPaths(dataSetId, Ids);
-        } else {
-            result.setMessage("数据错误");
-            result.setCode(403);
         }
         return result;
     }

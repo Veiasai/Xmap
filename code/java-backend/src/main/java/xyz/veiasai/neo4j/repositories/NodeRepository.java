@@ -1,12 +1,9 @@
 package xyz.veiasai.neo4j.repositories;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
 import xyz.veiasai.neo4j.domain.Node;
-import xyz.veiasai.neo4j.domain.Path;
-import xyz.veiasai.neo4j.domain.relation.PATH;
 
 import java.util.*;
 
