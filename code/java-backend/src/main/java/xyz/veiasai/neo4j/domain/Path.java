@@ -35,7 +35,6 @@ public class Path {
 
     @NotNull
     @Convert(ContentConverter.class)
-    @JsonIgnore
     private List<Content> contents;
 
     @JsonIgnore

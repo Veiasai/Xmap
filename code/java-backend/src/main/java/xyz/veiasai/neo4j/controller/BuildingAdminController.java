@@ -221,8 +221,38 @@ public class BuildingAdminController {
         return result;
     }
 
+    @PutMapping("building/admin/dataset/detail")
+    public Result addDataSetdetailByadmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
+        Result result = new Result();
+        DataSet dataSet = dataSetService.findById(dataSetId);
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(404);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (dataSet==null) {
+            result.setCode(404);
+            result.setMessage("数据组不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(403);
+            result.setMessage("该用户不是该建筑管理员");
+        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+            result.setCode(403);
+            result.setMessage("该数据组不属于该建筑");
+        } else if(dataSet.getType().equals("node")) {       //暂不验证id有效性
+            dataSetService.addRelationNode(dataSetId,Id);
+            result.setCode(200);
+            result.setMessage("增加点位成功");
+        } else if(dataSet.getType().equals("path")){
+            dataSetService.addRelationPath(dataSetId,Id);
+            result.setCode(200);
+            result.setMessage("增加路线成功");
+        }
+        return result;
+    }
     @DeleteMapping("building/admin/dataset/detail")
-    public Result deleteDataSetNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
+    public Result deleteDataSetdetailByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
         Result result = new Result();
         DataSet dataSet = dataSetService.findById(dataSetId);
         if (buildingService.getBuildingById(buildingId) == null) {

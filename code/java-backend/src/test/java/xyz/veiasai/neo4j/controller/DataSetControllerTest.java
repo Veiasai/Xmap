@@ -73,6 +73,7 @@ public class DataSetControllerTest extends TestDefault {
         ids.add(node2.getId());
         // ok
         mvc.perform(MockMvcRequestBuilders.post("/dataset/add")
+                .param("authorId",author.getId())
                 .param("dataSetId", dataSetNode.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(ids)))
@@ -108,6 +109,7 @@ public class DataSetControllerTest extends TestDefault {
         List<String> ids = new ArrayList<>();
         ids.add(node.getId());
         mvc.perform(MockMvcRequestBuilders.put("/dataset")
+                .param("authorId",author.getId())
                 .param("dataSetId", dataSetNode.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(ids)))
