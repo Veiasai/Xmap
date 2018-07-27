@@ -10,7 +10,7 @@
     }
   }
   .nodeInfo{
-    height: 85vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,7 +30,7 @@
         <swiper-item>
           <view style="text-align: center" wx:if="{{item.contents !== undefined}}">
             <view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>
-            <view style="height: 85vh">
+            <view style="height: 80vh">
               <PathDisplay :pathArray.sync="item.contents"/>
             </view>
           </view>

@@ -1,11 +1,11 @@
 <style>
   .tab{
-    margin-left: 34rpx;
+    margin-left: 71rpx;
     margin-top: 1vh;
-    left: 34rpx;
+    left: 40rpx;
     top: 180rpx;
-    width: 682rpx;
-    height: 100rpx;
+    width: 600rpx;
+    height: 80rpx;
     line-height: 40rpx;
     border-radius:16rpx;
     background-color: rgb(242, 242, 242);
@@ -26,21 +26,29 @@
   }
 
   .tabtext{
-    margin-top: 28rpx;
-    color: #fefefe;
     font-size: 32rpx;
   }
 
-
   .selected{
-    width: 341rpx;
+    width: 300rpx;
     text-align: center;
-    background-color: #1256be;
+    background-color: #90b3d0;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: none;
   }
   .default{
-    width: 341rpx;
+    width: 300rpx;
     text-align: center;
-    background-color: #1564de;
+    background-color: #FEFEFE;
+    color: #90b3d0;
+    border-width: 1px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .tabcontent{

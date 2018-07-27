@@ -6,6 +6,7 @@ import JsZip from 'jszip'
 import  FileSaver from 'file-saver'
 import {view as Qrcode} from '../../Components/Qrcode'
 import html2canvas from 'html2canvas'
+import {Control} from "react-keeper";
 
 
 
@@ -14,6 +15,10 @@ import html2canvas from 'html2canvas'
 class ShoppingCart extends Component {
     constructor(props) {
         super(props);
+        if(this.props.UserData.isLogin === false)
+        {
+            Control.go('/')
+        }
         this.state= {
             size: 128,
         }
@@ -24,7 +29,9 @@ class ShoppingCart extends Component {
             size: value,
         });
     }
-
+    deleteAll(){
+        this.props.UserData.qrNodeList=[];
+    }
     async generateQrCode(){
         let nodes = this.props.UserData.qrNodeList;
         let len = nodes.length;
@@ -75,6 +82,7 @@ class ShoppingCart extends Component {
                 </Row>
                 <Row>
                     <Button onClick={() =>this.generateQrCode()}>批量生成</Button>
+                    <Button onClick={() =>this.deleteAll()}>清空全部</Button>
                 </Row>
                 {this.props.UserData.qrNodeList.map((item)=>{
                     return (<div  width={this.state.size*3} height={this.state.size*3} ref={item.id} style={{display:'inline-block', width:'auto', height:'auto', padding:'5px'}}>

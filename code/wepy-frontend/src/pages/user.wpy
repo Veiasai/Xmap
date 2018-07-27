@@ -1,7 +1,6 @@
 <style>
   .userinfo{
     margin-top: 1vh;
-
   }
 
   .myfavor{
@@ -9,7 +8,7 @@
     margin-top: 1vh;
     left: 34rpx;
     top: 180rpx;
-    width: 608rpx;
+    width: 600rpx;
     height: 100rpx;
     line-height: 40rpx;
     border-radius:16rpx;
@@ -17,12 +16,11 @@
     text-align: center;
     display: flex;
     flex-direction: row;
+    align-items: center;
   }
 
   .favortext{
-    width: 400rpx;
-    margin-top: 30rpx;
-    margin-left: rpx;
+    margin-left: 10rpx;
     text-align: center;
 
   }
@@ -30,7 +28,6 @@
   .favoricon{
     width: 72rpx;
     height: 72rpx;
-    margin-top: 14rpx;
     margin-left: 10rpx;
 
   }
@@ -41,12 +38,12 @@
   }
 
   .tab{
-    margin-left: 34rpx;
+    margin-left: 71rpx;
     margin-top: 1vh;
-    left: 34rpx;
+    left: 40rpx;
     top: 180rpx;
-    width: 682rpx;
-    height: 100rpx;
+    width: 600rpx;
+    height: 80rpx;
     line-height: 40rpx;
     border-radius:16rpx;
     background-color: rgb(242, 242, 242);
@@ -67,20 +64,30 @@
   }
 
   .tabtext{
-    margin-top: 28rpx;
     color: #fefefe;
     font-size: 32rpx;
   }
 
   .selected{
-    width: 341rpx;
+    width: 300rpx;
     text-align: center;
-    background-color: #1256be;
+    background-color: #90b3d0;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: none;
   }
   .default{
-    width: 341rpx;
+    width: 300rpx;
     text-align: center;
-    background-color: #1564de;
+    background-color: #FEFEFE;
+    color: #90b3d0;
+    border-width: 1px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .tabcontent{
@@ -111,26 +118,20 @@
       <Node :node.sync="user"></Node>
     </view>
     <view class="myfavor">
+      <view class="favoricon">
+        <image src="../icons/favorite.svg"></image>
+      </view>
       <view class="favortext" @tap="toCollection">
         我的收藏
-      </view>
-      <view class="favoricon">
-        <image src="../images/收藏.png"></image>
-      </view>
-      <view class="favortext" @tap="toDataSet">
-        我的数据组
-      </view>
-      <view class="favoricon">
-        <image src="../images/收藏.png"></image>
       </view>
     </view>
     <view class="mine">
       <view class="tab">
         <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
-          <view class="tabtext" id="0">我的点位</view>
+          我的点位
         </view>
         <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
-          <view class="tabtext" id="1">我的路线</view>
+          我的路线
         </view>
       </view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
@@ -138,7 +139,7 @@
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
             <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem" @manItem.user="handleManItem">
-                <view  class="node">
+                <view  class="node" style="margin-top: 0">
                   <view class="nodeimg">
                     <image mode="aspectFill" src="{{item.img}}" />
                   </view>
@@ -154,7 +155,7 @@
           <repeat for="{{pathList}}" key="index" item="item" index="index">
             <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
-                <view @tap = "notifi" class="path">
+                <view @tap = "notifi" class="path" style="margin-top: 0">
                 <view class="pathimg">
                   <image mode="aspectFill" src="{{item.img}}" />
                 </view>
@@ -210,7 +211,7 @@
     config={
       navigationBarTitleText: 'User',
       enablePullDownRefresh: true,
-      backgroundColor: "#1cf001"
+      backgroundColor: "#f5f5f5"
     }
 
     components = {

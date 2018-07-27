@@ -4,7 +4,7 @@
     margin-left: 71rpx;
     left: 40rpx;
     top: 304rpx;
-    width: 608rpx;
+    width: 600rpx;
     height: 132rpx;
     line-height: 40rpx;
     border-radius: 16rpx;

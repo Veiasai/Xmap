@@ -81,37 +81,47 @@ public class DataSetController {
 
     @ApiOperation(value = "增加点位/路线", notes = "批量增加数据组中点位/路线;\r\n404:不存在;\r\n200:添加成功")
     @PostMapping("/dataset/add")
-    public Result addNodes(@RequestParam String dataSetId, @RequestBody @ApiParam(name = "NodeIds", value = "增加所需的点位/路线id List") List<String> NodeIds) {
+    public Result addNodes(@RequestParam String dataSetId, @RequestParam String authorId, @RequestBody @ApiParam(name = "NodeIds", value = "增加所需的点位/路线id List") List<String> NodeIds) {
         Result result = new Result();
         DataSet dataSet = dataSetService.getDataSetById(dataSetId);
         if (dataSet == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
-            return result;
-        }
-        if (dataSet.getType().equals("node")) {     //没有判断list里面id的有效性
+        } else if (authorService.getAuthorById(authorId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(404);
+        } else if (!dataSetService.existAuthorAndDataSet(authorId, dataSetId)) {
+            result.setMessage("该用户无权限");
+            result.setCode(403);
+        } else if (dataSet.getType().equals("node")) {     //没有判断list里面id的有效性
             result.setMessage("添加成功");
             result.setCode(200);
             dataSetService.addRelationNodes(dataSetId, NodeIds);
-            return result;
-        }
-        if (dataSet.getType().equals("path")) {
+        } else if (dataSet.getType().equals("path")) {
             result.setMessage("添加成功");
             result.setCode(200);
             dataSetService.addRelationPaths(dataSetId, NodeIds);
-            return result;
+        } else {
+            result.setMessage("数据错误");
+            result.setCode(403);
         }
         return result;
     }
 
     @ApiOperation(value = "删除点位/路线", notes = "批量删除数据组中点位/路线;\r\n404:不存在;\r\n200:删除成功")
     @PutMapping("/dataset")
-    public Result deleteNodes(@RequestParam String dataSetId, @RequestBody @ApiParam(name = "NodeIds", value = "删除所需的点位id List") List<String> Ids) {
+    public Result deleteNodes(@RequestParam String dataSetId, @RequestParam String authorId, @RequestBody @ApiParam(name = "NodeIds", value = "删除所需的点位id List") List<String> Ids) {
         Result result = new Result();
         DataSet dataSet = dataSetService.getDataSetById(dataSetId);
         if (dataSet == null) {
             result.setMessage("数据组不存在");
             result.setCode(404);
+        } else if (authorService.getAuthorById(authorId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(404);
+        } else if (!dataSetService.existAuthorAndDataSet(authorId, dataSetId)) {
+            result.setMessage("该用户无权限");
+            result.setCode(403);
         } else if (dataSet.getType().equals("node")) {
             result.setMessage("删除点位成功");
             result.setCode(200);
