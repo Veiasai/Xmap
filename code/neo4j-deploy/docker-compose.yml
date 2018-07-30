@@ -22,7 +22,9 @@ services:
   master:
     image: neo4j:3.1-enterprise
     container_name: core-placeholder
-
+    ports: 
+      - "8089:7474"
+      - "8088:7687"
     volumes: 
       - ./data1:/data
     networks:

@@ -96,8 +96,9 @@
     }
 
     onPullDownRefresh(){
-      this.searchDataSet();
+      this.dataSet = null;
       this.skip = 0;
+      this.searchDataSet();
       this.searchPath({skip: this.skip});
       this.searchMessage();
       wx.stopPullDownRefresh()
@@ -135,7 +136,9 @@
       },
 
       bindDataSetChange(e){
-        console.log(e);
+        this.dataSet = this.dataSetList[parseInt(e.detail.value)];
+        this.skip = 0;
+        this.searchPath({skip: 0});
       },
 
       async applyAdmin(){
@@ -250,7 +253,7 @@
         this.dataSetList = res.data.dataSets.filter((item)=>{
           return item.type === 'path';
         });
-        this.dataSetNameList = res.data.dataSets.map((item)=>{
+        this.dataSetNameList = this.dataSetList.map((item)=>{
           return item.name;
         })
         this.$apply();
