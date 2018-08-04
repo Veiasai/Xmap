@@ -68,7 +68,7 @@
       </view>
     </view>
     <swiper class="buildingMessages">
-      <repeat for="{{messages}}" index="index" item="item">
+      <repeat for="{{messages.reverse()}}" index="index" item="item">
         <swiper-item style="width: 660rpx">
           <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
           <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>

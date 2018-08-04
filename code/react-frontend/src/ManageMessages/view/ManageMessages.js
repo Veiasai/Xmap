@@ -140,7 +140,7 @@ class ManageMessages extends Component {
                     >
                         <List
                             itemLayout="vertical"
-                            dataSource={this.UserData.currentMessageList}
+                            dataSource={this.UserData.currentMessageList.reverse()}
                             renderItem={item => (
                                 <List.Item
                                     key={item.id}

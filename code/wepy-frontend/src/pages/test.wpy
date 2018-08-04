@@ -1,20 +1,16 @@
 <style>
   .test{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 </style>
 
 <template>
-<view style="height: 200rpx">
-  <view @tap="addPath">
-    上传路线
-  </view>
-  <view style="height: 200rpx" @tap="jumpto">
-    test
-  </view>
-  <view>
-    <PathItem :item.sync="pathInfo"></PathItem>
-  </view>
+<view class="test">
+  <Node :node.sync="node"></Node>
 </view>
 </template>
 
@@ -27,7 +23,7 @@
   export default class test extends wepy.page {
 
     components = {
-      node: Node,
+      Node: Node,
       Path: Path,
       PathItem: PathItem
     }

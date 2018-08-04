@@ -1,22 +1,18 @@
 <style lang="less">
   .node{
-    margin-top: 1vh;
-    margin-left: 71rpx;
-    left: 40rpx;
-    top: 304rpx;
     width: 600rpx;
-    height: 132rpx;
-    line-height: 40rpx;
+    height: 140rpx;
     border-radius: 16rpx;
-    background-color: rgba(242, 242, 242, 1);
+    background-color: #FEFEFE;
     text-align: center;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    box-shadow:0rpx 4rpx 30rpx #888888;
   }
 
   .nodeimg{
-    margin-top: 16rpx;
-    margin-left: 40rpx;
+    margin-left: 20rpx;
     position:relative;
     width:100rpx;
     height:100rpx;
@@ -30,10 +26,7 @@
   }
 
   .nodename{
-    margin-top: 44rpx;
-    margin-left: 22rpx;
-    width: 428rpx;
-    text-align: center;
+    margin-left: 20rpx;
     font-size: 18px;
     color: #111111;
   }
