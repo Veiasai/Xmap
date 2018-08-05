@@ -1,6 +1,6 @@
 <style>
   .display {
-    height: 80vh;
+    height: 100%;
     width:100%;
     display: flex;
     flex-direction: column;
@@ -9,11 +9,12 @@
 </style>
 
 <template>
-  <scroll-view scroll-y class='display'>
+  <view class="display">
     <repeat for="{{pathArray}}" key="index" index="index" item="item">
-      <PathItem :item="item"></PathItem>
+      <PathItem id="item{{key}}" :item="item"></PathItem>
     </repeat>
-  </scroll-view>
+  </view>
+
 </template>
 
 <script>
@@ -25,7 +26,7 @@
         type: Array,
         default:[]
       }
-    }
+    };
     components = {
       PathItem: pathItem
     }

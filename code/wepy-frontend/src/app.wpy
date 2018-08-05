@@ -17,12 +17,12 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/test',
+        'pages/pathUpload/pathUpload',
         'pages/user',
+        'pages/test',
         'pages/start',
         'pages/main',
         'pages/nodeViewer',
-        'pages/pathUpload/pathUpload',
         'pages/nodeUpload',
         'pages/pathUpload/nodeSelect',
         'pages/dataSetViewer',

@@ -10,7 +10,7 @@
 
 <template>
 <view class="test">
-  <Node :node.sync="node"></Node>
+  <PathDisplay :pathArray.sync="pathArray"></PathDisplay>
 </view>
 </template>
 
@@ -19,13 +19,15 @@
   import Path from '../components/path';
   import Node from '../components/node';
   import PathItem from '../components/pathItem'
+  import PathDisplay from '../components/pathDisplay'
 
   export default class test extends wepy.page {
 
     components = {
       Node: Node,
       Path: Path,
-      PathItem: PathItem
+      PathItem: PathItem,
+      PathDisplay: PathDisplay,
     }
 
     data = {
@@ -39,9 +41,24 @@
       manage:true,
 
       pathInfo:{
-        type:"action",
-        message:"17,left"
-      }
+        type:"img",
+        message:"../images/test1.jpg"
+      },
+      pathArray: [
+        {
+          type: 'img',
+          message: '../images/test1.jpg'
+        },
+        {
+          type: 'img',
+          message: '../images/test1.jpg'
+        },
+        {
+          type: 'img',
+          message: '../images/test1.jpg'
+        },
+
+      ]
 
     }
     async searchPath(skip) {

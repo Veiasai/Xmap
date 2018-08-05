@@ -1,17 +1,12 @@
 <style lang="less">
-  .imgview{
-    width: 682rpx;
-    height: 684rpx;
+  .img{
+    width: 680rpx;
+    height: 680rpx;
     border-radius: 16rpx;
   }
 
-  .img{
-    width: 682rpx;
-    height: 684rpx;
-  }
-
   .item{
-    width: 682rpx;
+    width: 680rpx;
     height: 150rpx;
     border-radius: 16rpx;
     background-color: #F2F2F2;
@@ -47,10 +42,8 @@
 </style>
 
 <template>
-  <view style="margin-left: 34rpx; margin-top: 1vh">
-    <view wx:if="{{item.type==='img'}}" class='imgview'>
-    <image lazy-load mode='aspectFill' class="img" src="{{item.message}}"></image>
-    </view>
+  <view>
+    <image class="img" wx:if="{{item.type==='img'}}" lazy-load mode='aspectFill' src="{{item.message}}"></image>
     <view wx:elif="{{item.type==='actionS'}}" class='item action'>
       <view class="icon">
         <image mode="aspectFill" src = "../icons/straight.svg"></image>
@@ -74,6 +67,7 @@
     <view wx:elif="{{item.type==='comment'}}" class='item'>
       <view style="margin-left: 5%">{{item.message}}</view>
     </view>
+    <view style="height: 1vh"> </view>
   </view>
 </template>
 

@@ -1,27 +1,36 @@
 <style>
-
-  .currentSteps{
-    font-size: 100rpx;
-    font-weight: bold;
-    color: #0073a7;
+  .mainContainer{
+    background: linear-gradient(0reg, #fefefe, #f0f0f0);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .pathDisplay{
+    width: 750rpx;
+    height: 65vh;
+    border-bottom: #000000;
+    z-index: -1;
+    /*box-shadow: 0rpx -12rpx 24rpx -14rpx #888888 inset;*/
   }
 
   .container {
     width: 750rpx;
-    height: 40vh;
+    height: 35vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: #f5f5f5;
+    /*filter:drop-shadow(0rpx 4rpx 24rpx #888888);*/
+    border-radius: 64rpx 64rpx 0rpx 0rpx;
   }
-
-  .pathDisplay{
-    width: 750rpx;
-    height: 60vh;
-    border-bottom: #000000;
-    box-shadow: #313131;
+  .currentSteps{
+    font-size: 100rpx;
+    font-weight: bold;
+    color: #2c2c2c;
   }
-
   .addInfo{
     width: 750rpx;
     height: 140rpx;
@@ -40,11 +49,11 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: #8794CB;
+    background-color: #90b3d0;
     color: #FEFEFE;
   }
   .tapedAddComment{
-    background-color: #8490c1;
+    background-color: #90b3d0;
   }
 
   .addImage{
@@ -52,7 +61,7 @@
     width: 110rpx;
     height: 110rpx;
     border-radius: 50%;
-    background-color: #305690;
+    background-color: #90b3d0;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -60,8 +69,12 @@
   }
 
   .pause{
+    border-radius: 50%;
     width: 140rpx;
     height: 140rpx;
+  }
+  .tappedPause{
+    background-color: #e4e4e4;
   }
 
   .pause image{
@@ -97,14 +110,13 @@
 </style>
 
 <template>
-  <view>
-    <view class="pathDisplay">
-      <PathDisplay :pathArray.sync="pathArray"/>
-    </view>
+  <view class="mainContainer">
+    <scroll-view enable-back-to-top	scroll-with-animation scroll-top="{{scrollHeight}}" scroll-y class="pathDisplay">
+        <PathDisplay :pathArray.sync="pathArray"/>
+    </scroll-view>
     <view class="container">
       <view class="currentSteps">
         {{steps}} 步
-        <!--<text>方向：{{direction == null ? 0 : direction}}</text>-->
       </view>
       <view class="addInfo">
         <!--add comment for path-->
@@ -112,14 +124,14 @@
           <image mode="widthFix" style="width: 60rpx;height: 60rpx;margin-top: 6rpx" src="../../icons/comment.svg"></image>
         </view>
         <!--start and pause-->
-        <view class="pause" @tap="record">
-          <image mode="widthFix" src="../../icons/start.svg" wx:if="{{recordButton !== '暂停记录'}}"></image>
+        <view class="pause" hover-class="tappedPause" hover-stay-time='100' @tap="record">
+          <image mode="widthFix" style="margin-left: 10rpx" src="../../icons/start.svg" wx:if="{{recordButton !== '暂停记录'}}"></image>
           <image mode="widthFix" src="../../icons/pause.svg" wx:if="{{recordButton === '暂停记录'}}"></image>
         </view>
         <!--add image to path-->
         <view class="addImage" @tap="takePhoto">
           <view>
-            <image mode="widthFix" style="width: 60rpx;height: 60rpx" src="../../icons/camera.svg"></image>
+            <image mode="widthFix" style="width: 60rpx;height: 60rpx;margin-top: 6rpx" src="../../icons/camera.svg"></image>
           </view>
         </view>
       </view>
@@ -152,8 +164,10 @@
   export default class PathUpload extends wepy.page {
     components = {
       PathDisplay: pathDisplay
-    }
+    };
+
     data = {
+      scrollHeight: 0,
       direction: null,
       recordButton: "开始记录",
       pathArray: [],
@@ -172,7 +186,13 @@
       origin: "",
       end: "",
       img: "",
-    }
+    };
+
+    watch = {
+      pathArray (newPathArray,oldPathArray){
+        this.scrollHeight += 1000;
+      }
+    };
 
     methods = {
       record() {
@@ -198,8 +218,8 @@
           let imgres = await wepy.chooseImage({
             count: 1, // 默认9
             sizeType: ['compressed'],  // 可以指定是原图还是压缩图，默认二者都有}
-            sourceType: ['camera','album ']
-        })
+            sourceType: ['camera','album']
+        });
 
           console.log(imgres);
           let uploadres = await wepy.uploadFile({
@@ -208,9 +228,8 @@
             name: 'file',
             formData: {
               'user': 'woshiqiangmima'
-            }})
-
-          console.log(uploadres)
+            }});
+          console.log(uploadres);
           let data = JSON.parse(uploadres.data);
           if (data.code === 200) {
             this.imgArray.push(data.message);
@@ -218,7 +237,7 @@
           else {
             this.imgArray.push("");
           }
-          this.pathArray.push({"type": 'actionS', "message": this.steps + ""})
+          this.pathArray.push({"type": 'actionS', "message": this.steps + ""});
           this.pathArray.push({"type": 'img', "message": imgres.tempFilePaths[0]});
           this.allsteps += this.steps;
           this.steps = 0;
@@ -365,6 +384,7 @@
       //提交注释
       commentConfirm() {
         this.pathArray.push({"type": 'comment', "message": this.comment});
+        this.scrollHeight += 300;
         this.hiddenComment = true;
         this.comment = ""
       }
