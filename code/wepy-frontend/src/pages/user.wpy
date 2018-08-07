@@ -5,7 +5,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(0deg, #f6f6f6, #fefefe);
+    background: linear-gradient(180deg, #90b3d0, #fefefe);
   }
 
   .container0{
@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    box-shadow:2rpx 6rpx 30rpx #333333
+    filter:drop-shadow(4rpx 6rpx 10rpx #333333)
   }
 
   .avatar{
@@ -116,7 +116,7 @@
   .tabcontent{
     margin-top: 1vh;
     width: 750rpx;
-    height: 70vh;
+    height: 75vh;
   }
 
   .show{display: block;padding-bottom:42px;}
@@ -143,7 +143,11 @@
           <image mode="aspectFill" src="{{user.img}}" />
         </view>
         <view class="userName" >{{user.name}}</view>
-        <view class="favortext" @tap="toCollection">我的收藏 ></view>
+        <view class="favortext">
+          <view style="height: 100%; display: flex;align-items: center" @tap="toCollection">
+            我的收藏 >
+          </view>
+        </view>
       </view>
     </view>
     <view class="container1">
@@ -206,6 +210,7 @@
 
 
   export default class user extends wepy.page {
+
     async onLoad() {
       try {
         this.searchPath(0);
@@ -234,8 +239,9 @@
 
     config={
       navigationBarTitleText: 'User',
-      enablePullDownRefresh: true,
-      backgroundColor: "#f5f5f5"
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "enablePullDownRefresh": true,
     }
 
     components = {
@@ -259,7 +265,7 @@
       pathList:[],
       nodeList:[],
       manage:true
-    }
+    };
 
     methods = {
       toCollection() {

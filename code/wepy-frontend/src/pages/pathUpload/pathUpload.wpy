@@ -237,7 +237,10 @@
           else {
             this.imgArray.push("");
           }
-          this.pathArray.push({"type": 'actionS', "message": this.steps + ""});
+          if(this.steps !== 0)
+          {
+            this.pathArray.push({"type": 'actionS', "message": this.steps + ""});
+          }
           this.pathArray.push({"type": 'img', "message": imgres.tempFilePaths[0]});
           this.allsteps += this.steps;
           this.steps = 0;
