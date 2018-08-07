@@ -1,6 +1,12 @@
 <style>
+  .collectionContainer0{
+    height: 9vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .tab{
-    margin-left: 71rpx;
     margin-top: 1vh;
     left: 40rpx;
     top: 180rpx;
@@ -54,7 +60,7 @@
   .tabcontent{
     margin-top: 1vh;
     width: 750rpx;
-    height: 70vh;
+    height: 90vh;
   }
 
   .show{display: block;padding-bottom:42px;}
@@ -64,17 +70,19 @@
 </style>
 
 <template>
-  <view class="mine">
-    <view class="tab">
-      <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
-        <view class="tabtext" id="0" >收藏点位</view>
-      </view>
-      <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
-        <view class="tabtext" id="1" >收藏路线</view>
+  <view style="height: 100vh">
+    <view class="collectionContainer0">
+      <view class="tab">
+        <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
+          <view class="tabtext" id="0" >收藏点位</view>
+        </view>
+        <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
+          <view class="tabtext" id="1" >收藏路线</view>
+        </view>
       </view>
     </view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" style="height: 90vh">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
             <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete :swipeData="item" @delItem.user="handleDelItem">
@@ -90,7 +98,7 @@
         </scroll-view>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" style="height: 90vh">
           <repeat for="{{pathList}}" key="index" item="item" index="index">
             <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
               <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
@@ -135,9 +143,11 @@
       wx.stopPullDownRefresh()
     }
     config = {
-      navigationBarTitleText: "Collection",
-      enablePullDownRefresh: true,
-      backgroundColor: "#1cf001"
+      navigationBarTitleText: 'User',
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
+      "enablePullDownRefresh": true,
     }
 
     data = {
