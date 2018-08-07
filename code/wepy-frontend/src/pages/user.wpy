@@ -5,19 +5,22 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, #90b3d0, #fefefe);
   }
 
   .container0{
-    height: 15vh;
+    height: 17vh;
+    width: 750rpx;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   .container1{
-    height: 10vh;
+    height: 9vh;
+    width: 750rpx;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   .userInfo{
@@ -116,7 +119,7 @@
   .tabcontent{
     margin-top: 1vh;
     width: 750rpx;
-    height: 75vh;
+    height: 74vh;
   }
 
   .show{display: block;padding-bottom:42px;}
@@ -125,38 +128,40 @@
 
   .pathView{
     width: 750rpx;
-    height: 75vh;
+    height: 74vh;
   }
 
   .nodeView{
     width: 750rpx;
-    height: 75vh;
+    height: 74vh;
   }
 
 </style>
 
 <template>
   <view class="mainContainer">
-    <view class="container0">
-      <view class="userInfo">
-        <view class="avatar">
-          <image mode="aspectFill" src="{{user.img}}" />
-        </view>
-        <view class="userName" >{{user.name}}</view>
-        <view class="favortext">
-          <view style="height: 100%; display: flex;align-items: center" @tap="toCollection">
-            我的收藏 >
+    <view style="background: linear-gradient(180deg, #90b3d0, #fefefe);">
+      <view class="container0">
+        <view class="userInfo">
+          <view class="avatar">
+            <image mode="aspectFill" src="{{user.img}}" />
+          </view>
+          <view class="userName" >{{user.name}}</view>
+          <view class="favortext">
+            <view style="height: 100%; display: flex;align-items: center" @tap="toCollection">
+              我的收藏 >
+            </view>
           </view>
         </view>
       </view>
-    </view>
-    <view class="container1">
-      <view class="tab">
-        <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
-          我的点位
-        </view>
-        <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
-          我的路线
+      <view class="container1">
+        <view class="tab">
+          <view class="mynode {{select === '0' ?'selected':'default'}}" id="0" @tap="select">
+            我的点位
+          </view>
+          <view class="mypath {{select === '1' ? 'selected':'default'}}" id="1" @tap="select">
+            我的路线
+          </view>
         </view>
       </view>
     </view>
@@ -164,13 +169,15 @@
       <view class="tabcontent" wx:if="{{select === '0'}}">
         <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd"  class="nodeView">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
-            <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
+            <view style="height: 140rpx; margin-top: 1vh;">
               <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem" @manItem.user="handleManItem">
-                <view  class="node">
-                  <view class="nodeimg">
-                    <image mode="aspectFill" src="{{item.img}}" />
+                <view style="display: flex;justify-content: center;align-items: center">
+                  <view  class="node">
+                    <view class="nodeimg">
+                      <image mode="aspectFill" src="{{item.img}}" />
+                    </view>
+                    <view class="nodename" >{{item.name}}</view>
                   </view>
-                  <view class="nodename" >{{item.name}}</view>
                 </view>
               </SwipeDelete>
             </view>
@@ -180,17 +187,19 @@
       <view class="tabcontent" wx:if="{{select === '1'}}">
         <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd"  class="pathView">
           <repeat for="{{pathList}}" key="index" item="item" index="index">
-            <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
+            <view style="height: 200rpx; margin-top: 1vh;">
               <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
-                <view @tap = "notifi" class="path">
-                <view class="pathimg">
-                  <image mode="aspectFill" src="{{item.img}}" />
+                <view style="display: flex;justify-content: center;align-items: center">
+                  <view id="{{index}}" @tap = "jumpToPath" class="path">
+                    <view class="pathimg">
+                      <image mode="aspectFill" src="{{item.img}}" />
+                    </view>
+                    <view class="pathContent">
+                      <view class="pathname">{{item.name}}</view>
+                      <view class="pathdetail">步数：{{item.steps}}  转弯数：{{item.curves}}</view>
+                    </view>
+                  </view>
                 </view>
-                <view>
-                  <view class="pathname">{{item.name}}</view>
-                  <view class="pathdetail">步数：{{item.steps}}  转弯数：{{item.curves}}</view>
-                </view>
-              </view>
               </SwipeDelete1>
             </view>
           </repeat>
@@ -210,6 +219,13 @@
 
 
   export default class user extends wepy.page {
+    config={
+      navigationBarTitleText: 'User',
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
+      "enablePullDownRefresh": true,
+    };
 
     async onLoad() {
       try {
@@ -237,19 +253,14 @@
       wx.stopPullDownRefresh()
     }
 
-    config={
-      navigationBarTitleText: 'User',
-      backgroundColor: "#90b3d0",
-      "navigationBarBackgroundColor": "#90b3d0",
-      "enablePullDownRefresh": true,
-    }
+
 
     components = {
       Path: Path,
       Node: Node,
       SwipeDelete: swipeDelete,
       SwipeDelete1: swipeDelete
-    }
+    };
 
     data = {
       select:"0",
@@ -267,7 +278,17 @@
       manage:true
     };
 
+
     methods = {
+      jumpToPath(itemData){
+        console.log(itemData);
+        this.$preload('originToEnd', [this.pathList[itemData.currentTarget.id]]);
+        wx.navigateTo({
+          url: '/pages/pathInfo',
+        })
+
+      },
+
       toCollection() {
         wx.navigateTo({
           url: '/pages/collection',

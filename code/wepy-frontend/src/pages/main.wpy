@@ -107,7 +107,9 @@
     config = {
       navigationBarTitleText: "Main",
       enablePullDownRefresh: true,
-      backgroundColor: "#f6f6f6"
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
     };
     data = {
       dataSet: null,
@@ -172,7 +174,7 @@
           url: '/pages/pathInfo',
         })
       }
-    }
+    };
 
     async searchPath(data) {
       try {
