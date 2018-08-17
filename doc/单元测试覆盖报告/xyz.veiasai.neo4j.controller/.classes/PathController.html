@@ -1,0 +1,233 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PathController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PathController (xyz.veiasai.neo4j.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PathController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (44/ 44)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import io.swagger.annotations.Api;
+<i>5</i>&nbsp;import io.swagger.annotations.ApiOperation;
+<i>6</i>&nbsp;import net.bytebuddy.asm.Advice;
+<i>7</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>8</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>9</i>&nbsp;import org.springframework.validation.BindingResult;
+<i>10</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>11</i>&nbsp;import xyz.veiasai.neo4j.domain.Author;
+<i>12</i>&nbsp;import xyz.veiasai.neo4j.domain.DataSet;
+<i>13</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>14</i>&nbsp;import xyz.veiasai.neo4j.domain.Path;
+<i>15</i>&nbsp;import xyz.veiasai.neo4j.result.PathResult;
+<i>16</i>&nbsp;import xyz.veiasai.neo4j.result.Result;
+<i>17</i>&nbsp;import xyz.veiasai.neo4j.service.*;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;import javax.validation.Valid;
+<i>20</i>&nbsp;import java.util.Collection;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;@Api(value = &quot;path-controller&quot;)
+<i>23</i>&nbsp;@RestController
+<i>24</i>&nbsp;@RequestMapping(&quot;/&quot;)
+<b class="fc"><i>25</i>&nbsp;public class PathController {</b>
+<i>26</i>&nbsp;    @Autowired
+<i>27</i>&nbsp;    private PathService pathService;
+<i>28</i>&nbsp;    @Autowired
+<i>29</i>&nbsp;    private DataSetService dataSetService;
+<i>30</i>&nbsp;    @Autowired
+<i>31</i>&nbsp;    private AuthorService authorService;
+<i>32</i>&nbsp;    @Autowired
+<i>33</i>&nbsp;    private BuildingService buildingService;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    @PostMapping(&quot;/path&quot;)
+<i>36</i>&nbsp;    public PathResult pathPost(@RequestBody Path path, @RequestParam String buildingId, @RequestParam String author,
+<i>37</i>&nbsp;                               @RequestParam(required = false) String origin, @RequestParam(required = false) String end){
+<b class="fc"><i>38</i>&nbsp;        path = pathService.addPath(path);</b>
+<b class="fc"><i>39</i>&nbsp;        String id = path.getId();</b>
+<b class="fc"><i>40</i>&nbsp;        pathService.addRelation(id, buildingId, author, origin, end);</b>
+<b class="fc"><i>41</i>&nbsp;        PathResult result = new PathResult();</b>
+<b class="fc"><i>42</i>&nbsp;        result.setPath(path);</b>
+<b class="fc"><i>43</i>&nbsp;        return result;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    @GetMapping(&quot;/paths&quot;)
+<i>47</i>&nbsp;    public PathResult pathGet(@RequestParam(required = false) String buildingId,
+<i>48</i>&nbsp;                              @RequestParam(required = false, defaultValue = &quot;&quot;) String name,
+<i>49</i>&nbsp;                              @RequestParam(required = false) String dataSetId,
+<i>50</i>&nbsp;                              @RequestParam(required = false, defaultValue = &quot;0&quot;) Integer skip,
+<i>51</i>&nbsp;                              @RequestParam(required = false, defaultValue = &quot;5&quot;) Integer limit) {
+<b class="fc"><i>52</i>&nbsp;        PathResult result = new PathResult();</b>
+<b class="fc"><i>53</i>&nbsp;        if (dataSetId != null) {</b>
+<b class="fc"><i>54</i>&nbsp;            if (dataSetService.getDataSetById(dataSetId) == null) {</b>
+<b class="fc"><i>55</i>&nbsp;                result.setMessage(&quot;数据组不存在&quot;);</b>
+<b class="fc"><i>56</i>&nbsp;                result.setCode(404);</b>
+<i>57</i>&nbsp;            } else {
+<b class="fc"><i>58</i>&nbsp;                result.setPaths(dataSetService.findPathByNameLike(dataSetId, name, skip, limit));</b>
+<b class="fc"><i>59</i>&nbsp;                result.setCode(200);</b>
+<i>60</i>&nbsp;            }
+<i>61</i>&nbsp;        }
+<b class="fc"><i>62</i>&nbsp;        else if (buildingId == null)</b>
+<i>63</i>&nbsp;        {
+<b class="fc"><i>64</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>65</i>&nbsp;            result.setMessage(&quot;参数错误&quot;);</b>
+<i>66</i>&nbsp;        }
+<b class="fc"><i>67</i>&nbsp;        else if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="fc"><i>68</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>69</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<i>70</i>&nbsp;        } else {
+<b class="fc"><i>71</i>&nbsp;            result.setCode(200);    //对查询结果做判断，是否为空 to be continued</b>
+<b class="fc"><i>72</i>&nbsp;            result.setPaths(pathService.findByBuildingAndName(buildingId, name, skip, limit));</b>
+<i>73</i>&nbsp;        }
+<b class="fc"><i>74</i>&nbsp;        return result;</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    @DeleteMapping(&quot;/path&quot;)
+<i>79</i>&nbsp;    public Result pathDeleteById(@RequestParam String authorId, @RequestParam String pathId) {
+<b class="fc"><i>80</i>&nbsp;        Result result = new Result();</b>
+<b class="fc"><i>81</i>&nbsp;        if (authorService.getAuthorById(authorId) == null) {</b>
+<b class="fc"><i>82</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>83</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>84</i>&nbsp;        } else if (pathService.getPathById(pathId) == null) {</b>
+<b class="fc"><i>85</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>86</i>&nbsp;            result.setMessage(&quot;路线不存在&quot;);</b>
+<b class="fc"><i>87</i>&nbsp;        } else if(!pathService.existPathAndAuthor(authorId, pathId)){</b>
+<b class="fc"><i>88</i>&nbsp;            result.setCode(403);</b>
+<b class="fc"><i>89</i>&nbsp;            result.setMessage(&quot;用户和路线不匹配&quot;);</b>
+<i>90</i>&nbsp;        } else {
+<b class="fc"><i>91</i>&nbsp;            pathService.deletePathById(authorId, pathId);</b>
+<b class="fc"><i>92</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>93</i>&nbsp;            result.setMessage(&quot;删除路线成功&quot;);</b>
+<i>94</i>&nbsp;        }
+<b class="fc"><i>95</i>&nbsp;        return result;</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    @GetMapping(&quot;/paths/author&quot;)
+<i>99</i>&nbsp;    public PathResult pathGetByAuthor(@RequestParam String authorId,
+<i>100</i>&nbsp;                                      @RequestParam(required = false, defaultValue = &quot;&quot;) String name,
+<i>101</i>&nbsp;                                      @RequestParam(required = false, defaultValue = &quot;0&quot;) Integer skip,
+<i>102</i>&nbsp;                                      @RequestParam(required = false, defaultValue = &quot;5&quot;) Integer limit) {
+<i>103</i>&nbsp;
+<b class="fc"><i>104</i>&nbsp;        PathResult result = new PathResult();</b>
+<b class="fc"><i>105</i>&nbsp;        if (authorService.getAuthorById(authorId) == null) {</b>
+<b class="fc"><i>106</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>107</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<i>108</i>&nbsp;        } else {
+<b class="fc"><i>109</i>&nbsp;            result.setCode(200);        //对查询结果做判断，是否为空 to be continued</b>
+<b class="fc"><i>110</i>&nbsp;            result.setPaths(pathService.findByAuthorId(authorId, name, skip, limit));</b>
+<i>111</i>&nbsp;        }
+<b class="fc"><i>112</i>&nbsp;        return result;</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    /* 废弃接口
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    @GetMapping(&quot;/paths/origin&quot;)
+<i>119</i>&nbsp;    public PathResult pathGetByOrigin(@RequestParam String originId, @RequestParam String endId) {
+<i>120</i>&nbsp;        PathResult result =new PathResult();
+<i>121</i>&nbsp;        if (originId.equals(endId))
+<i>122</i>&nbsp;        {
+<i>123</i>&nbsp;            result.setCode(HttpStatus.FORBIDDEN.value());
+<i>124</i>&nbsp;            return result;
+<i>125</i>&nbsp;        }
+<i>126</i>&nbsp;        result.setPaths(pathService.findByOriginAndEnd(originId, endId));
+<i>127</i>&nbsp;        result.setCode(HttpStatus.OK.value());
+<i>128</i>&nbsp;        return result;
+<i>129</i>&nbsp;    }
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    @ApiOperation(value = &quot;查询路线&quot;,notes=&quot;name设为空，则可查询所有&quot;)
+<i>134</i>&nbsp;    @GetMapping(&quot;/paths/name&quot;)
+<i>135</i>&nbsp;    public  PathResult pathGetByName(@RequestParam(required = false,defaultValue = &quot;&quot;) String name,
+<i>136</i>&nbsp;                                            @RequestParam(required = false) Integer skip,
+<i>137</i>&nbsp;                                            @RequestParam(required = false) Integer limit){
+<i>138</i>&nbsp;        if(skip == null){
+<i>139</i>&nbsp;            skip = 0;
+<i>140</i>&nbsp;        }
+<i>141</i>&nbsp;        if(limit == null){
+<i>142</i>&nbsp;            limit = 5;
+<i>143</i>&nbsp;        }
+<i>144</i>&nbsp;        PathResult result =new PathResult();
+<i>145</i>&nbsp;        result.setPaths(pathService.findByName(name,skip,limit));
+<i>146</i>&nbsp;        return result;
+<i>147</i>&nbsp;    }
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;    */
+<i>150</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

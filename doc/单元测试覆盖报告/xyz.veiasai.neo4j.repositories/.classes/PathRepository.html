@@ -1,0 +1,105 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PathRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.repositories</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PathRepository (xyz.veiasai.neo4j.repositories)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">PathRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.repositories;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.data.neo4j.annotation.Query;
+<i>4</i>&nbsp;import org.springframework.data.neo4j.repository.Neo4jRepository;
+<i>5</i>&nbsp;import org.springframework.data.repository.query.Param;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Path;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.Collection;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;public interface PathRepository extends Neo4jRepository&lt;Path, String&gt; {
+<i>12</i>&nbsp;    @Query(&quot;MATCH (p:Path) where p.name =~ (&#39;.*&#39;+{Name}+&#39;.*&#39;)&quot; +
+<i>13</i>&nbsp;            &quot;RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}&quot;)
+<i>14</i>&nbsp;    public Collection&lt;Path&gt; findByNameLike(@Param(&quot;Name&quot;) String Name, @Param(&quot;skip&quot;) Integer skip, @Param(&quot;limit&quot;) Integer limit);
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    @Query(&quot;MATCH (:Node {id: {nodeId}})-[PATH]-&gt;(n:Path) RETURN n&quot;)
+<i>17</i>&nbsp;    public Collection&lt;Path&gt; findByOrigin(@Param(&quot;nodeId&quot;) String nodeId);
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @Query(&quot;MATCH (:Building {id:{buildingId}})-[:BUILDING]-(p:Path) WHERE p.name=~(&#39;.*&#39;+{name}+&#39;.*&#39;)&quot; +
+<i>20</i>&nbsp;            &quot;RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}&quot;)
+<i>21</i>&nbsp;    public Collection&lt;Path&gt; findByBuildingAndName(@Param(&quot;buildingId&quot;) String buildingId,
+<i>22</i>&nbsp;                                                  @Param(&quot;name&quot;) String name,
+<i>23</i>&nbsp;                                                  @Param(&quot;skip&quot;) Integer skip,
+<i>24</i>&nbsp;                                                  @Param(&quot;limit&quot;) Integer limit);
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Query(&quot;match (building:Building {id:{buildingId}}), (author:Author {id:{author}}), (path: Path {id:{pathId}})&quot; +
+<i>27</i>&nbsp;            &quot;merge (author)-[:AUTHOR]-(path)-[:BUILDING]-(building)&quot;
+<i>28</i>&nbsp;    )
+<i>29</i>&nbsp;    public void addRelationBuildingAndAuthor(@Param(&quot;pathId&quot;) String pathId, @Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;author&quot;) String author);
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    @Query(&quot;match (origin:Node {id:{origin}}), (end:Node {id:{end}}), (path: Path {id:{pathId}})&quot; +
+<i>32</i>&nbsp;            &quot;merge (origin)-[:PATH {node:{origin}, path:{pathId}}]-&gt;(path)-[:PATH {node:{end},path:{pathId}}]-&gt;(end)&quot;
+<i>33</i>&nbsp;    )
+<i>34</i>&nbsp;    public void addRelationOriginAndEnd(@Param(&quot;pathId&quot;) String pathId, @Param(&quot;origin&quot;) String origin, @Param(&quot;end&quot;) String end);
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @Query(&quot;MATCH (n1:Node {id:{originId}}),(n2:Node {id:{endId}}) ,&quot; +
+<i>37</i>&nbsp;            &quot;p = shortestpath((n1)-[:PATH*..25]-&gt;(n2)) RETURN p&quot;)
+<i>38</i>&nbsp;    public Collection&lt;Path&gt; findByOriginAndEnd(@Param(&quot;originId&quot;) String originId, @Param(&quot;endId&quot;) String endId);
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    @Query(&quot;match (n:Author {id:{authorId}})-[:AUTHOR]-&gt;(r:Path) where r.name=~(&#39;.*&#39;+{name}+&#39;.*&#39;)&quot; +
+<i>41</i>&nbsp;            &quot;RETURN r ORDER BY r.name SKIP {skip} LIMIT {limit}&quot;)
+<i>42</i>&nbsp;    public Collection&lt;Path&gt; findByAuthorId(@Param(&quot;authorId&quot;) String authorId,
+<i>43</i>&nbsp;                                           @Param(&quot;name&quot;) String name,
+<i>44</i>&nbsp;                                           @Param(&quot;skip&quot;) Integer skip,
+<i>45</i>&nbsp;                                           @Param(&quot;limit&quot;) Integer limit);
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Query(&quot;Match (p:Path {id:{pathId}})-[r:AUTHOR]-(a:Author {id:{authorId}}) return count(r)&quot;)
+<i>48</i>&nbsp;    public int countPathByAuthorId(@Param(&quot;authorId&quot;) String authorId, @Param(&quot;pathId&quot;) String pathId);
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Query(&quot;Match (a:Author{id:{authorId}})-[:AUTHOR]-(p:Path {id:{pathId}}) detach delete p&quot;)
+<i>51</i>&nbsp;    public void deletePathById(@Param(&quot;authorId&quot;) String authorId, @Param(&quot;pathId&quot;) String pathId);
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    @Query(&quot;Match (p:Path {id:{pathId}}) detach delete p&quot;)
+<i>54</i>&nbsp;    public void deletePathByAdmin(@Param(&quot;pathId&quot;) String pathId);
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    @Query(&quot;Match (b:Building{id:{buildingId}})-[r:BUILDING]-(p:Path {id:{pathId}}) return count(r)&quot;)
+<i>57</i>&nbsp;    public int countBuildingAndPath(@Param(&quot;buildingId&quot;)String buildingId, @Param(&quot;pathId&quot;) String pathId);
+<i>58</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

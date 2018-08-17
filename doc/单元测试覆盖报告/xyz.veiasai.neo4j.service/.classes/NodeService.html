@@ -1,0 +1,191 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: NodeService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: NodeService (xyz.veiasai.neo4j.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NodeService</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89.5%
+  </span>
+  <span class="absValue">
+    (17/ 19)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NodeService$$EnhancerBySpringCGLIB$$2e7d38a3</td>
+  </tr>
+  <tr>
+    <td class="name">NodeService$$EnhancerBySpringCGLIB$$2e7d38a3$$FastClassBySpringCGLIB$$b2438ca5</td>
+  </tr>
+  <tr>
+    <td class="name">NodeService$$FastClassBySpringCGLIB$$7bb5b2cb</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89.5%
+  </span>
+  <span class="absValue">
+    (17/ 19)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>4</i>&nbsp;import org.springframework.stereotype.Service;
+<i>5</i>&nbsp;import org.springframework.transaction.annotation.Transactional;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.repositories.NodeRepository;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.*;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;@Service
+<i>12</i>&nbsp;@Transactional
+<b class="fc"><i>13</i>&nbsp;public class NodeService {</b>
+<i>14</i>&nbsp;    @Autowired
+<i>15</i>&nbsp;    private NodeRepository nodeRepository;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    @Transactional(readOnly = true)
+<i>18</i>&nbsp;    public Node addNode(Node node, String buildingId, String authorId) {
+<b class="fc"><i>19</i>&nbsp;        node.setId(null);</b>
+<b class="fc"><i>20</i>&nbsp;        node.setState(1);</b>
+<b class="fc"><i>21</i>&nbsp;        node = nodeRepository.save(node);</b>
+<b class="fc"><i>22</i>&nbsp;        nodeRepository.addRelationBuildingAndAuthor(node.getId(), buildingId, authorId);</b>
+<b class="fc"><i>23</i>&nbsp;        return node;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Transactional(readOnly = true)
+<i>27</i>&nbsp;    public Collection&lt;Node&gt; findByBuildingAndName(String buildingId, String name, Integer skip, Integer limit) {
+<b class="fc"><i>28</i>&nbsp;        return nodeRepository.findByBuildingAndNameLike(buildingId, name, skip, limit);</b>
+<i>29</i>&nbsp;    }
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    @Transactional(readOnly = true)
+<i>32</i>&nbsp;    public Node findById(String id) {
+<b class="fc"><i>33</i>&nbsp;        return nodeRepository.findById(id).orElse(null);</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @Transactional(readOnly = true)
+<i>37</i>&nbsp;    public Set&lt;Map&lt;String, Object&gt;&gt; findAllPathsByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit) {
+<b class="fc"><i>38</i>&nbsp;        return nodeRepository.findAllPathsByTwoNodeId(nId1, nId2, skip, limit);</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    @Transactional(readOnly = true)
+<i>42</i>&nbsp;    public Collection&lt;Node&gt; findByOriginNode(String originId, String name, Integer skip, Integer limit) {
+<b class="fc"><i>43</i>&nbsp;        return nodeRepository.findByOriginNode(originId, name, skip, limit);</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    @Transactional(readOnly = true)
+<i>47</i>&nbsp;    public Collection&lt;Node&gt; findByBuildingAndAuthor(String buildingId, String authorId, Integer skip, Integer limit) {
+<b class="fc"><i>48</i>&nbsp;        return nodeRepository.findByBuildingAndAuthor(buildingId, authorId, skip, limit);</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @Transactional(readOnly = true)
+<i>53</i>&nbsp;    public Collection&lt;Node&gt; findByAuthorAndName(String authorId, String name, Integer skip, Integer limit) {
+<b class="fc"><i>54</i>&nbsp;        return nodeRepository.findByAuthorId(authorId, name, skip, limit);</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    @Transactional(readOnly = true)
+<i>58</i>&nbsp;    public void deleteNodeById(String auhtorId, String nodeId) {
+<b class="fc"><i>59</i>&nbsp;        nodeRepository.deleteNodeById(auhtorId, nodeId);</b>
+<b class="fc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    @Transactional(readOnly = true)
+<i>63</i>&nbsp;    public void deleteNodeByAdmin(String nodeId) {
+<b class="fc"><i>64</i>&nbsp;        nodeRepository.deleteNodeByAdmin(nodeId);</b>
+<b class="fc"><i>65</i>&nbsp;    }</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    @Transactional(readOnly = true)
+<i>68</i>&nbsp;    public boolean existBuildingAndNode(String buildingId,String nodeId){
+<b class="fc"><i>69</i>&nbsp;        return nodeRepository.countBuildingAndNode(buildingId, nodeId)!=0;</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;    @Transactional(readOnly = true)
+<i>72</i>&nbsp;    public void updateNodeByAdmin(Node node){
+<b class="nc"><i>73</i>&nbsp;        nodeRepository.save(node);</b>
+<i>74</i>&nbsp;
+<b class="nc"><i>75</i>&nbsp;    }</b>
+<i>76</i>&nbsp;    /*废弃接口
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    @Transactional(readOnly = true)
+<i>79</i>&nbsp;    public Collection&lt;Node&gt; findByBuilding(String building,Integer skip,Integer limit)
+<i>80</i>&nbsp;    {
+<i>81</i>&nbsp;        return nodeRepository.findByBuildingId(building,skip,limit);
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    public Node update(Node node) {return nodeRepository.save(node);};
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    @Transactional(readOnly = true)
+<i>87</i>&nbsp;    public Set&lt;Map&lt;String, Object&gt;&gt; findByTwoNodeId(String nId1, String nId2, Integer skip, Integer limit)
+<i>88</i>&nbsp;    {
+<i>89</i>&nbsp;        return nodeRepository.findByTwoNodeId(nId1, nId2, skip,limit);
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DataSetService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DataSetService (xyz.veiasai.neo4j.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataSetService</td>
+<td class="coverageStat">
+  <span class="percent">
+    78.3%
+  </span>
+  <span class="absValue">
+    (18/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88%
+  </span>
+  <span class="absValue">
+    (44/ 50)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DataSetService$$EnhancerBySpringCGLIB$$fdf227d1</td>
+  </tr>
+  <tr>
+    <td class="name">DataSetService$$EnhancerBySpringCGLIB$$fdf227d1$$FastClassBySpringCGLIB$$15e22b30</td>
+  </tr>
+  <tr>
+    <td class="name">DataSetService$$FastClassBySpringCGLIB$$157633c5</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    78.3%
+  </span>
+  <span class="absValue">
+    (18/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88%
+  </span>
+  <span class="absValue">
+    (44/ 50)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>4</i>&nbsp;import org.springframework.stereotype.Service;
+<i>5</i>&nbsp;import org.springframework.transaction.annotation.Transactional;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.DataSet;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.Path;
+<i>9</i>&nbsp;import xyz.veiasai.neo4j.repositories.DataSetRepository;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.util.Collection;
+<i>12</i>&nbsp;import java.util.Iterator;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;@Service
+<i>16</i>&nbsp;@Transactional
+<b class="fc"><i>17</i>&nbsp;public class DataSetService {</b>
+<i>18</i>&nbsp;    @Autowired
+<i>19</i>&nbsp;    private DataSetRepository dataSetRepository;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    @Transactional(readOnly = true)
+<i>22</i>&nbsp;    public DataSet addDataSet(DataSet dataSet, String buildingId, String authorId) {
+<b class="fc"><i>23</i>&nbsp;        dataSet.setId(null);</b>
+<b class="fc"><i>24</i>&nbsp;        dataSet = dataSetRepository.save(dataSet);</b>
+<b class="fc"><i>25</i>&nbsp;        String dataSetId = dataSet.getId();</b>
+<b class="fc"><i>26</i>&nbsp;        dataSetRepository.addRelationBuildingAndAuthor(dataSetId, buildingId, authorId);</b>
+<b class="fc"><i>27</i>&nbsp;        return dataSet;</b>
+<i>28</i>&nbsp;    }
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    @Transactional
+<i>31</i>&nbsp;    public DataSet findById(String dataSetId){
+<b class="nc"><i>32</i>&nbsp;        return dataSetRepository.findById(dataSetId).orElse(null);</b>
+<i>33</i>&nbsp;    }
+<i>34</i>&nbsp;    @Transactional(readOnly = true)
+<i>35</i>&nbsp;    public DataSet getDataSetById(String dataSetId) {
+<b class="fc"><i>36</i>&nbsp;        return dataSetRepository.findDataSetById(dataSetId);</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    @Transactional(readOnly = true)
+<i>40</i>&nbsp;    public Collection&lt;DataSet&gt; getDataSetByName(String dataSetName, Integer skip, Integer limit) {
+<b class="nc"><i>41</i>&nbsp;        return dataSetRepository.findDataSetByName(dataSetName, skip, limit);</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Transactional
+<i>45</i>&nbsp;    public void deleteDataSetByAuthor(String authorId,String dataSetId) {
+<b class="fc"><i>46</i>&nbsp;        dataSetRepository.deleteDataSetByAuthor(authorId,dataSetId);</b>
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;    @Transactional
+<i>49</i>&nbsp;    public void deleteDataSetByAdmin(String dataSetId){
+<b class="nc"><i>50</i>&nbsp;        dataSetRepository.deleteDataSetByAdmin(dataSetId);</b>
+<b class="nc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    @Transactional(readOnly = true)
+<i>54</i>&nbsp;    public void addRelationNodes(String dataSetId, List&lt;String&gt; NodeIds) {
+<b class="fc"><i>55</i>&nbsp;        Iterator it = NodeIds.iterator();</b>
+<b class="fc"><i>56</i>&nbsp;        while (it.hasNext()) {</b>
+<b class="fc"><i>57</i>&nbsp;            String nodeId = it.next().toString();</b>
+<b class="fc"><i>58</i>&nbsp;            addRelationNode(dataSetId, nodeId);</b>
+<b class="fc"><i>59</i>&nbsp;        }</b>
+<i>60</i>&nbsp;
+<b class="fc"><i>61</i>&nbsp;    }</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    @Transactional(readOnly = true)
+<i>64</i>&nbsp;    public void addRelationNode(String dataSetId, String nodeId) {
+<b class="fc"><i>65</i>&nbsp;        dataSetRepository.addRelationDataSetAndNode(dataSetId, nodeId);</b>
+<b class="fc"><i>66</i>&nbsp;    }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    @Transactional()
+<i>69</i>&nbsp;    public void deleteRelationNode(String dataSetId, String nodeId) {
+<b class="fc"><i>70</i>&nbsp;        dataSetRepository.deleteRelationDataSetAndNode(dataSetId, nodeId);</b>
+<b class="fc"><i>71</i>&nbsp;    }</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    @Transactional()
+<i>74</i>&nbsp;    public void deleteRelationNodes(String dataSetId, List&lt;String&gt; NodeIds) {
+<b class="fc"><i>75</i>&nbsp;        for (Object NodeId : NodeIds) {</b>
+<b class="fc"><i>76</i>&nbsp;            String nodeId = NodeId.toString();</b>
+<b class="fc"><i>77</i>&nbsp;            deleteRelationNode(dataSetId, nodeId);</b>
+<b class="fc"><i>78</i>&nbsp;        }</b>
+<b class="fc"><i>79</i>&nbsp;    }</b>
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    @Transactional
+<i>82</i>&nbsp;    public Collection&lt;Node&gt; findNodesByNameLike(String dataSetId, String nodeName, Integer skip, Integer limit){
+<b class="fc"><i>83</i>&nbsp;        return dataSetRepository.findNodesByNameLike(dataSetId,nodeName,skip,limit);</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    @Transactional
+<i>87</i>&nbsp;    public Collection&lt;Node&gt; searchAllNodes(String dataSetId){
+<b class="nc"><i>88</i>&nbsp;        return dataSetRepository.findAllNodes(dataSetId);</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    @Transactional()
+<i>92</i>&nbsp;    public void deleteRelationPath(String dataSetId, String pathId) {
+<b class="fc"><i>93</i>&nbsp;        dataSetRepository.deleteRelationDataSetAndPath(dataSetId, pathId);</b>
+<b class="fc"><i>94</i>&nbsp;    }</b>
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    @Transactional(readOnly = true)
+<i>97</i>&nbsp;    public void addRelationPaths(String dataSetId, List&lt;String&gt; PathIds) {
+<b class="fc"><i>98</i>&nbsp;        for (Object PathId : PathIds) {</b>
+<b class="fc"><i>99</i>&nbsp;            String pathId = PathId.toString();</b>
+<b class="fc"><i>100</i>&nbsp;            addRelationPath(dataSetId, pathId);</b>
+<b class="fc"><i>101</i>&nbsp;        }</b>
+<i>102</i>&nbsp;
+<b class="fc"><i>103</i>&nbsp;    }</b>
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    @Transactional(readOnly = true)
+<i>106</i>&nbsp;    public void addRelationPath(String dataSetId, String pathId) {
+<b class="fc"><i>107</i>&nbsp;        dataSetRepository.addRelationDataSetAndPath(dataSetId, pathId);</b>
+<b class="fc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    @Transactional(readOnly = true)
+<i>111</i>&nbsp;    public void deleteRelationPaths(String dataSetId, List&lt;String&gt; PathIds) {
+<b class="fc"><i>112</i>&nbsp;        for (Object PathId : PathIds) {</b>
+<b class="fc"><i>113</i>&nbsp;            String pathId = PathId.toString();</b>
+<b class="fc"><i>114</i>&nbsp;            deleteRelationPath(dataSetId, pathId);</b>
+<b class="fc"><i>115</i>&nbsp;        }</b>
+<b class="fc"><i>116</i>&nbsp;    }</b>
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    @Transactional
+<i>119</i>&nbsp;    public Collection&lt;Path&gt; findPathByNameLike(String dataSetId, String pathName, Integer skip, Integer limit){
+<b class="fc"><i>120</i>&nbsp;        return dataSetRepository.findPathsByNameLike(dataSetId,pathName,skip,limit);</b>
+<i>121</i>&nbsp;    }
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    @Transactional
+<i>124</i>&nbsp;    public Collection&lt;DataSet&gt; findDataSetByBuildingAndName(String buildingId,String dataSetName,Integer skip,Integer limit){
+<b class="fc"><i>125</i>&nbsp;        return dataSetRepository.findByBuildingAndName(buildingId,dataSetName,skip,limit);</b>
+<i>126</i>&nbsp;    }
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    @Transactional(readOnly = true)
+<i>129</i>&nbsp;    public Collection&lt;DataSet&gt; findDataSetByBuildingAndAuthor(String buildingId, String authorId, Integer skip, Integer limit) {
+<b class="fc"><i>130</i>&nbsp;        return dataSetRepository.findByBuildingAndAuthor(buildingId, authorId, skip, limit);</b>
+<i>131</i>&nbsp;    }
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    @Transactional(readOnly = true)
+<i>134</i>&nbsp;    public Collection&lt;DataSet&gt; findDataSetByAuthorAndName(String authorId, String dataSetName, Integer skip, Integer limit) {
+<b class="fc"><i>135</i>&nbsp;        return dataSetRepository.findByAuthorAndName(authorId, dataSetName, skip, limit);</b>
+<i>136</i>&nbsp;    }
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    @Transactional
+<i>139</i>&nbsp;    public boolean existBuildingAndDataSet(String buildingId,String dataSetId){
+<b class="nc"><i>140</i>&nbsp;        return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId) == 0;</b>
+<i>141</i>&nbsp;    }
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;    @Transactional
+<i>144</i>&nbsp;    public boolean existAuthorAndDataSet(String authorId,String dataSetId){
+<b class="fc"><i>145</i>&nbsp;        return dataSetRepository.countAuthorAndDataSet(authorId, dataSetId)!=0;</b>
+<i>146</i>&nbsp;    }
+<i>147</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

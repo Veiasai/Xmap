@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Swagger</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Swagger (xyz.veiasai.neo4j)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Swagger</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Swagger$$EnhancerBySpringCGLIB$$eb9dc75d</td>
+  </tr>
+  <tr>
+    <td class="name">Swagger$$EnhancerBySpringCGLIB$$eb9dc75d$$FastClassBySpringCGLIB$$fcbef909</td>
+  </tr>
+  <tr>
+    <td class="name">Swagger$$FastClassBySpringCGLIB$$817c0d3b</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.context.annotation.Bean;
+<i>4</i>&nbsp;import org.springframework.context.annotation.Configuration;
+<i>5</i>&nbsp;import springfox.documentation.builders.ApiInfoBuilder;
+<i>6</i>&nbsp;import springfox.documentation.builders.PathSelectors;
+<i>7</i>&nbsp;import springfox.documentation.builders.RequestHandlerSelectors;
+<i>8</i>&nbsp;import springfox.documentation.service.ApiInfo;
+<i>9</i>&nbsp;import springfox.documentation.spi.DocumentationType;
+<i>10</i>&nbsp;import springfox.documentation.spring.web.plugins.Docket;
+<i>11</i>&nbsp;import springfox.documentation.swagger2.annotations.EnableSwagger2;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;@Configuration
+<i>14</i>&nbsp;@EnableSwagger2
+<b class="fc"><i>15</i>&nbsp;public class Swagger {</b>
+<i>16</i>&nbsp;    @Bean
+<i>17</i>&nbsp;    public Docket createRestApi(){
+<b class="fc"><i>18</i>&nbsp;        return new Docket(DocumentationType.SWAGGER_2)</b>
+<b class="fc"><i>19</i>&nbsp;                .apiInfo(apiInfo())</b>
+<b class="fc"><i>20</i>&nbsp;                .select()</b>
+<b class="fc"><i>21</i>&nbsp;                .apis(RequestHandlerSelectors.basePackage(&quot;xyz.veiasai.neo4j.controller&quot;))</b>
+<b class="fc"><i>22</i>&nbsp;                .paths(PathSelectors.any())</b>
+<b class="fc"><i>23</i>&nbsp;                .build();</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    private ApiInfo apiInfo(){
+<b class="fc"><i>27</i>&nbsp;        return new ApiInfoBuilder()</b>
+<b class="fc"><i>28</i>&nbsp;                .title(&quot;小寻导航api文档&quot;)</b>
+<b class="fc"><i>29</i>&nbsp;                .description(&quot;spring-mvc restful&quot;)</b>
+<b class="fc"><i>30</i>&nbsp;                .version(&quot;1.0&quot;)</b>
+<b class="fc"><i>31</i>&nbsp;                .build();</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

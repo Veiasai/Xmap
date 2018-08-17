@@ -1,0 +1,128 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Address</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.domain</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Address (xyz.veiasai.neo4j.domain)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Address</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (4/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.7%
+  </span>
+  <span class="absValue">
+    (8/ 11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.domain;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+<i>4</i>&nbsp;import org.neo4j.ogm.annotation.GeneratedValue;
+<i>5</i>&nbsp;import org.neo4j.ogm.annotation.Id;
+<i>6</i>&nbsp;import org.neo4j.ogm.annotation.NodeEntity;
+<i>7</i>&nbsp;import org.neo4j.ogm.annotation.Relationship;
+<i>8</i>&nbsp;import org.neo4j.ogm.id.UuidStrategy;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import javax.validation.constraints.NotNull;
+<i>11</i>&nbsp;import java.util.Collection;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;@NodeEntity
+<i>14</i>&nbsp;public class Address {
+<i>15</i>&nbsp;    @Id
+<i>16</i>&nbsp;    @NotNull
+<i>17</i>&nbsp;    private String address;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @JsonIgnore
+<i>20</i>&nbsp;    @Relationship(type = &quot;IN-ADDRESS&quot;)
+<i>21</i>&nbsp;    private Collection&lt;Building&gt; buildings;
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;    public Address() {</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;    public Address(@NotNull String address) {</b>
+<b class="fc"><i>27</i>&nbsp;        this.address = address;</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    public String getAddress() {
+<b class="fc"><i>31</i>&nbsp;        return address;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public void setAddress(String address) {
+<b class="fc"><i>35</i>&nbsp;        this.address = address;</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public Collection&lt;Building&gt; getBuildings() {
+<b class="nc"><i>39</i>&nbsp;        return buildings;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    public void setBuildings(Collection&lt;Building&gt; buildings) {
+<b class="nc"><i>43</i>&nbsp;        this.buildings = buildings;</b>
+<b class="nc"><i>44</i>&nbsp;    }</b>
+<i>45</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

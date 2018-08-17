@@ -1,0 +1,154 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DataSetRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.repositories</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DataSetRepository (xyz.veiasai.neo4j.repositories)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DataSetRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.repositories;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.data.neo4j.annotation.Query;
+<i>4</i>&nbsp;import org.springframework.data.neo4j.repository.Neo4jRepository;
+<i>5</i>&nbsp;import org.springframework.data.repository.query.Param;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.DataSet;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.Path;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import javax.xml.crypto.Data;
+<i>11</i>&nbsp;import java.util.Collection;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;public interface DataSetRepository extends Neo4jRepository&lt;DataSet, String&gt; {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Query(&quot;Match (d:DataSet{id:{dataSetId}}) return d&quot;)
+<i>16</i>&nbsp;    public DataSet findDataSetById(@Param(&quot;dataSetId&quot;) String dataSetId);
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    @Query(&quot;Match (d:DataSet) where d.name =~ (&#39;.*&#39;+Name+&#39;.*&#39;) return d &quot; +
+<i>19</i>&nbsp;            &quot;order by d.name SKIP{skip} LIMIT{limit} &quot;)
+<i>20</i>&nbsp;    public Collection&lt;DataSet&gt; findDataSetByName(@Param(&quot;Name&quot;) String Name, @Param(&quot;skip&quot;) Integer skip,
+<i>21</i>&nbsp;                                                 @Param(&quot;limit&quot;) Integer limit);
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    @Query(&quot;match (building:Building {id:{buildingId}}),(author:Author {id:{authorId}}),(dataset:DataSet {id:{dataSetId}}) &quot; +
+<i>24</i>&nbsp;            &quot;merge (author)-[:AUTHOR]-&gt;(dataset)&lt;-[:BUILDING]-(building)&quot;
+<i>25</i>&nbsp;    )
+<i>26</i>&nbsp;    public void addRelationBuildingAndAuthor(@Param(&quot;dataSetId&quot;) String dataSetId, @Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @Query(&quot;Match (node:Node {id:{nodeId}}),(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>29</i>&nbsp;            &quot;merge (node)-[:NODE]-&gt;(dataset)&quot;
+<i>30</i>&nbsp;    )
+<i>31</i>&nbsp;    public void addRelationDataSetAndNode(@Param(&quot;dataSetId&quot;) String dataSetId, @Param(&quot;nodeId&quot;) String nodeId);
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @Query(&quot;Match (node:Node {id:{nodeId}})-[r:NODE]-&gt;(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>34</i>&nbsp;            &quot;Delete r&quot;
+<i>35</i>&nbsp;    )
+<i>36</i>&nbsp;    public void deleteRelationDataSetAndNode(@Param(&quot;dataSetId&quot;) String dataSetId, @Param(&quot;nodeId&quot;) String nodeId);
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    @Query(&quot;Match (node:Node)-[:NODE]-&gt;(dataset:DataSet {id:{dataSetId}}) where node.name =~ (&#39;.*&#39;+{nodeName}+&#39;.*&#39;)&quot; +
+<i>39</i>&nbsp;            &quot;RETURN node ORDER BY node.name SKIP {skip} LIMIT {limit}&quot;
+<i>40</i>&nbsp;    )
+<i>41</i>&nbsp;    public Collection&lt;Node&gt; findNodesByNameLike(@Param(&quot;dataSetId&quot;) String dataSetId,
+<i>42</i>&nbsp;                                                @Param(&quot;nodeName&quot;) String nodeName,
+<i>43</i>&nbsp;                                                @Param(&quot;skip&quot;)Integer skip,
+<i>44</i>&nbsp;                                                @Param(&quot;limit&quot;)Integer limit);
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Query(&quot;Match (node:Node)-[:NODE]-&gt;(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>48</i>&nbsp;            &quot;return node&quot;
+<i>49</i>&nbsp;    )
+<i>50</i>&nbsp;    public Collection&lt;Node&gt; findAllNodes(@Param(&quot;dataSetId&quot;) String dataSetId);
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @Query(&quot;Match (path:Path)-[:PATH]-&gt;(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>53</i>&nbsp;            &quot;return path&quot;
+<i>54</i>&nbsp;    )
+<i>55</i>&nbsp;    public Collection&lt;Path&gt; findAllPaths(@Param(&quot;dataSetId&quot;) String dataSetId);
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    @Query(&quot;Match (p:Path {id:{pathId}}),(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>59</i>&nbsp;            &quot;merge (p)-[:PATH]-(dataset)&quot;
+<i>60</i>&nbsp;    )
+<i>61</i>&nbsp;    public void addRelationDataSetAndPath(@Param(&quot;dataSetId&quot;) String dataSetId, @Param(&quot;pathId&quot;) String pathId);
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    @Query(&quot;Match (p:Path {id:{pathId}})-[r:PATH]-(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>64</i>&nbsp;            &quot;Delete r&quot;
+<i>65</i>&nbsp;    )
+<i>66</i>&nbsp;    public void deleteRelationDataSetAndPath(@Param(&quot;dataSetId&quot;) String dataSetId, @Param(&quot;pathId&quot;) String pathId);
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    @Query(&quot;Match (p:Path)-[:PATH]-(dataset:DataSet {id:{dataSetId}}) where p.name =~(&#39;.*&#39;+{pathName}+&#39;.*&#39;)&quot; +
+<i>69</i>&nbsp;            &quot;RETURN p ORDER BY p.name SKIP {skip} LIMIT {limit}&quot;
+<i>70</i>&nbsp;    )
+<i>71</i>&nbsp;    public Collection&lt;Path&gt; findPathsByNameLike(@Param(&quot;dataSetId&quot;) String dataSetId,
+<i>72</i>&nbsp;                                                @Param(&quot;pathName&quot;) String pathName,
+<i>73</i>&nbsp;                                                @Param(&quot;skip&quot;)Integer skip,
+<i>74</i>&nbsp;                                                @Param(&quot;limit&quot;)Integer limit);
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}})-[:AUTHOR]-(d:DataSet {id:{dataSetId}}) Detach Delete d&quot;)
+<i>77</i>&nbsp;    public void deleteDataSetByAuthor(@Param(&quot;authorId&quot;)String authorId,@Param(&quot;dataSetId&quot;) String dataSetId);
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    @Query(&quot;Match (d:DataSet)-[:BUILDING]-(b:Building {id:{buildingId}}) where d.name =~ (&#39;.*&#39;+{Name}+&#39;.*&#39;)&quot; +
+<i>80</i>&nbsp;            &quot;RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}&quot;)
+<i>81</i>&nbsp;    public Collection&lt;DataSet&gt; findByBuildingAndName(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;Name&quot;) String Name, @Param(&quot;skip&quot;) Integer skip, @Param(&quot;limit&quot;) Integer limit);
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    @Query(&quot;Match (d:DataSet)-[:BUILDING]-(b:Building {id:{buildingId}}),(d:DataSet)-[:AUTHOR]-(a:Author {id:{authorId}})&quot; +
+<i>84</i>&nbsp;            &quot;RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}&quot;)
+<i>85</i>&nbsp;    public Collection&lt;DataSet&gt; findByBuildingAndAuthor(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId, @Param(&quot;skip&quot;) Integer skip, @Param(&quot;limit&quot;) Integer limit);
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;    @Query(&quot;Match (d:DataSet)-[:AUTHOR]-(a:Author {id:{authorId}}) where d.name =~ (&#39;.*&#39;+{Name}+&#39;.*&#39;)&quot; +
+<i>88</i>&nbsp;            &quot;RETURN d ORDER BY d.name SKIP {skip} LIMIT {limit}&quot;)
+<i>89</i>&nbsp;    public Collection&lt;DataSet&gt; findByAuthorAndName(@Param(&quot;authorId&quot;) String authorId, @Param(&quot;Name&quot;) String Name, @Param(&quot;skip&quot;) Integer skip, @Param(&quot;limit&quot;) Integer limit);
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    @Query(&quot;Match (b:Building{id:{buildingId}})-[r:BUILDING]-(d:DataSet {id:{dataSetId}}) return count(r)&quot;)
+<i>92</i>&nbsp;    public int countBuildingAndDataSet(@Param(&quot;buildingId&quot;)String buildingId, @Param(&quot;dataSetId&quot;) String dataSetId);
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    @Query(&quot;Match (a:Author{id:{authorId}})-[r:AUTHOR]-(d:DataSet {id:{dataSetId}}) return count(r)&quot;)
+<i>95</i>&nbsp;    public int countAuthorAndDataSet(@Param(&quot;authorId&quot;)String authorId, @Param(&quot;dataSetId&quot;) String dataSetId);
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    @Query(&quot;Match (d:DataSet {id:{dataSetId}}) Detach Delete d&quot;)
+<i>98</i>&nbsp;    public void deleteDataSetByAdmin(@Param(&quot;dataSetId&quot;) String dataSetId);
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    /* 废弃接口
+<i>101</i>&nbsp;    @Query(&quot;Match (p:Path)-[:PATH]-&gt;(dataset:DataSet {id:{dataSetId}})&quot; +
+<i>102</i>&nbsp;            &quot;return p&quot;
+<i>103</i>&nbsp;    )
+<i>104</i>&nbsp;    public Collection&lt;Path&gt; SearchAllPaths(@Param(&quot;dataSetId&quot;) String dataSetId);
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

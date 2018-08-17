@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AuthorService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AuthorService (xyz.veiasai.neo4j.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthorService</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90.3%
+  </span>
+  <span class="absValue">
+    (28/ 31)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AuthorService$$EnhancerBySpringCGLIB$$34a7be08</td>
+  </tr>
+  <tr>
+    <td class="name">AuthorService$$EnhancerBySpringCGLIB$$34a7be08$$FastClassBySpringCGLIB$$7bd4bf79</td>
+  </tr>
+  <tr>
+    <td class="name">AuthorService$$FastClassBySpringCGLIB$$9b4da522</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90.3%
+  </span>
+  <span class="absValue">
+    (28/ 31)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.neo4j.driver.v1.types.Path;
+<i>4</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>5</i>&nbsp;import org.springframework.stereotype.Service;
+<i>6</i>&nbsp;import org.springframework.transaction.annotation.Transactional;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Author;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.DataSet;
+<i>9</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>10</i>&nbsp;import xyz.veiasai.neo4j.repositories.AuthorRepository;
+<i>11</i>&nbsp;import xyz.veiasai.neo4j.repositories.DataSetRepository;
+<i>12</i>&nbsp;import xyz.veiasai.neo4j.repositories.NodeRepository;
+<i>13</i>&nbsp;import xyz.veiasai.neo4j.repositories.PathRepository;
+<i>14</i>&nbsp;import xyz.veiasai.neo4j.result.DataSetResult;
+<i>15</i>&nbsp;import xyz.veiasai.neo4j.result.FavoriteResult;
+<i>16</i>&nbsp;import xyz.veiasai.neo4j.result.NodeResult;
+<i>17</i>&nbsp;import xyz.veiasai.neo4j.result.PathResult;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;import javax.print.DocFlavor;
+<i>20</i>&nbsp;import java.util.List;
+<i>21</i>&nbsp;import java.util.Optional;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;@Service
+<i>24</i>&nbsp;@Transactional
+<b class="fc"><i>25</i>&nbsp;public class AuthorService {</b>
+<i>26</i>&nbsp;    @Autowired
+<i>27</i>&nbsp;    private AuthorRepository authorRepository;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Autowired
+<i>30</i>&nbsp;    private NodeRepository nodeRepository;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    @Autowired
+<i>33</i>&nbsp;    private PathRepository pathRepository;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    @Autowired
+<i>36</i>&nbsp;    private DataSetRepository dataSetRepository;
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    @Transactional(readOnly = true)
+<i>39</i>&nbsp;    public Author addAuthor(Author author) {
+<b class="nc"><i>40</i>&nbsp;        Optional&lt;Author&gt; optionalAuthor = authorRepository.findById(author.getId());</b>
+<b class="nc"><i>41</i>&nbsp;        return optionalAuthor.orElseGet(()-&gt;authorRepository.save(author));</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Transactional(readOnly = true)
+<i>45</i>&nbsp;    public Author findById(String id) {
+<b class="fc"><i>46</i>&nbsp;        Optional&lt;Author&gt; optionalAuthor = authorRepository.findById(id);</b>
+<b class="fc"><i>47</i>&nbsp;        return optionalAuthor.orElse(new Author(id));</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Transactional(readOnly = true)
+<i>51</i>&nbsp;    public Author getAuthorById(String authorId) {
+<b class="fc"><i>52</i>&nbsp;        Optional&lt;Author&gt; optionalAuthor = authorRepository.findById(authorId);</b>
+<b class="fc"><i>53</i>&nbsp;        return optionalAuthor.orElse(null);</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    @Transactional(readOnly = true)
+<i>57</i>&nbsp;    public boolean FavoriteIsExistInDb(String favoriteId) {          //判断favorite是否存在
+<b class="fc"><i>58</i>&nbsp;        if(authorRepository.FavorExistInDb(favoriteId)!=0){</b>
+<b class="fc"><i>59</i>&nbsp;            return true;</b>
+<i>60</i>&nbsp;        }
+<b class="fc"><i>61</i>&nbsp;        return false;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    @Transactional(readOnly = true)
+<i>65</i>&nbsp;    public boolean FavoriteIsExistInAuthor(String authorId, String favoriteId) {      //判断用户是否收藏
+<b class="fc"><i>66</i>&nbsp;        if (authorRepository.findFavoriteById(authorId, favoriteId) != 0) {</b>
+<b class="fc"><i>67</i>&nbsp;            return true;</b>
+<i>68</i>&nbsp;        }
+<b class="nc"><i>69</i>&nbsp;        return false;</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    @Transactional(readOnly = true)
+<i>73</i>&nbsp;    public void addFavorite(String authorId, String favoriteId) {
+<b class="fc"><i>74</i>&nbsp;        authorRepository.addFavorite(authorId, favoriteId);</b>
+<b class="fc"><i>75</i>&nbsp;    }</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    @Transactional(readOnly = true)
+<i>78</i>&nbsp;    public void deleteFavorite(String auhtorId, String favoriteId) {
+<b class="fc"><i>79</i>&nbsp;        authorRepository.deleteFavorite(auhtorId, favoriteId);</b>
+<b class="fc"><i>80</i>&nbsp;    }</b>
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    @Transactional(readOnly = true)
+<i>83</i>&nbsp;    public FavoriteResult findFavoriteByNameLike(String authorId, String favoriteName, Integer skip, Integer limit) {
+<b class="fc"><i>84</i>&nbsp;        FavoriteResult favoriteResult = new FavoriteResult();</b>
+<b class="fc"><i>85</i>&nbsp;        favoriteResult.setDataSets(authorRepository.findDataSetByNameLike(authorId, favoriteName, skip, limit));</b>
+<b class="fc"><i>86</i>&nbsp;        favoriteResult.setNodes(authorRepository.findNodeByNameLike(authorId, favoriteName, skip, limit));</b>
+<b class="fc"><i>87</i>&nbsp;        favoriteResult.setPaths(authorRepository.findPathByNameLike(authorId, favoriteName, skip, limit));</b>
+<b class="fc"><i>88</i>&nbsp;        return favoriteResult;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    @Transactional(readOnly = true)
+<i>92</i>&nbsp;    public NodeResult findfavorNodeByNameLike(String authorId, String nodeName, Integer skip, Integer limit) {
+<b class="fc"><i>93</i>&nbsp;        NodeResult nodeResult = new NodeResult();</b>
+<b class="fc"><i>94</i>&nbsp;        nodeResult.setNodes(authorRepository.findNodeByNameLike(authorId, nodeName, skip, limit));</b>
+<b class="fc"><i>95</i>&nbsp;        return nodeResult;</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    @Transactional(readOnly = true)
+<i>99</i>&nbsp;    public PathResult findfavorPathByNameLike(String authorId, String pathName, Integer skip, Integer limit) {
+<b class="fc"><i>100</i>&nbsp;        PathResult pathResult = new PathResult();</b>
+<b class="fc"><i>101</i>&nbsp;        pathResult.setPaths(authorRepository.findPathByNameLike(authorId, pathName, skip, limit));</b>
+<b class="fc"><i>102</i>&nbsp;        return pathResult;</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    @Transactional(readOnly = true)
+<i>106</i>&nbsp;    public DataSetResult findfavorDataSetByNameLike(String authorId, String dataSetName, Integer skip, Integer limit) {
+<b class="fc"><i>107</i>&nbsp;        DataSetResult dataSetResult = new DataSetResult();</b>
+<b class="fc"><i>108</i>&nbsp;        dataSetResult.setDataSets(authorRepository.findDataSetByNameLike(authorId, dataSetName, skip, limit));</b>
+<b class="fc"><i>109</i>&nbsp;        return dataSetResult;</b>
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

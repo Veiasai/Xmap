@@ -1,0 +1,104 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BuildingAdminRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.repositories</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BuildingAdminRepository (xyz.veiasai.neo4j.repositories)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">BuildingAdminRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.repositories;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.data.neo4j.annotation.Query;
+<i>4</i>&nbsp;import org.springframework.data.neo4j.repository.Neo4jRepository;
+<i>5</i>&nbsp;import org.springframework.data.repository.query.Param;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.Author;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Building;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.CountSum;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.Collection;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;public interface BuildingAdminRepository extends Neo4jRepository&lt;Author, String&gt; {
+<i>13</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}})&quot; +
+<i>14</i>&nbsp;            &quot; merge (a)-[:BUILDINGADMIN {state:0}]-(b)&quot;)
+<i>15</i>&nbsp;    public void applyBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)&quot; +
+<i>18</i>&nbsp;            &quot; delete r&quot;)
+<i>19</i>&nbsp;    public void deleteBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN]-(b)&quot; +
+<i>22</i>&nbsp;            &quot; return count(r)&quot;)
+<i>23</i>&nbsp;    public int countBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN {state:1}]-(b)&quot; +
+<i>26</i>&nbsp;            &quot; return count(r)&quot;)
+<i>27</i>&nbsp;    public int countValidBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN {state:0}]-(b)&quot; +
+<i>30</i>&nbsp;            &quot; return count(r)&quot;)
+<i>31</i>&nbsp;    public int countApplyBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @Query(&quot;Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building)  return b&quot;)
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    public Collection&lt;Building&gt; findBuildingByAdmin(@Param(&quot;authorId&quot;) String authorId);
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    @Query(&quot;Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building) &quot; +
+<i>38</i>&nbsp;            &quot;return b as building,&quot; +
+<i>39</i>&nbsp;            &quot;size((:Node)-[:BUILDING]-(b)) as nodeSum,size((:Path)-[:BUILDING]-(b)) as pathSum, size((:Message)-[:BUILDING]-(b)) as MessageSum &quot;)
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    public Collection&lt;CountSum&gt; findBuildingAndCountByAdmin(@Param(&quot;authorId&quot;) String authorId);
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Query(&quot;Match (a:Author)-[r:BUILDINGADMIN {state:1}]-(b:Building {id:{buildingId}}) return a&quot;)
+<i>45</i>&nbsp;    public Collection&lt;Author&gt; findAdminByBuildingId(@Param(&quot;buildingId&quot;) String buildingId);
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN {state:0}]-(b)&quot; +
+<i>48</i>&nbsp;            &quot;set r.state = 2 &quot;) //2 means refused
+<i>49</i>&nbsp;    public void refuseBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}}),(a)-[r:BUILDINGADMIN {state:0}]-(b)&quot; +
+<i>52</i>&nbsp;            &quot;set r.state = 1 &quot;) //1 means success
+<i>53</i>&nbsp;    public void setBuildingAdmin(@Param(&quot;buildingId&quot;) String buildingId, @Param(&quot;authorId&quot;) String authorId);
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}})-[r:BUILDINGADMIN]-(b:Building) return count(r)&quot;)
+<i>56</i>&nbsp;    public int countBuildingByAdmin(@Param(&quot;authorId&quot;)String authorId);
+<i>57</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

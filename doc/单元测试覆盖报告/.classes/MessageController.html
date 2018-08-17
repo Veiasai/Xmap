@@ -1,0 +1,184 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MessageController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MessageController (xyz.veiasai.neo4j.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MessageController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (47/ 47)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import io.swagger.annotations.Api;
+<i>4</i>&nbsp;import io.swagger.annotations.ApiModel;
+<i>5</i>&nbsp;import io.swagger.annotations.ApiOperation;
+<i>6</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>7</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.Message;
+<i>9</i>&nbsp;import xyz.veiasai.neo4j.result.MessageResult;
+<i>10</i>&nbsp;import xyz.veiasai.neo4j.result.Result;
+<i>11</i>&nbsp;import xyz.veiasai.neo4j.service.AuthorService;
+<i>12</i>&nbsp;import xyz.veiasai.neo4j.service.BuildingAdminService;
+<i>13</i>&nbsp;import xyz.veiasai.neo4j.service.BuildingService;
+<i>14</i>&nbsp;import xyz.veiasai.neo4j.service.MessageService;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;@Api(value = &quot;message-controller&quot;)
+<i>17</i>&nbsp;@RestController
+<i>18</i>&nbsp;@RequestMapping(&quot;/&quot;)
+<b class="fc"><i>19</i>&nbsp;public class MessageController {</b>
+<i>20</i>&nbsp;    @Autowired
+<i>21</i>&nbsp;    private MessageService messageService;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    @Autowired
+<i>24</i>&nbsp;    private AuthorService authorService;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Autowired
+<i>27</i>&nbsp;    private BuildingService buildingService;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Autowired
+<i>30</i>&nbsp;    private BuildingAdminService buildingAdminService;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    @ApiOperation(value = &quot;发布信息&quot;, notes = &quot;建筑管理员发布信息&quot;)
+<i>33</i>&nbsp;    @PostMapping(&quot;/message&quot;)
+<i>34</i>&nbsp;    public MessageResult postMessage(@RequestBody Message message, @RequestParam String buildingId, @RequestParam String authorId) {
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;        MessageResult result = new MessageResult();</b>
+<b class="fc"><i>37</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="fc"><i>38</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="fc"><i>39</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>40</i>&nbsp;        } else if (authorService.getAuthorById(authorId) == null) {</b>
+<b class="fc"><i>41</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>42</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>43</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {</b>
+<b class="fc"><i>44</i>&nbsp;            result.setMessage(&quot;用户无权限发布信息&quot;);</b>
+<b class="fc"><i>45</i>&nbsp;            result.setCode(403);</b>
+<i>46</i>&nbsp;        } else {
+<b class="fc"><i>47</i>&nbsp;            message.setBuilding(buildingService.findById(buildingId));</b>
+<b class="fc"><i>48</i>&nbsp;            message.setAuthor(authorService.findById(authorId));</b>
+<b class="fc"><i>49</i>&nbsp;            message = messageService.addMessage(message);</b>
+<b class="fc"><i>50</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>51</i>&nbsp;            result.setMessage(&quot;发布信息成功&quot;);</b>
+<b class="fc"><i>52</i>&nbsp;            result.setSingleMessage(message);</b>
+<i>53</i>&nbsp;        }
+<b class="fc"><i>54</i>&nbsp;        return result;</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    @ApiOperation(value = &quot;删除信息&quot;, notes = &quot;建筑管理员删除信息&quot;)
+<i>58</i>&nbsp;    @DeleteMapping(&quot;/message&quot;)
+<i>59</i>&nbsp;    public Result deleteMessage(@RequestParam String authorId, @RequestParam String messageId) {
+<b class="fc"><i>60</i>&nbsp;        Result result = new Result();</b>
+<b class="fc"><i>61</i>&nbsp;        if (authorService.getAuthorById(authorId) == null) {</b>
+<b class="fc"><i>62</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>63</i>&nbsp;            result.setCode(405);</b>
+<b class="fc"><i>64</i>&nbsp;        } else if (messageService.getMessageById(messageId) == null) {</b>
+<b class="fc"><i>65</i>&nbsp;            result.setMessage(&quot;信息不存在&quot;);</b>
+<b class="fc"><i>66</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>67</i>&nbsp;        } else if (!messageService.existMessageAndAuthor(authorId, messageId)) {</b>
+<b class="fc"><i>68</i>&nbsp;            result.setMessage(&quot;该用户无权限删除此信息&quot;);</b>
+<b class="fc"><i>69</i>&nbsp;            result.setCode(403);</b>
+<i>70</i>&nbsp;        } else {
+<b class="fc"><i>71</i>&nbsp;            messageService.deleteMessage(authorId, messageId);</b>
+<b class="fc"><i>72</i>&nbsp;            result.setMessage(&quot;删除信息成功&quot;);</b>
+<b class="fc"><i>73</i>&nbsp;            result.setCode(200);</b>
+<i>74</i>&nbsp;        }
+<b class="fc"><i>75</i>&nbsp;        return result;</b>
+<i>76</i>&nbsp;    }
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    @GetMapping(&quot;/message&quot;)
+<i>79</i>&nbsp;    public MessageResult getMessage(@RequestParam(required = false) String buildingId,  //此处与dataset-controller一样都没做buildingId和authorId的检验
+<i>80</i>&nbsp;                                    @RequestParam(required = false) String authorId,
+<i>81</i>&nbsp;                                    @RequestParam(required = false, defaultValue = &quot;&quot;) String title,
+<i>82</i>&nbsp;                                    @RequestParam(required = false, defaultValue = &quot;0&quot;) Integer skip,
+<i>83</i>&nbsp;                                    @RequestParam(required = false, defaultValue = &quot;5&quot;) Integer limit) {
+<b class="fc"><i>84</i>&nbsp;        MessageResult result = new MessageResult();</b>
+<b class="fc"><i>85</i>&nbsp;        result.setCode(404);</b>
+<b class="fc"><i>86</i>&nbsp;        if (buildingId != null &amp;&amp; authorId != null) {</b>
+<b class="fc"><i>87</i>&nbsp;            result.setMessages(messageService.findMessageByAuthorAndBuilding(buildingId, authorId, title, skip, limit));</b>
+<b class="fc"><i>88</i>&nbsp;            result.setMessage(&quot;查询成功&quot;);      //区别singleMessage方法</b>
+<b class="fc"><i>89</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>90</i>&nbsp;        } else if (buildingId != null) {</b>
+<b class="fc"><i>91</i>&nbsp;            result.setMessages(messageService.findMessageByBuildingAndTitle(buildingId,title, skip, limit));</b>
+<b class="fc"><i>92</i>&nbsp;            result.setMessage(&quot;查询成功&quot;);      //区别singleMessage方法</b>
+<b class="fc"><i>93</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>94</i>&nbsp;        } else if (authorId != null) {</b>
+<b class="fc"><i>95</i>&nbsp;            result.setMessages(messageService.findMessageByAuthorAndTitle(authorId,title,skip, limit));</b>
+<b class="fc"><i>96</i>&nbsp;            result.setMessage(&quot;查询成功&quot;);      //区别singleMessage方法</b>
+<b class="fc"><i>97</i>&nbsp;            result.setCode(200);</b>
+<i>98</i>&nbsp;        }
+<b class="fc"><i>99</i>&nbsp;        return result;</b>
+<i>100</i>&nbsp;    }
+<i>101</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 11:57</div>
+</div>
+</body>
+</html>

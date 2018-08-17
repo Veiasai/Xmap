@@ -1,0 +1,393 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BuildingAdminController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BuildingAdminController (xyz.veiasai.neo4j.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BuildingAdminController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46.2%
+  </span>
+  <span class="absValue">
+    (6/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    29.7%
+  </span>
+  <span class="absValue">
+    (60/ 202)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import io.swagger.annotations.Api;
+<i>4</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>5</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.DataSet;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.Path;
+<i>9</i>&nbsp;import xyz.veiasai.neo4j.result.BuildingAdminResult;
+<i>10</i>&nbsp;import xyz.veiasai.neo4j.result.BuildingResult;
+<i>11</i>&nbsp;import xyz.veiasai.neo4j.result.CountSumResult;
+<i>12</i>&nbsp;import xyz.veiasai.neo4j.result.Result;
+<i>13</i>&nbsp;import xyz.veiasai.neo4j.service.*;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import java.util.List;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;@Api(value = &quot;buildingAdmin-controller&quot;)
+<i>18</i>&nbsp;@RestController
+<i>19</i>&nbsp;@RequestMapping(&quot;/&quot;)
+<b class="fc"><i>20</i>&nbsp;public class BuildingAdminController {</b>
+<i>21</i>&nbsp;    @Autowired
+<i>22</i>&nbsp;    private AuthorService authorService;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    @Autowired
+<i>25</i>&nbsp;    private BuildingService buildingService;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    @Autowired
+<i>28</i>&nbsp;    private BuildingAdminService buildingAdminService;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    @Autowired
+<i>31</i>&nbsp;    private NodeService nodeService;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @Autowired
+<i>34</i>&nbsp;    private PathService pathService;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @Autowired
+<i>37</i>&nbsp;    private DataSetService dataSetService;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    @PostMapping(&quot;/building/admin/login&quot;)
+<i>40</i>&nbsp;    public Result loginBuildingAdmin(@RequestParam String authorId) {
+<b class="fc"><i>41</i>&nbsp;        Result result = new Result();</b>
+<b class="fc"><i>42</i>&nbsp;        if (buildingAdminService.isBuildingAdmin(authorId)) {</b>
+<b class="fc"><i>43</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>44</i>&nbsp;            result.setMessage(&quot;登录成功&quot;);</b>
+<i>45</i>&nbsp;        } else {
+<b class="fc"><i>46</i>&nbsp;            result.setCode(403);</b>
+<b class="fc"><i>47</i>&nbsp;            result.setMessage(&quot;不是建筑管理员&quot;);       //authorId是否存在不应该判断。存在可能泄密</b>
+<i>48</i>&nbsp;        }
+<b class="fc"><i>49</i>&nbsp;        return result;</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @GetMapping(&quot;/building/admin/admin&quot;)       //to be continued
+<i>53</i>&nbsp;    public BuildingAdminResult getAdminByBuildingId(@RequestParam String buildingId) {
+<b class="fc"><i>54</i>&nbsp;        BuildingAdminResult result = new BuildingAdminResult();</b>
+<b class="fc"><i>55</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="fc"><i>56</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="fc"><i>57</i>&nbsp;            result.setCode(404);</b>
+<i>58</i>&nbsp;        } else {
+<b class="fc"><i>59</i>&nbsp;            result.setBuildingAdmins(buildingAdminService.findAdminByBuildingId(buildingId));</b>
+<b class="fc"><i>60</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>61</i>&nbsp;            result.setMessage(&quot;查询成功&quot;);      //进一步判断查询结果是否为空 to be continued</b>
+<i>62</i>&nbsp;        }
+<b class="fc"><i>63</i>&nbsp;        return result;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    @DeleteMapping(&quot;building/admin/node&quot;)
+<i>67</i>&nbsp;    public Result deleteNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String nodeId) {
+<b class="fc"><i>68</i>&nbsp;        Result result = new Result();</b>
+<b class="fc"><i>69</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="fc"><i>70</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>71</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="fc"><i>72</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="fc"><i>73</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>74</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>75</i>&nbsp;        } else if (nodeService.findById(nodeId) == null) {</b>
+<b class="fc"><i>76</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>77</i>&nbsp;            result.setMessage(&quot;点位不存在&quot;);</b>
+<b class="fc"><i>78</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="fc"><i>79</i>&nbsp;            result.setCode(403);</b>
+<b class="fc"><i>80</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="fc"><i>81</i>&nbsp;        } else if (!nodeService.existBuildingAndNode(buildingId, nodeId)) {</b>
+<b class="nc"><i>82</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>83</i>&nbsp;            result.setMessage(&quot;该点位不属于该建筑&quot;);</b>
+<i>84</i>&nbsp;        } else {
+<b class="fc"><i>85</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>86</i>&nbsp;            result.setMessage(&quot;删除成功&quot;);</b>
+<b class="fc"><i>87</i>&nbsp;            nodeService.deleteNodeByAdmin(nodeId);</b>
+<i>88</i>&nbsp;        }
+<b class="fc"><i>89</i>&nbsp;        return result;</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    @PutMapping(&quot;building/admin/node&quot;)
+<i>93</i>&nbsp;    public Result updateNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Node node) {
+<b class="nc"><i>94</i>&nbsp;        Result result = new Result();</b>
+<b class="nc"><i>95</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="nc"><i>96</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>97</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="nc"><i>98</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>99</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>100</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>101</i>&nbsp;        } else if (nodeService.findById(node.getId()) == null) {</b>
+<b class="nc"><i>102</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>103</i>&nbsp;            result.setMessage(&quot;点位不存在&quot;);</b>
+<b class="nc"><i>104</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="nc"><i>105</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>106</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="nc"><i>107</i>&nbsp;        } else if (!nodeService.existBuildingAndNode(buildingId, node.getId())) {</b>
+<b class="nc"><i>108</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>109</i>&nbsp;            result.setMessage(&quot;该点位不属于该建筑&quot;);</b>
+<i>110</i>&nbsp;        } else {
+<b class="nc"><i>111</i>&nbsp;            nodeService.updateNodeByAdmin(node);</b>
+<b class="nc"><i>112</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>113</i>&nbsp;            result.setMessage(&quot;更新成功&quot;);</b>
+<i>114</i>&nbsp;        }
+<b class="nc"><i>115</i>&nbsp;        return result;</b>
+<i>116</i>&nbsp;    }
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    @DeleteMapping(&quot;building/admin/path&quot;)
+<i>119</i>&nbsp;    public Result deletePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String pathId) {
+<b class="fc"><i>120</i>&nbsp;        Result result = new Result();</b>
+<b class="fc"><i>121</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="fc"><i>122</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>123</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="fc"><i>124</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="fc"><i>125</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>126</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>127</i>&nbsp;        } else if (pathService.findById(pathId) == null) {</b>
+<b class="fc"><i>128</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>129</i>&nbsp;            result.setMessage(&quot;路线不存在&quot;);</b>
+<b class="fc"><i>130</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="fc"><i>131</i>&nbsp;            result.setCode(403);</b>
+<b class="fc"><i>132</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="fc"><i>133</i>&nbsp;        } else if (!pathService.existBuildingAndPath(buildingId, pathId)) {</b>
+<b class="nc"><i>134</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>135</i>&nbsp;            result.setMessage(&quot;该路线不属于该建筑&quot;);</b>
+<i>136</i>&nbsp;        } else {
+<b class="fc"><i>137</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>138</i>&nbsp;            result.setMessage(&quot;删除成功&quot;);</b>
+<b class="fc"><i>139</i>&nbsp;            pathService.deletePathByAdmin(pathId);</b>
+<i>140</i>&nbsp;        }
+<b class="fc"><i>141</i>&nbsp;        return result;</b>
+<i>142</i>&nbsp;    }
+<i>143</i>&nbsp;
+<i>144</i>&nbsp;    @PutMapping(&quot;building/admin/path&quot;)
+<i>145</i>&nbsp;    public Result updatePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Path path) {
+<b class="nc"><i>146</i>&nbsp;        Result result = new Result();</b>
+<b class="nc"><i>147</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="nc"><i>148</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>149</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="nc"><i>150</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>151</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>152</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>153</i>&nbsp;        } else if (pathService.findById(path.getId()) == null) {</b>
+<b class="nc"><i>154</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>155</i>&nbsp;            result.setMessage(&quot;路线不存在&quot;);</b>
+<b class="nc"><i>156</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="nc"><i>157</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>158</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="nc"><i>159</i>&nbsp;        } else if (!pathService.existBuildingAndPath(buildingId, path.getId())) {</b>
+<b class="nc"><i>160</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>161</i>&nbsp;            result.setMessage(&quot;该路线不属于该建筑&quot;);</b>
+<i>162</i>&nbsp;        } else {
+<b class="nc"><i>163</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>164</i>&nbsp;            result.setMessage(&quot;更新成功&quot;);</b>
+<b class="nc"><i>165</i>&nbsp;            pathService.updatePathByAdmin(path);</b>
+<i>166</i>&nbsp;        }
+<b class="nc"><i>167</i>&nbsp;        return result;</b>
+<i>168</i>&nbsp;    }
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    @DeleteMapping(&quot;building/admin/dataset&quot;)
+<i>171</i>&nbsp;    public Result deleteDataSetByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId) {
+<b class="nc"><i>172</i>&nbsp;        Result result = new Result();</b>
+<b class="nc"><i>173</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="nc"><i>174</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>175</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="nc"><i>176</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>177</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>178</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>179</i>&nbsp;        } else if (dataSetService.findById(dataSetId) == null) {</b>
+<b class="nc"><i>180</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>181</i>&nbsp;            result.setMessage(&quot;数据组不存在&quot;);</b>
+<b class="nc"><i>182</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="nc"><i>183</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>184</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="nc"><i>185</i>&nbsp;        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {</b>
+<b class="nc"><i>186</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>187</i>&nbsp;            result.setMessage(&quot;该数据组不属于该建筑&quot;);</b>
+<i>188</i>&nbsp;        } else {
+<b class="nc"><i>189</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>190</i>&nbsp;            result.setMessage(&quot;删除成功&quot;);</b>
+<b class="nc"><i>191</i>&nbsp;            dataSetService.deleteDataSetByAdmin(dataSetId);</b>
+<i>192</i>&nbsp;        }
+<b class="nc"><i>193</i>&nbsp;        return result;</b>
+<i>194</i>&nbsp;    }
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    @PutMapping(&quot;building/admin/dataset&quot;)
+<i>197</i>&nbsp;    public Result updateDataSetByadmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam List&lt;String&gt; Ids) {
+<b class="nc"><i>198</i>&nbsp;        Result result = new Result();</b>
+<b class="nc"><i>199</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="nc"><i>200</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>201</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="nc"><i>202</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>203</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>204</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>205</i>&nbsp;        } else if (dataSetService.findById(dataSetId) == null) {</b>
+<b class="nc"><i>206</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>207</i>&nbsp;            result.setMessage(&quot;数据组不存在&quot;);</b>
+<b class="nc"><i>208</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="nc"><i>209</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>210</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="nc"><i>211</i>&nbsp;        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {</b>
+<b class="nc"><i>212</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>213</i>&nbsp;            result.setMessage(&quot;该数据组不属于该建筑&quot;);</b>
+<i>214</i>&nbsp;        } else {
+<b class="nc"><i>215</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>216</i>&nbsp;            result.setMessage(&quot;更新成功&quot;);</b>
+<i>217</i>&nbsp;        }
+<b class="nc"><i>218</i>&nbsp;        return result;</b>
+<i>219</i>&nbsp;    }
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;    @PutMapping(&quot;building/admin/dataset/detail&quot;)
+<i>222</i>&nbsp;    public Result addDataSetdetailByadmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
+<b class="nc"><i>223</i>&nbsp;        Result result = new Result();</b>
+<b class="nc"><i>224</i>&nbsp;        DataSet dataSet = dataSetService.findById(dataSetId);</b>
+<b class="nc"><i>225</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="nc"><i>226</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>227</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="nc"><i>228</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>229</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>230</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>231</i>&nbsp;        } else if (dataSet==null) {</b>
+<b class="nc"><i>232</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>233</i>&nbsp;            result.setMessage(&quot;数据组不存在&quot;);</b>
+<b class="nc"><i>234</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="nc"><i>235</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>236</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="nc"><i>237</i>&nbsp;        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {</b>
+<b class="nc"><i>238</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>239</i>&nbsp;            result.setMessage(&quot;该数据组不属于该建筑&quot;);</b>
+<b class="nc"><i>240</i>&nbsp;        } else if(dataSet.getType().equals(&quot;node&quot;)) {       //暂不验证id有效性</b>
+<b class="nc"><i>241</i>&nbsp;            dataSetService.addRelationNode(dataSetId,Id);</b>
+<b class="nc"><i>242</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>243</i>&nbsp;            result.setMessage(&quot;增加点位成功&quot;);</b>
+<b class="nc"><i>244</i>&nbsp;        } else if(dataSet.getType().equals(&quot;path&quot;)){</b>
+<b class="nc"><i>245</i>&nbsp;            dataSetService.addRelationPath(dataSetId,Id);</b>
+<b class="nc"><i>246</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>247</i>&nbsp;            result.setMessage(&quot;增加路线成功&quot;);</b>
+<i>248</i>&nbsp;        }
+<b class="nc"><i>249</i>&nbsp;        return result;</b>
+<i>250</i>&nbsp;    }
+<i>251</i>&nbsp;    @DeleteMapping(&quot;building/admin/dataset/detail&quot;)
+<i>252</i>&nbsp;    public Result deleteDataSetdetailByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
+<b class="nc"><i>253</i>&nbsp;        Result result = new Result();</b>
+<b class="nc"><i>254</i>&nbsp;        DataSet dataSet = dataSetService.findById(dataSetId);</b>
+<b class="nc"><i>255</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="nc"><i>256</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>257</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="nc"><i>258</i>&nbsp;        } else if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>259</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>260</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>261</i>&nbsp;        } else if (dataSet==null) {</b>
+<b class="nc"><i>262</i>&nbsp;            result.setCode(404);</b>
+<b class="nc"><i>263</i>&nbsp;            result.setMessage(&quot;数据组不存在&quot;);</b>
+<b class="nc"><i>264</i>&nbsp;        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {</b>
+<b class="nc"><i>265</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>266</i>&nbsp;            result.setMessage(&quot;该用户不是该建筑管理员&quot;);</b>
+<b class="nc"><i>267</i>&nbsp;        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {</b>
+<b class="nc"><i>268</i>&nbsp;            result.setCode(403);</b>
+<b class="nc"><i>269</i>&nbsp;            result.setMessage(&quot;该数据组不属于该建筑&quot;);</b>
+<b class="nc"><i>270</i>&nbsp;        } else if(dataSet.getType().equals(&quot;node&quot;)) {</b>
+<b class="nc"><i>271</i>&nbsp;            dataSetService.deleteRelationNode(dataSetId,Id);</b>
+<b class="nc"><i>272</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>273</i>&nbsp;            result.setMessage(&quot;删除点位成功&quot;);</b>
+<i>274</i>&nbsp;        }
+<i>275</i>&nbsp;        else{
+<b class="nc"><i>276</i>&nbsp;            dataSetService.deleteRelationPath(dataSetId,Id);</b>
+<b class="nc"><i>277</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>278</i>&nbsp;            result.setMessage(&quot;删除路线成功&quot;);</b>
+<i>279</i>&nbsp;        }
+<b class="nc"><i>280</i>&nbsp;        return result;</b>
+<i>281</i>&nbsp;    }
+<i>282</i>&nbsp;
+<i>283</i>&nbsp;    @GetMapping(&quot;/building/admin/building&quot;)    //to be continued
+<i>284</i>&nbsp;    public BuildingResult getBuildingByAdminId(@RequestParam String adminId) {
+<b class="fc"><i>285</i>&nbsp;        BuildingResult result = new BuildingResult();</b>
+<b class="fc"><i>286</i>&nbsp;        if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="fc"><i>287</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>288</i>&nbsp;            result.setCode(405);</b>
+<i>289</i>&nbsp;        } else {
+<b class="fc"><i>290</i>&nbsp;            result.setBuildings(buildingAdminService.findBuildingByAdmin(adminId));</b>
+<b class="fc"><i>291</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>292</i>&nbsp;            result.setMessage(&quot;查询成功&quot;);</b>
+<i>293</i>&nbsp;        }
+<b class="fc"><i>294</i>&nbsp;        return result;</b>
+<i>295</i>&nbsp;    }
+<i>296</i>&nbsp;
+<i>297</i>&nbsp;    @GetMapping(&quot;building/admin/buildingandcount&quot;)
+<i>298</i>&nbsp;    public CountSumResult getBuildingAndCountByAdminId(@RequestParam String adminId) {
+<b class="nc"><i>299</i>&nbsp;        CountSumResult result = new CountSumResult();</b>
+<b class="nc"><i>300</i>&nbsp;        if (authorService.getAuthorById(adminId) == null) {</b>
+<b class="nc"><i>301</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="nc"><i>302</i>&nbsp;            result.setCode(405);</b>
+<i>303</i>&nbsp;        } else {
+<b class="nc"><i>304</i>&nbsp;            result.setCountSums(buildingAdminService.findBuildingAndCountByAdmin(adminId));</b>
+<b class="nc"><i>305</i>&nbsp;            result.setCode(200);</b>
+<b class="nc"><i>306</i>&nbsp;            result.setMessage(&quot;查询成功&quot;);</b>
+<i>307</i>&nbsp;        }
+<b class="nc"><i>308</i>&nbsp;        return result;</b>
+<i>309</i>&nbsp;    }
+<i>310</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 11:57</div>
+</div>
+</body>
+</html>

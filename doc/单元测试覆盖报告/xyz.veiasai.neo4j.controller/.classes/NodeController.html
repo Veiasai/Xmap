@@ -1,0 +1,232 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: NodeController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: NodeController (xyz.veiasai.neo4j.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NodeController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (41/ 41)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import io.swagger.annotations.*;
+<i>4</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>5</i>&nbsp;import org.springframework.validation.BindingResult;
+<i>6</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.result.NodeResult;
+<i>9</i>&nbsp;import xyz.veiasai.neo4j.result.Result;
+<i>10</i>&nbsp;import xyz.veiasai.neo4j.service.AuthorService;
+<i>11</i>&nbsp;import xyz.veiasai.neo4j.service.BuildingService;
+<i>12</i>&nbsp;import xyz.veiasai.neo4j.service.DataSetService;
+<i>13</i>&nbsp;import xyz.veiasai.neo4j.service.NodeService;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import javax.validation.Valid;
+<i>16</i>&nbsp;import java.util.*;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;@Api(value = &quot;node-controller&quot;)
+<i>19</i>&nbsp;@RestController
+<i>20</i>&nbsp;@RequestMapping(&quot;/&quot;)
+<b class="fc"><i>21</i>&nbsp;public class NodeController {</b>
+<i>22</i>&nbsp;    @Autowired
+<i>23</i>&nbsp;    private NodeService nodeService;
+<i>24</i>&nbsp;    @Autowired
+<i>25</i>&nbsp;    private BuildingService buildingService;
+<i>26</i>&nbsp;    @Autowired
+<i>27</i>&nbsp;    private AuthorService authorService;
+<i>28</i>&nbsp;    @Autowired
+<i>29</i>&nbsp;    private DataSetService dataSetService;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    @ApiOperation(value = &quot;上传点位&quot;, notes = &quot;上传点位信息&quot;)
+<i>32</i>&nbsp;    @PostMapping(&quot;/node&quot;)
+<i>33</i>&nbsp;    public NodeResult nodePost(@RequestBody @Valid Node node,
+<i>34</i>&nbsp;                               @RequestParam @ApiParam(name = &quot;buildingId&quot;, value = &quot;点位所在建筑的id&quot;) String buildingId,
+<i>35</i>&nbsp;                               @RequestParam @ApiParam(name = &quot;author&quot;, value = &quot;上传者的open-id&quot;) String author,
+<i>36</i>&nbsp;                               BindingResult bindingResult) {
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        NodeResult result = new NodeResult();</b>
+<b class="fc"><i>39</i>&nbsp;        if (buildingService.getBuildingById(buildingId) == null) {</b>
+<b class="fc"><i>40</i>&nbsp;            result.setMessage(&quot;建筑不存在&quot;);</b>
+<b class="fc"><i>41</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>42</i>&nbsp;        } else if (authorService.getAuthorById(author) == null) {</b>
+<b class="fc"><i>43</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>44</i>&nbsp;            result.setCode(404);</b>
+<i>45</i>&nbsp;        }
+<b class="fc"><i>46</i>&nbsp;        node = nodeService.addNode(node, buildingId, author);</b>
+<b class="fc"><i>47</i>&nbsp;        result.setNode(node);</b>
+<b class="fc"><i>48</i>&nbsp;        return result;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @GetMapping(&quot;/nodes&quot;)
+<i>52</i>&nbsp;    public NodeResult nodeGet(@RequestParam(required = false, defaultValue = &quot;&quot;) String name,
+<i>53</i>&nbsp;                              @RequestParam(required = false) String buildingId,
+<i>54</i>&nbsp;                              @RequestParam(required = false) String authorId,
+<i>55</i>&nbsp;                              @RequestParam(required = false) String originId,
+<i>56</i>&nbsp;                              @RequestParam(required = false) String dataSetId,
+<i>57</i>&nbsp;                              @RequestParam(required = false, defaultValue = &quot;0&quot;) Integer skip,
+<i>58</i>&nbsp;                              @RequestParam(required = false, defaultValue = &quot;5&quot;) Integer limit)
+<i>59</i>&nbsp;    {
+<b class="fc"><i>60</i>&nbsp;        NodeResult result =new NodeResult();</b>
+<b class="fc"><i>61</i>&nbsp;        result.setCode(200);</b>
+<b class="fc"><i>62</i>&nbsp;        if (dataSetId != null)</b>
+<i>63</i>&nbsp;        {
+<b class="fc"><i>64</i>&nbsp;            if (dataSetService.getDataSetById(dataSetId) == null) {</b>
+<b class="fc"><i>65</i>&nbsp;                result.setMessage(&quot;数据组不存在&quot;);</b>
+<b class="fc"><i>66</i>&nbsp;                result.setCode(404);</b>
+<i>67</i>&nbsp;            }
+<i>68</i>&nbsp;            else{
+<b class="fc"><i>69</i>&nbsp;                result.setNodes(dataSetService.findNodesByNameLike(dataSetId, name, skip, limit));</b>
+<i>70</i>&nbsp;            }
+<i>71</i>&nbsp;        }
+<b class="fc"><i>72</i>&nbsp;        else if(authorId != null &amp;&amp; buildingId !=null){</b>
+<b class="fc"><i>73</i>&nbsp;            result.setNodes(nodeService.findByBuildingAndAuthor(buildingId,authorId,skip,limit));</b>
+<i>74</i>&nbsp;        }
+<b class="fc"><i>75</i>&nbsp;        else if(authorId !=null){</b>
+<b class="fc"><i>76</i>&nbsp;            result.setNodes(nodeService.findByAuthorAndName(authorId, name,skip,limit));</b>
+<i>77</i>&nbsp;        }
+<b class="fc"><i>78</i>&nbsp;        else if(buildingId !=null){</b>
+<b class="fc"><i>79</i>&nbsp;            result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));</b>
+<i>80</i>&nbsp;        }
+<b class="fc"><i>81</i>&nbsp;        else if (originId != null){</b>
+<b class="fc"><i>82</i>&nbsp;            result.setNodes(nodeService.findByOriginNode(originId, name,skip,limit));</b>
+<i>83</i>&nbsp;        }
+<i>84</i>&nbsp;        else {
+<b class="fc"><i>85</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>86</i>&nbsp;            result.setMessage(&quot;查询异常&quot;);</b>
+<i>87</i>&nbsp;        }
+<b class="fc"><i>88</i>&nbsp;        return result;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    @GetMapping(&quot;/nodes/twonodes/v2&quot;)
+<i>92</i>&nbsp;    public Set&lt;Map&lt;String, Object&gt;&gt; pathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2, //未做nId1，nId2有效性检验
+<i>93</i>&nbsp;                                                      @RequestParam(required = false, defaultValue = &quot;0&quot;) Integer skip,
+<i>94</i>&nbsp;                                                      @RequestParam(required = false, defaultValue = &quot;5&quot;) Integer limit) {
+<b class="fc"><i>95</i>&nbsp;        return nodeService.findAllPathsByTwoNodeId(nId1, nId2, skip, limit);</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    @DeleteMapping(&quot;/node&quot;)
+<i>99</i>&nbsp;    public Result nodeDeleteById(@RequestParam String authorId, @RequestParam String nodeId) {
+<b class="fc"><i>100</i>&nbsp;        Result result = new Result();</b>
+<b class="fc"><i>101</i>&nbsp;        if (authorService.getAuthorById(authorId) == null) {</b>
+<b class="fc"><i>102</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>103</i>&nbsp;            result.setMessage(&quot;用户不存在&quot;);</b>
+<b class="fc"><i>104</i>&nbsp;        } else if (nodeService.findById(nodeId) == null) {</b>
+<b class="fc"><i>105</i>&nbsp;            result.setCode(404);</b>
+<b class="fc"><i>106</i>&nbsp;            result.setMessage(&quot;点位不存在&quot;);</b>
+<i>107</i>&nbsp;        } else {
+<b class="fc"><i>108</i>&nbsp;            nodeService.deleteNodeById(authorId, nodeId);</b>
+<b class="fc"><i>109</i>&nbsp;            result.setCode(200);</b>
+<b class="fc"><i>110</i>&nbsp;            result.setMessage(&quot;删除点位成功&quot;);</b>
+<i>111</i>&nbsp;        }
+<b class="fc"><i>112</i>&nbsp;        return result;</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    /* 废弃接口
+<i>116</i>&nbsp;    @GetMapping(&quot;/nodes/building&quot;)
+<i>117</i>&nbsp;    public NodeResult nodeGetByBuilding(@RequestParam String buildingId,
+<i>118</i>&nbsp;                                        @RequestParam(required = false,defaultValue = &quot;&quot;) String name,
+<i>119</i>&nbsp;                                        @RequestParam(required = false) Integer skip,
+<i>120</i>&nbsp;                                        @RequestParam(required = false)Integer limit){
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;        if(skip == null){
+<i>123</i>&nbsp;            skip = 0;
+<i>124</i>&nbsp;        }
+<i>125</i>&nbsp;        if(limit == null){
+<i>126</i>&nbsp;            limit = 5;
+<i>127</i>&nbsp;        }
+<i>128</i>&nbsp;        NodeResult result =new NodeResult();
+<i>129</i>&nbsp;        result.setNodes(nodeService.findByBuildingAndName(buildingId,name,skip,limit));
+<i>130</i>&nbsp;        return result;
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    }
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;    @GetMapping(&quot;/nodes/twonodes/v1&quot;)
+<i>135</i>&nbsp;    public Set&lt;Map&lt;String, Object&gt;&gt; ShorestpathGetByTwoNodes(@RequestParam String nId1, @RequestParam String nId2,
+<i>136</i>&nbsp;                                                             @RequestParam(required = false) Integer skip,
+<i>137</i>&nbsp;                                                             @RequestParam(required = false)Integer limit){
+<i>138</i>&nbsp;        if(skip == null){
+<i>139</i>&nbsp;            skip = 0;
+<i>140</i>&nbsp;        }
+<i>141</i>&nbsp;        if(limit == null){
+<i>142</i>&nbsp;            limit = 5;
+<i>143</i>&nbsp;        }
+<i>144</i>&nbsp;        Set&lt;Map&lt;String, Object&gt;&gt; result = nodeService.findByTwoNodeId(nId1,nId2,skip,limit);
+<i>145</i>&nbsp;        return result;
+<i>146</i>&nbsp;    }
+<i>147</i>&nbsp;    */
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

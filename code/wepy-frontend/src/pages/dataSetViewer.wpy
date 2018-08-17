@@ -1,5 +1,5 @@
 <style>
-  .searchInput{
+  .searchInput {
     height: 7vh;
     width: 660rpx;
     margin-top: 2vh;
@@ -8,63 +8,62 @@
     text-align: center;
     background-color: white;
     border-radius: 4vh;
-    border: rgb(242,242,242);
+    border: rgb(242, 242, 242);
     border-style: solid;
     border-width: 4rpx;
   }
 </style>
 
 <template>
-  <view style="height: 9vh; display: flex; flex-direction: row;">
-    <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
-  </view>
-  <view @tap="addDataSet">
-    添加数据组
-  </view>
+  <view>
+    <view style="height: 9vh; display: flex; flex-direction: row;">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息" />
+    </view>
+    <view @tap="addDataSet">
+      添加数据组
+    </view>
+    <view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import {httpHead, imgHead} from '../properties/Const'
-
+  import {
+    httpHead,
+    imgHead
+  } from '../properties/Const'
   export default class DataSetViewer extends wepy.page {
     onLoad() {
-
     }
-
     config = {
       navigationBarTitleText: 'DataSetView',
     }
-
     data = {
-      addName:"",
+      addName: "",
       hiddenInput: true,
       dataSet: [],
-      name:"",
+      name: "",
       typeArray: ["点位", "路线"],
-      skip:0,
-      limit:5,
+      skip: 0,
+      limit: 5,
     }
-
     methods = {
       searchInput(e) {
         this.skip = 0;
         this.name = e.target.value;
         this.search();
       },
-      addDataSet(){
+      addDataSet() {
         wx.navigateTo({
           url: '/pages/addDataSet',
         })
       }
     }
-
     async search() {
       try {
         let res = await wepy.request({
           url: httpHead + '/dataset',
           data: {
-            buildingId : this.$parent.globalData.building.id,
+            buildingId: this.$parent.globalData.building.id,
             authorId: this.$parent.globalData.userInfo,
             dataSetName: this.name,
             skip: this.skip,
@@ -72,7 +71,7 @@
           }
         })
         console.log(res.data);
-      }catch (e) {
+      } catch (e) {
         console.log(e);
       }
     }

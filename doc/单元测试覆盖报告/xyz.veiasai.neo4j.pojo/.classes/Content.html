@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Content</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.pojo</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Content (xyz.veiasai.neo4j.pojo)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Content</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.pojo;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.fasterxml.jackson.annotation.JsonInclude;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import javax.validation.constraints.NotNull;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;@JsonInclude(JsonInclude.Include.NON_NULL)
+<i>8</i>&nbsp;public class Content {
+<i>9</i>&nbsp;    @NotNull
+<i>10</i>&nbsp;    private String type;
+<i>11</i>&nbsp;    @NotNull
+<i>12</i>&nbsp;    private String message;
+<i>13</i>&nbsp;
+<b class="fc"><i>14</i>&nbsp;    public Content() {</b>
+<b class="fc"><i>15</i>&nbsp;    }</b>
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;    public Content(@NotNull String type, @NotNull String message) {</b>
+<b class="fc"><i>18</i>&nbsp;        this.type = type;</b>
+<b class="fc"><i>19</i>&nbsp;        this.message = message;</b>
+<b class="fc"><i>20</i>&nbsp;    }</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    public String getType() {
+<b class="fc"><i>23</i>&nbsp;        return type;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    public void setType(String type) {
+<b class="fc"><i>27</i>&nbsp;        this.type = type;</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    public String getMessage() {
+<b class="fc"><i>31</i>&nbsp;        return message;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public void setMessage(String message) {
+<b class="fc"><i>35</i>&nbsp;        this.message = message;</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>

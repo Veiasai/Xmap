@@ -1,0 +1,96 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AuthorRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">xyz.veiasai.neo4j.repositories</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AuthorRepository (xyz.veiasai.neo4j.repositories)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">AuthorRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package xyz.veiasai.neo4j.repositories;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.data.neo4j.annotation.Query;
+<i>4</i>&nbsp;import org.springframework.data.neo4j.repository.Neo4jRepository;
+<i>5</i>&nbsp;import org.springframework.data.repository.query.Param;
+<i>6</i>&nbsp;import xyz.veiasai.neo4j.domain.Author;
+<i>7</i>&nbsp;import xyz.veiasai.neo4j.domain.DataSet;
+<i>8</i>&nbsp;import xyz.veiasai.neo4j.domain.Node;
+<i>9</i>&nbsp;import xyz.veiasai.neo4j.domain.Path;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.util.Collection;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;public interface AuthorRepository extends Neo4jRepository&lt;Author, String&gt; {
+<i>15</i>&nbsp;    @Query(&quot;Match (n {id:{favoriteId}}),(a:Author {id:{authorId}}) merge (a)-[:COLLECT]-&gt;(n)&quot;)
+<i>16</i>&nbsp;    public void addFavorite(@Param(&quot;authorId&quot;) String authorId, @Param(&quot;favoriteId&quot;) String favoriteId);
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    @Query(&quot;Match (n {id:{favoriteId}}) where labels(n)[0] in [&#39;Node&#39;,&#39;Path&#39;,&#39;DataSet&#39;] return count(n)&quot;)
+<i>19</i>&nbsp;    public int FavorExistInDb(@Param(&quot;favoriteId&quot;) String favoriteId);
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}})-[:COLLECT]-&gt;(n {id:{favoriteId}}) return count(n) &quot;)
+<i>22</i>&nbsp;    public int findFavoriteById(@Param(&quot;authorId&quot;) String authorId, @Param(&quot;favoriteId&quot;) String favoriteId);
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    @Query(&quot;Match (a:Author {id:{authorId}})-[r:COLLECT]-&gt;(n {id:{favoriteId}}) delete r&quot;)
+<i>25</i>&nbsp;    public void deleteFavorite(@Param(&quot;authorId&quot;) String authorId, @Param(&quot;favoriteId&quot;) String favoriteId);
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    @Query(&quot;MATCH (a:Author {id:{authorId}})-[:COLLECT]-&gt;(n:Node) WHERE n.name =~ (&#39;.*&#39;+{nodeName}+&#39;.*&#39;)&quot; +
+<i>28</i>&nbsp;            &quot;RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}&quot;)
+<i>29</i>&nbsp;    public Collection&lt;Node&gt; findNodeByNameLike(@Param(&quot;authorId&quot;) String authorId,
+<i>30</i>&nbsp;                                               @Param(&quot;nodeName&quot;) String nodeName,
+<i>31</i>&nbsp;                                               @Param(&quot;skip&quot;) Integer skip,
+<i>32</i>&nbsp;                                               @Param(&quot;limit&quot;) Integer limit);
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    @Query(&quot;MATCH (a:Author {id:{authorId}})-[:COLLECT]-&gt;(n:Path) WHERE n.name =~ (&#39;.*&#39;+{pathName}+&#39;.*&#39;) &quot; +
+<i>35</i>&nbsp;            &quot;RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}&quot;)
+<i>36</i>&nbsp;    public Collection&lt;Path&gt; findPathByNameLike(@Param(&quot;authorId&quot;) String authorId,
+<i>37</i>&nbsp;                                               @Param(&quot;pathName&quot;) String pathName,
+<i>38</i>&nbsp;                                               @Param(&quot;skip&quot;) Integer skip,
+<i>39</i>&nbsp;                                               @Param(&quot;limit&quot;) Integer limit);
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    @Query(&quot;MATCH (a:Author {id:{authorId}})-[:COLLECT]-&gt;(n:DataSet) WHERE n.name =~ (&#39;.*&#39;+{datasetName}+&#39;.*&#39;)&quot; +
+<i>42</i>&nbsp;            &quot;RETURN n ORDER BY n.name SKIP {skip} LIMIT {limit}&quot;)
+<i>43</i>&nbsp;    public Collection&lt;DataSet&gt; findDataSetByNameLike(@Param(&quot;authorId&quot;) String authorId,
+<i>44</i>&nbsp;                                                     @Param(&quot;datasetName&quot;) String datasetName,
+<i>45</i>&nbsp;                                                     @Param(&quot;skip&quot;) Integer skip,
+<i>46</i>&nbsp;                                                     @Param(&quot;limit&quot;) Integer limit);
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-08-17 12:05</div>
+</div>
+</body>
+</html>
