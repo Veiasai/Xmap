@@ -49,6 +49,7 @@ public class TestDefault {
     protected static Node node = new Node();
     protected static Node node2 = new Node();
     protected static Path path = new Path();
+    protected static Path path2 = new Path();
     protected static DataSet dataSetNode = new DataSet();
     protected static DataSet dataSetPath = new DataSet();
     protected static Gson gson = new Gson();
@@ -90,6 +91,7 @@ public class TestDefault {
 
         node2.setName("node2");
         node2.setId(null);
+        node2.setBuilding(building2);
         node2 = nodeRepository.save(node2);
 
         // 初始化path
@@ -109,6 +111,18 @@ public class TestDefault {
         pathRepository.addRelationBuildingAndAuthor(path.getId(), building.getId(), author.getId());
         pathRepository.addRelationOriginAndEnd(path.getId(), node.getId(), node2.getId());
 
+        path2.setId(null);
+        path2.setName("test");
+        path2.setCurves(10);
+        path2.setImg("test");
+        path2.setSteps(10);
+        path2.setState(1);
+        path2.setContents(contents);
+        path2 = pathRepository.save(path2);
+        pathRepository.addRelationBuildingAndAuthor(path2.getId(), building2.getId(), author2.getId());
+
+
+
         // 初始化dataSet
         dataSetNode.setName("test");
         dataSetNode.setState(1);
@@ -122,7 +136,7 @@ public class TestDefault {
         dataSetPath.setType("path");
         dataSetPath = dataSetRepository.save(dataSetPath);
         dataSetRepository.addRelationDataSetAndPath(dataSetPath.getId(), path.getId());
-        dataSetRepository.addRelationBuildingAndAuthor(dataSetPath.getId(), building.getId(), author.getId());
+        dataSetRepository.addRelationBuildingAndAuthor(dataSetPath.getId(), building2.getId(), author.getId());
 
         // 初始化favorite
         authorRepository.addFavorite(author.getId(), path.getId());

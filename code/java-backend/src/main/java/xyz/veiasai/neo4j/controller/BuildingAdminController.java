@@ -14,6 +14,7 @@ import xyz.veiasai.neo4j.service.*;
 
 import java.util.List;
 
+
 @Api(value = "buildingAdmin-controller")
 @RestController
 @RequestMapping("/")
@@ -89,32 +90,6 @@ public class BuildingAdminController {
         return result;
     }
 
-    @PutMapping("building/admin/node")
-    public Result updateNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Node node) {
-        Result result = new Result();
-        if (buildingService.getBuildingById(buildingId) == null) {
-            result.setCode(404);
-            result.setMessage("建筑不存在");
-        } else if (authorService.getAuthorById(adminId) == null) {
-            result.setCode(404);
-            result.setMessage("用户不存在");
-        } else if (nodeService.findById(node.getId()) == null) {
-            result.setCode(404);
-            result.setMessage("点位不存在");
-        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
-            result.setCode(403);
-            result.setMessage("该用户不是该建筑管理员");
-        } else if (!nodeService.existBuildingAndNode(buildingId, node.getId())) {
-            result.setCode(403);
-            result.setMessage("该点位不属于该建筑");
-        } else {
-            nodeService.updateNodeByAdmin(node);
-            result.setCode(200);
-            result.setMessage("更新成功");
-        }
-        return result;
-    }
-
     @DeleteMapping("building/admin/path")
     public Result deletePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String pathId) {
         Result result = new Result();
@@ -141,32 +116,6 @@ public class BuildingAdminController {
         return result;
     }
 
-    @PutMapping("building/admin/path")
-    public Result updatePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Path path) {
-        Result result = new Result();
-        if (buildingService.getBuildingById(buildingId) == null) {
-            result.setCode(404);
-            result.setMessage("建筑不存在");
-        } else if (authorService.getAuthorById(adminId) == null) {
-            result.setCode(404);
-            result.setMessage("用户不存在");
-        } else if (pathService.findById(path.getId()) == null) {
-            result.setCode(404);
-            result.setMessage("路线不存在");
-        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
-            result.setCode(403);
-            result.setMessage("该用户不是该建筑管理员");
-        } else if (!pathService.existBuildingAndPath(buildingId, path.getId())) {
-            result.setCode(403);
-            result.setMessage("该路线不属于该建筑");
-        } else {
-            result.setCode(200);
-            result.setMessage("更新成功");
-            pathService.updatePathByAdmin(path);
-        }
-        return result;
-    }
-
     @DeleteMapping("building/admin/dataset")
     public Result deleteDataSetByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId) {
         Result result = new Result();
@@ -182,7 +131,7 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
-        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
             result.setCode(403);
             result.setMessage("该数据组不属于该建筑");
         } else {
@@ -194,7 +143,7 @@ public class BuildingAdminController {
     }
 
     @PutMapping("building/admin/dataset")
-    public Result updateDataSetByadmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam List<String> Ids) {
+    public Result updateDataSetByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam List<String> Ids) {
         Result result = new Result();
         if (buildingService.getBuildingById(buildingId) == null) {
             result.setCode(404);
@@ -208,7 +157,7 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
-        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
             result.setCode(403);
             result.setMessage("该数据组不属于该建筑");
         } else {
@@ -219,7 +168,7 @@ public class BuildingAdminController {
     }
 
     @PutMapping("building/admin/dataset/detail")
-    public Result addDataSetdetailByadmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
+    public Result addDataSetDetailByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
         Result result = new Result();
         DataSet dataSet = dataSetService.findById(dataSetId);
         if (buildingService.getBuildingById(buildingId) == null) {
@@ -248,8 +197,9 @@ public class BuildingAdminController {
         }
         return result;
     }
+
     @DeleteMapping("building/admin/dataset/detail")
-    public Result deleteDataSetdetailByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
+    public Result deleteDataSetDetailByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestParam String dataSetId, @RequestParam String Id) {
         Result result = new Result();
         DataSet dataSet = dataSetService.findById(dataSetId);
         if (buildingService.getBuildingById(buildingId) == null) {
@@ -264,7 +214,7 @@ public class BuildingAdminController {
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
             result.setCode(403);
             result.setMessage("该用户不是该建筑管理员");
-        } else if (dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
+        } else if (!dataSetService.existBuildingAndDataSet(buildingId, dataSetId)) {
             result.setCode(403);
             result.setMessage("该数据组不属于该建筑");
         } else if(dataSet.getType().equals("node")) {
@@ -285,7 +235,7 @@ public class BuildingAdminController {
         BuildingResult result = new BuildingResult();
         if (authorService.getAuthorById(adminId) == null) {
             result.setMessage("用户不存在");
-            result.setCode(405);
+            result.setCode(404);
         } else {
             result.setBuildings(buildingAdminService.findBuildingByAdmin(adminId));
             result.setCode(200);
@@ -293,13 +243,12 @@ public class BuildingAdminController {
         }
         return result;
     }
-
     @GetMapping("building/admin/buildingandcount")
     public CountSumResult getBuildingAndCountByAdminId(@RequestParam String adminId) {
         CountSumResult result = new CountSumResult();
         if (authorService.getAuthorById(adminId) == null) {
             result.setMessage("用户不存在");
-            result.setCode(405);
+            result.setCode(404);
         } else {
             result.setCountSums(buildingAdminService.findBuildingAndCountByAdmin(adminId));
             result.setCode(200);
@@ -307,4 +256,62 @@ public class BuildingAdminController {
         }
         return result;
     }
+
+
+    /* 待定update接口
+    @PutMapping("building/admin/path")
+    public Result updatePathByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Path path) {
+        Result result = new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(404);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (pathService.findById(path.getId()) == null) {
+            result.setCode(404);
+            result.setMessage("路线不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(403);
+            result.setMessage("该用户不是该建筑管理员");
+        } else if (!pathService.existBuildingAndPath(buildingId, path.getId())) {
+            result.setCode(403);
+            result.setMessage("该路线不属于该建筑");
+        } else {
+            result.setCode(200);
+            result.setMessage("更新成功");
+            pathService.updatePathByAdmin(path);
+        }
+        return result;
+    }
+    */
+
+
+    /*
+    @PutMapping("building/admin/node")
+    public Result updateNodeByAdmin(@RequestParam String buildingId, @RequestParam String adminId, @RequestBody Node node) {
+        Result result = new Result();
+        if (buildingService.getBuildingById(buildingId) == null) {
+            result.setCode(404);
+            result.setMessage("建筑不存在");
+        } else if (authorService.getAuthorById(adminId) == null) {
+            result.setCode(404);
+            result.setMessage("用户不存在");
+        } else if (nodeService.findById(node.getId()) == null) {
+            result.setCode(404);
+            result.setMessage("点位不存在");
+        } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, adminId)) {
+            result.setCode(403);
+            result.setMessage("该用户不是该建筑管理员");
+        } else if (!nodeService.existBuildingAndNode(buildingId, node.getId())) {
+            result.setCode(403);
+            result.setMessage("该点位不属于该建筑");
+        } else {
+            nodeService.updateNodeByAdmin(node);
+            result.setCode(200);
+            result.setMessage("更新成功");
+        }
+        return result;
+    }
+    */
 }

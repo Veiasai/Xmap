@@ -62,6 +62,15 @@ public class BuildingAdminControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
 
         assertTrue(pathRepository.findById(path.getId()).isPresent());
+        // invalid building-relation-path
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/path")
+                .param("pathId", path2.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        assertTrue(pathRepository.findById(path.getId()).isPresent());
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/building/admin/path")
                 .param("pathId", path.getId())
@@ -110,6 +119,16 @@ public class BuildingAdminControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
         assertTrue(nodeRepository.findById(node.getId()).isPresent());
+
+        // invalid building-relation-node
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/node")
+                .param("nodeId", node2.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+        assertTrue(nodeRepository.findById(node.getId()).isPresent());
+
         // ok
         mvc.perform(MockMvcRequestBuilders.delete("/building/admin/node")
                 .param("nodeId", node.getId())
@@ -132,7 +151,7 @@ public class BuildingAdminControllerTest extends TestDefault {
         mvc.perform(MockMvcRequestBuilders.get("/building/admin/building")
                 .param("adminId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(405));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
 
         // invalid admin
         mvc.perform(MockMvcRequestBuilders.get("/building/admin/building")
@@ -140,6 +159,28 @@ public class BuildingAdminControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.buildings").isEmpty());
+    }
+
+    @Test
+    public void countAdminByBuildingId() throws Exception{
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/building/admin/buildingandcount")
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.countSums").isNotEmpty());
+
+        // invalid author id
+        mvc.perform(MockMvcRequestBuilders.get("/building/admin/buildingandcount")
+                .param("adminId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid admin
+        mvc.perform(MockMvcRequestBuilders.get("/building/admin/buildingandcount")
+                .param("adminId", author.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.countSums").isEmpty());
     }
 
     @Test
@@ -155,5 +196,236 @@ public class BuildingAdminControllerTest extends TestDefault {
                 .param("buildingId", "NotExist"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+    }
+
+    @Test
+    public void deleteDataSetByAdmin() throws Exception {
+        assertTrue(dataSetRepository.findById(dataSetNode.getId()).isPresent());
+        // invalid dataSet
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset")
+                .param("dataSetId", "NotExist")
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+        assertTrue(dataSetRepository.findById(dataSetNode.getId()).isPresent());
+        // invalid building
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", "NotExist")
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+        assertTrue(dataSetRepository.findById(dataSetNode.getId()).isPresent());
+        // invalid user
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", "NotExist"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+        assertTrue(dataSetRepository.findById(dataSetNode.getId()).isPresent());
+        // invalid admin
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", author.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+        assertTrue(dataSetRepository.findById(dataSetNode.getId()).isPresent());
+        // invalid building-relation-dataSet
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset")
+                .param("dataSetId", dataSetPath.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+        assertTrue(dataSetRepository.findById(dataSetPath.getId()).isPresent());
+        // ok
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+
+        assertFalse(dataSetRepository.findById(dataSetNode.getId()).isPresent());
+    }
+
+    @Test
+    public void updateDataSetByAdmin() throws Exception {
+
+        // invalid dataSet
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset")
+                .param("dataSetId", "NotExist")
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Ids", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid building
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", "NotExist")
+                .param("adminId", buildingAdmin.getId())
+                .param("Ids", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid user
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", "NotExist")
+                .param("Ids", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid admin
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", author.getId())
+                .param("Ids", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // invalid building-relation-dataSet
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset")
+                .param("dataSetId", dataSetPath.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Ids", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Ids", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+
+
+    }
+
+    @Test
+    public void addDataSetDetailByAdmin() throws Exception {
+
+        // invalid dataSet
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset/detail")
+                .param("dataSetId", "NotExist")
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid building
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", "NotExist")
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid user
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", "NotExist")
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid admin
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", author.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // invalid building-relation-dataSet
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetPath.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.put("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+
+    }
+
+    @Test
+    public void deleteDataSetDetailByAdmin() throws Exception {
+        // invalid dataSet
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset/detail")
+                .param("dataSetId", "NotExist")
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid building
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", "NotExist")
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid user
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", "NotExist")
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(404));
+
+        // invalid admin
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", author.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // invalid building-relation-dataSet
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetPath.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.delete("/building/admin/dataset/detail")
+                .param("dataSetId", dataSetNode.getId())
+                .param("buildingId", building.getId())
+                .param("adminId", buildingAdmin.getId())
+                .param("Id", "[]"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));
+
     }
 }

@@ -137,11 +137,11 @@ public class DataSetService {
 
     @Transactional
     public boolean existBuildingAndDataSet(String buildingId,String dataSetId){
-        return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId) == 0;
+        return dataSetRepository.countBuildingAndDataSet(buildingId, dataSetId) != 0;
     }
 
     @Transactional
     public boolean existAuthorAndDataSet(String authorId,String dataSetId){
-        return dataSetRepository.countAuthorAndDataSet(authorId, dataSetId)!=0;
+        return dataSetRepository.countAuthorAndDataSet(authorId, dataSetId) !=0;
     }
 }
