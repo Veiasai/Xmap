@@ -16,7 +16,7 @@
 
   .pathGroup {
     width: 700 rpx;
-    height: 60vh;
+    height: 62vh;
     bottom: 0;
   }
 
@@ -29,19 +29,19 @@
   }
 
   .applyAdminButton{
-    width:350rpx;
-    height:80rpx;
+    width:320rpx;
+    height:70rpx;
     display: flex;
     align-items: center;
     justify-content: center;
     color:white;
     background-color: #90b3d0;
-    border-radius: 50rpx;
+    border-radius: 40rpx;
   }
 
   .buildingMessages{
     width: 700rpx;
-    height: 20vh;
+    height: 18vh;
     background-color: #f6f6f6;
     border-radius: 16rpx;
     display: flex;
@@ -62,19 +62,21 @@
         </view>
       </picker>
     </view>
-    <view style="height: 10vh; display: flex;justify-content: center;align-items: center">
+    <view style="height: 8vh; display: flex;justify-content: center;align-items: center">
       <view class="applyAdminButton" @tap="applyAdmin">
         申请成为管理员
       </view>
     </view>
-    <swiper class="buildingMessages">
-      <repeat for="{{messages.reverse()}}" index="index" item="item">
-        <swiper-item style="width: 660rpx">
-          <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
-          <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
-        </swiper-item>
-      </repeat>
-    </swiper>
+    <view style="height: 20vh; display: flex;justify-content: center;align-items: center">
+      <swiper class="buildingMessages">
+        <repeat for="{{messages.reverse()}}" index="index" item="item">
+          <swiper-item style="width: 660rpx">
+            <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
+            <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
+          </swiper-item>
+        </repeat>
+      </swiper>
+    </view>
     <scroll-view  scroll-y bindscrolltolower="touchLow" class="pathGroup">
       <repeat for="{{paths}}" index="index" item="item">
         <Path :path="item"></Path>
@@ -105,9 +107,11 @@
     }
 
     config = {
-      navigationBarTitleText: "Main",
+      navigationBarTitleText: "首页",
       enablePullDownRefresh: true,
-      backgroundColor: "#f6f6f6"
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
     };
     data = {
       dataSet: null,
@@ -172,7 +176,7 @@
           url: '/pages/pathInfo',
         })
       }
-    }
+    };
 
     async searchPath(data) {
       try {
@@ -215,8 +219,7 @@
               icon: 'none',
             })
           }
-        }
-        this.$parent.globalData.paths = this.paths;
+        }this.$parent.globalData.paths = this.paths;
         this.$apply();
       }
       catch (e) {

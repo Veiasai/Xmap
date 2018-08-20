@@ -1,14 +1,13 @@
 <style lang="less">
   .node{
-    width: 600rpx;
+    width: 700rpx;
     height: 140rpx;
     border-radius: 16rpx;
-    background-color: #FEFEFE;
+    background-color: #e5edf4;
     text-align: center;
     display: flex;
     flex-direction: row;
     align-items: center;
-    box-shadow:0rpx 4rpx 30rpx #888888;
   }
 
   .nodeimg{
@@ -35,11 +34,13 @@
 </style>
 
 <template>
-  <view @tap="tapNode" class="node">
-    <view class="nodeimg">
-      <image mode="aspectFill" src="{{node.img}}" />
+  <view style="display: flex; width: 750rpx;justify-content: center;margin-top: 1vh">
+    <view @tap="tapNode" class="node">
+      <view class="nodeimg">
+        <image mode="aspectFill" src="{{node.img}}" />
+      </view>
+      <view class="nodename" >{{node.name}}</view>
     </view>
-    <view class="nodename" >{{node.name}}</view>
   </view>
 </template>
 

@@ -77,6 +77,11 @@
     }
 
     config={
+      navigationBarTitleText: '上传',
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
+      "enablePullDownRefresh": true,
     }
   }
 </script>
