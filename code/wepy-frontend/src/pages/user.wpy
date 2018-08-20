@@ -1,29 +1,26 @@
 <style>
-  .mainContainer{
+  .mainContainer {
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
-
-  .container0{
+  .container0 {
     height: 17vh;
     width: 750rpx;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
-  .container1{
+  .container1 {
     height: 9vh;
     width: 750rpx;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
-  .userInfo{
+  .userInfo {
     width: 600rpx;
     height: 140rpx;
     border-radius: 16rpx;
@@ -32,30 +29,26 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    filter:drop-shadow(4rpx 6rpx 10rpx #333333)
+    filter: drop-shadow(4rpx 6rpx 10rpx #333333)
   }
-
-  .avatar{
+  .avatar {
     margin-left: 20rpx;
-    position:relative;
-    width:100rpx;
-    height:100rpx;
-    overflow:hidden;
-    border-radius:50%;
+    position: relative;
+    width: 100rpx;
+    height: 100rpx;
+    overflow: hidden;
+    border-radius: 50%;
   }
-
-  .avatar image{
-    width:100rpx;
-    height:100rpx;
+  .avatar image {
+    width: 100rpx;
+    height: 100rpx;
   }
-
-  .userName{
+  .userName {
     margin-left: 20rpx;
     font-size: 40rpx;
     color: #111111;
   }
-
-  .favortext{
+  .favortext {
     height: 100%;
     margin-right: 20rpx;
     font-size: 32rpx;
@@ -66,35 +59,29 @@
     align-items: center;
     justify-content: flex-end;
   }
-
-  .tab{
+  .tab {
     left: 40rpx;
     top: 180rpx;
     width: 600rpx;
     height: 80rpx;
     line-height: 40rpx;
-    border-radius:16rpx;
+    border-radius: 16rpx;
     background-color: rgb(242, 242, 242);
     text-align: center;
     display: flex;
     flex-direction: row;
   }
-
-
-  .mynode{
+  .mynode {
     border-radius: 16rpx 0rpx 0rpx 16rpx;
   }
-
-  .mypath{
+  .mypath {
     border-radius: 0rpx 16rpx 16rpx 0rpx;
   }
-
-  .tabtext{
+  .tabtext {
     color: #fefefe;
     font-size: 32rpx;
   }
-
-  .selected{
+  .selected {
     width: 300rpx;
     text-align: center;
     background-color: #90b3d0;
@@ -104,7 +91,7 @@
     justify-content: center;
     border-style: none;
   }
-  .default{
+  .default {
     width: 300rpx;
     text-align: center;
     background-color: #FEFEFE;
@@ -115,27 +102,27 @@
     align-items: center;
     justify-content: center;
   }
-
-  .tabcontent{
+  .tabcontent {
     margin-top: 1vh;
     width: 750rpx;
     height: 74vh;
   }
-
-  .show{display: block;padding-bottom:42px;}
-
-  .hidden{display: none;padding-bottom:42px;}
-
-  .pathView{
+  .show {
+    display: block;
+    padding-bottom: 42px;
+  }
+  .hidden {
+    display: none;
+    padding-bottom: 42px;
+  }
+  .pathView {
     width: 750rpx;
     height: 74vh;
   }
-
-  .nodeView{
+  .nodeView {
     width: 750rpx;
     height: 74vh;
   }
-
 </style>
 
 <template>
@@ -146,7 +133,7 @@
           <view class="avatar">
             <image mode="aspectFill" src="{{user.img}}" />
           </view>
-          <view class="userName" >{{user.name}}</view>
+          <view class="userName">{{user.name}}</view>
           <view class="favortext">
             <view style="height: 100%; display: flex;align-items: center" @tap="toCollection">
               我的收藏 >
@@ -167,16 +154,16 @@
     </view>
     <view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd"  class="nodeView">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
             <view style="height: 140rpx; margin-top: 1vh;">
               <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem" @manItem.user="handleManItem">
                 <view style="display: flex;justify-content: center;align-items: center">
-                  <view  class="node">
+                  <view class="node">
                     <view class="nodeimg">
                       <image mode="aspectFill" src="{{item.img}}" />
                     </view>
-                    <view class="nodename" >{{item.name}}</view>
+                    <view class="nodename">{{item.name}}</view>
                   </view>
                 </view>
               </SwipeDelete>
@@ -185,18 +172,18 @@
         </scroll-view>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd"  class="pathView">
+        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
           <repeat for="{{pathList}}" key="index" item="item" index="index">
             <view style="height: 200rpx; margin-top: 1vh;">
-              <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
+              <SwipeDelete1 :swipeData="item" @delItem.user="handleDelItem">
                 <view style="display: flex;justify-content: center;align-items: center">
-                  <view id="{{index}}" @tap = "jumpToPath" class="path">
+                  <view id="{{index}}" @tap="jumpToPath" class="path">
                     <view class="pathimg">
                       <image mode="aspectFill" src="{{item.img}}" />
                     </view>
                     <view class="pathContent">
                       <view class="pathname">{{item.name}}</view>
-                      <view class="pathdetail">步数：{{item.steps}}  转弯数：{{item.curves}}</view>
+                      <view class="pathdetail">步数：{{item.steps}} 转弯数：{{item.curves}}</view>
                     </view>
                   </view>
                 </view>
@@ -211,110 +198,97 @@
 
 <script>
   import wepy from 'wepy';
-  import {httpHead, imgHead} from '../properties/Const'
+  import {
+    httpHead,
+    imgHead
+  } from '../properties/Const'
   import Path from '../components/path';
   import Node from '../components/node';
   import swipeDelete from '../components/swipe-delete'
-
-
-
   export default class user extends wepy.page {
-    config={
+    config = {
       navigationBarTitleText: '我的',
       backgroundColor: "#90b3d0",
       "navigationBarBackgroundColor": "#90b3d0",
       "navigationBarTextStyle": "white",
       "enablePullDownRefresh": true,
     };
-
     async onLoad() {
       try {
         this.searchPath(0);
         this.searchNode(0);
-        let res = await  wepy.getUserInfo();
+        let res = await wepy.getUserInfo();
         let user = res.userInfo;
         console.log(res);
-        this.user = {img: user.avatarUrl, name: user.nickName};
+        this.user = {
+          img: user.avatarUrl,
+          name: user.nickName
+        };
         console.log(this.user);
         this.$apply();
-      }catch (e){
-
+      } catch (e) {
       }
     }
-    onPullDownRefresh(){
-      if (this.select === '0'){
+    onPullDownRefresh() {
+      if (this.select === '0') {
         this.nodeSkip = 0;
         this.searchNode(0);
-      }
-      else{
+      } else {
         this.pathSkip = 0;
         this.searchPath(0);
       }
       wx.stopPullDownRefresh()
     }
-
-
-
     components = {
       Path: Path,
       Node: Node,
       SwipeDelete: swipeDelete,
       SwipeDelete1: swipeDelete
     };
-
     data = {
-      select:"0",
-      pathSkip:0,
-      nodeSkip:0,
+      select: "0",
+      pathSkip: 0,
+      nodeSkip: 0,
       limit: 5,
-      user:{
-        index:0,
-        img:"../images/test1.jpg",
-        name:'吴志文'
+      user: {
+        index: 0,
+        img: "../images/test1.jpg",
+        name: '吴志文'
       },
-
-      pathList:[],
-      nodeList:[],
-      manage:true
+      pathList: [],
+      nodeList: [],
+      manage: true
     };
-
-
     methods = {
-      jumpToPath(itemData){
+      jumpToPath(itemData) {
         console.log(itemData);
         this.$preload('originToEnd', [this.pathList[itemData.currentTarget.id]]);
         wx.navigateTo({
           url: '/pages/pathInfo',
         })
-
       },
-
       toCollection() {
         wx.navigateTo({
           url: '/pages/collection',
         })
       },
-
-      toDataSet(){
+      toDataSet() {
         wx.navigateTo({
           url: '/pages/dataSetViewer',
         })
       },
-
       handleManItem(itemData) {
         console.log(itemData)
       },
-
-      async handleDelItem (itemData) {
-        try{
+      async handleDelItem(itemData) {
+        try {
           console.log(itemData)
           let res = await wepy.showModal({
             title: "提示",
-            content: "删除操作不可恢复，确认删除<" + itemData.name+ ">?",
+            content: "删除操作不可恢复，确认删除<" + itemData.name + ">?",
           })
           console.log(res);
-          if (res.confirm)
-          {
+          if (res.confirm) {
             let type = "/node";
             if (itemData.contents !== undefined) {
               type = "/path";
@@ -323,14 +297,13 @@
               url: httpHead + type + "?nodeId=" + itemData.id + "&pathId=" + itemData.id + "&authorId=" + this.$parent.globalData.userInfo,
               method: "DELETE",
             })
-            if (del.data.code === 200){
-              if (type === "/node"){
-                this.nodeList = this.nodeList.filter((item)=>{
+            if (del.data.code === 200) {
+              if (type === "/node") {
+                this.nodeList = this.nodeList.filter((item) => {
                   return item.id !== itemData.id;
                 })
-              }
-              else{
-                this.pathList = this.pathList.filter((item)=>{
+              } else {
+                this.pathList = this.pathList.filter((item) => {
                   return item.id !== itemData.id;
                 })
               }
@@ -338,25 +311,21 @@
             console.log(del);
             this.$apply();
           }
-        }catch (e){
+        } catch (e) {
           console.log(e);
         }
       },
-      select(e){
+      select(e) {
         console.log(e);
         this.select = e.target.id;
       },
-
-      pathTouchEnd(){
+      pathTouchEnd() {
         this.searchPath(this.pathSkip);
       },
-      nodeTouchEnd(){
+      nodeTouchEnd() {
         this.searchNode(this.nodeSkip);
       },
     }
-
-
-
     async searchPath(skip) {
       try {
         let res = await wepy.request({
@@ -369,26 +338,25 @@
         })
         console.log(res.data);
         let paths = res.data.paths.map((item) => {
-          return {...item, img: imgHead + item.img}
+          return { ...item,
+            img: imgHead + item.img
+          }
         });
         if (paths.length > 0) {
           if (this.pathSkip === 0) {
             this.pathList = paths;
-          }
-          else {
+          } else {
             this.pathList = [...this.pathList, ...paths];
           }
           this.pathSkip += 5;
-        }
-        else {
+        } else {
           if (skip === 0) {
             this.pathList = [];
             wx.showToast({
               title: '没有创建路径',
               icon: 'none',
             })
-          }
-          else {
+          } else {
             wx.showToast({
               title: '没有更多了',
               icon: 'none',
@@ -396,12 +364,10 @@
           }
         }
         this.$apply();
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e);
       }
     }
-
     async searchNode(skip) {
       try {
         let res = await wepy.request({
@@ -415,26 +381,24 @@
         console.log(res.data);
         if (res.data.nodes.length > 0) {
           let nodes = res.data.nodes.map((item) => {
-            return {...item, img: imgHead + item.img}
+            return { ...item,
+              img: imgHead + item.img
+            }
           });
-
           if (skip === 0) {
             this.nodeList = nodes;
-          }
-          else if (this.nodeList.length === skip) {
+          } else if (this.nodeList.length === skip) {
             this.nodeList = [...this.nodeList, ...nodes];
           }
           this.nodeSkip += this.limit;
-        }
-        else {
+        } else {
           if (skip === 0) {
             wx.showToast({
               title: '没有创建点位',
               icon: 'none',
             })
             this.nodeList = [];
-          }
-          else {
+          } else {
             wx.showToast({
               title: '没有更多了',
               icon: 'none',
@@ -442,19 +406,16 @@
           }
         }
         this.$apply();
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e);
       }
     }
-
     async delNode() {
-      try{
+      try {
         let res = await wepy.request({
           url: httpHead + "/"
         })
-      }catch (e)
-      {
+      } catch (e) {
         console.log(e);
       }
     }

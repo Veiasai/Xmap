@@ -4,6 +4,7 @@ import "./Login.css"
 import {Control} from 'react-keeper'
 import {inject, observer} from "mobx-react/index";
 import {httpHead} from '../../Consts'
+import Qrcode from 'qrcode.react'
 
 const FormItem = Form.Item;
 
@@ -14,7 +15,9 @@ class Login extends Component {
         super(props);
         this.UserData = this.props.UserData;
     }
-
+    componentDidMount(){
+        this.refresh();
+    }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -24,6 +27,43 @@ class Login extends Component {
             }
         });
     };
+    refresh = async ()=>{
+        try{
+            this.UserData.qrcodeCount++;
+            let count = this.UserData.qrcodeCount;
+            let url = httpHead + '/login/qrcode'
+            let res = await fetch(url,
+                {
+                    method: "GET",
+                    mode: 'cors',
+                });
+            let json = await res.json();
+            this.UserData.qrcode = json;
+            url = httpHead + '/login/check?token=' + json.token
+            res = await fetch(url,{
+                    method: "GET",
+                    mode: 'cors',
+                });
+            
+            json = await res.json();
+            
+            if (count !== this.UserData.qrcodeCount)
+                return;
+            
+            if (json.code === 200 && json.state === 1) {
+                this.UserData.userID = json.userId;
+                this.UserData.isLogin = true;
+                message.success('登陆成功');
+                this.getBuildingList({authorId: json.userId});
+                Control.go('/ManageBuildings', {name: 'React-Keeper'})
+            }else{
+                message.error("登录过时") // 信息失效
+                this.UserData.qrcode = null;
+            }
+        }catch(e){
+
+        }
+    }
 
     Login = async (values) => {
         const url = httpHead + '/building/admin/login?authorId='+values.authorId;
@@ -41,7 +81,6 @@ class Login extends Component {
                     mode: 'cors',
                 });
             const json = await response.json();
-
             if (json.code === 200) {
                 this.UserData.userID = values.authorId;
                 this.UserData.isLogin = true;
@@ -72,6 +111,10 @@ class Login extends Component {
             const json = await response.json();
 
             if (json.code === 200) {
+                if (json.countSums.length === 0){
+                    message.success('您未管理任何建筑');
+                    return;
+                }
                 this.UserData.buildingList = json.countSums.map((item)=>{
                     let building=  item.building;
                     delete item.building;
@@ -107,6 +150,10 @@ class Login extends Component {
                         </Button>
                     </FormItem>
                 </Form>
+                {this.UserData.qrcode === null ? <Button onClick={this.refresh}>刷新</Button> : 
+                    <Qrcode size={300} value={JSON.stringify(this.UserData.qrcode)}/>}
+          
+                
             </div>
         );
     }

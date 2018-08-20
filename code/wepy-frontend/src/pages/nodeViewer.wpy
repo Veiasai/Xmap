@@ -1,5 +1,5 @@
 <style>
-  .searchInput{
+  .searchInput {
     height: 7vh;
     width: 640rpx;
     font-size: 32rpx;
@@ -7,11 +7,10 @@
     text-align: center;
     background-color: white;
     border-radius: 4vh;
-    border: rgb(242,242,242);
+    border: rgb(242, 242, 242);
     border-style: solid;
     border-width: 4rpx;
   }
-
   .nodeSelect {
     width: 680 rpx;
     height: 110rpx;
@@ -21,25 +20,23 @@
     align-items: center;
     justify-content: center;
   }
-
-  .nodeSelectItem{
+  .nodeSelectItem {
     width: 320rpx;
     height: 100rpx;
     border-radius: 16rpx;
     font-size: 28rpx;
     font-weight: lighter;
-    background-color: rgb(242,242,242);
+    background-color: rgb(242, 242, 242);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
   }
-  .cancel{
+  .cancel {
     width: 34rpx;
     height: 34rpx;
   }
-
-  .pathsAvailable{
+  .pathsAvailable {
     margin-top: 1vh;
     margin-left: 3%;
     padding-left: 4%;
@@ -51,28 +48,23 @@
     flex-direction: column;
     justify-content: center;
   }
-
-  .pathsAvailable view{
-
-  }
+  .pathsAvailable view {}
 </style>
 
 <template>
   <view>
     <!--search input box-->
     <view style="height: 9vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-      <view @tap="scanNode">
+      <view @tap="scan">
         <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/qrCode.svg"></image>
       </view>
-      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
-      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息" />
+      <picker bindchange="bindDataSetChange" range="{{dataSetNameList}}">
         <view class="picker">
           <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupSelector.svg"></image>
         </view>
       </picker>
     </view>
-
-
     <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
@@ -93,21 +85,21 @@
     <view wx:if="{{originToEndList === null}}">
       <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
         <view wx:if="{{origin === null}}">
-          <repeat  for="{{originNodes}}" index="index" item="item">
-            <oNode  :node="item"></oNode>
+          <repeat for="{{originNodes}}" index="index" item="item">
+            <oNode :node="item"></oNode>
           </repeat>
         </view>
         <view wx:else>
-          <repeat  for="{{endNodes}}" index="index" item="item">
-            <eNode  :node="item"></eNode>
+          <repeat for="{{endNodes}}" index="index" item="item">
+            <eNode :node="item"></eNode>
           </repeat>
         </view>
       </scroll-view>
     </view>
     <view wx:else>
       <scroll-view style="height: 60vh;" scroll-y bindscrolltolower="touchLowPath" class="nodeGroup">
-        <repeat  for="{{originToEndList}}" index="index" item="item">
-          <view class="pathsAvailable"  data-paths="{{item.paths}}" @tap="pathView">
+        <repeat for="{{originToEndList}}" index="index" item="item">
+          <view class="pathsAvailable" data-paths="{{item.paths}}" @tap="pathView">
             <view style="font-size: 40rpx">路线 {{index+1}}</view>
             <view style="font-size: 32rpx;font-weight: lighter;color: #383838">由 {{(item.paths.length-1)/2}} 条路线拼接而成</view>
             <view style="font-size: 32rpx;font-weight: lighter;color: #383838">共经过 {{(item.paths.length+1)/2}} 个点</view>
@@ -120,9 +112,11 @@
 
 <script>
   import wepy from 'wepy';
-  import {httpHead, imgHead} from '../properties/Const'
+  import {
+    httpHead,
+    imgHead
+  } from '../properties/Const'
   import node from '../components/node'
-
   export default class NodeViewer extends wepy.page {
     onLoad() {
       let data = {
@@ -133,7 +127,7 @@
       this.searchNode(data);
       this.searchDataSet();
     }
-    onPullDownRefresh(){
+    onPullDownRefresh() {
       let data = {
         buildingId: this.$parent.globalData.building.id,
         skip: 0,
@@ -149,7 +143,6 @@
       this.searchDataSet();
       wx.stopPullDownRefresh()
     }
-
     config = {
       navigationBarTitleText: '点位查找',
       backgroundColor: "#90b3d0",
@@ -162,8 +155,8 @@
       dataSet: null,
       dataSetList: [],
       dataSetNameList: [],
-      originNodes: [],  // 查找到的点位
-      endNodes:[],
+      originNodes: [], // 查找到的点位
+      endNodes: [],
       origin: null,
       end: null,
       originSkip: 0,
@@ -176,13 +169,11 @@
       oNode: node,
       eNode: node
     }
-
     computed = {
-      pathAmount(e){
-        return (e-1)/2
+      pathAmount(e) {
+        return (e - 1) / 2
       }
     }
-
     methods = {
       searchInput(e) {
         this.name = e.detail.value;
@@ -195,26 +186,22 @@
         }
         if (this.origin !== null) {
           data.originId = this.origin.id;
-        }
-        else {
+        } else {
           data.buildingId = this.$parent.globalData.building.id
         }
         this.searchNode(data);
       },
-
       nodeCancel(e) {
         let id = e.target.id;
         console.log(e.target)
         if (id === "1") {
           this.origin = null;
           this.end = null;
-        }
-        else {
+        } else {
           this.end = null;
         }
         this.originToEndList = null;
       },
-
       touchLow() {
         let data = {
           buildingId: this.$parent.globalData.building.id,
@@ -224,18 +211,15 @@
         }
         this.searchNode(data);
       },
-
       touchLowPath() {
         this.searchPath(this.pathSkip);
       },
-
       pathView(e) {
         this.$preload("originToEnd", e.currentTarget.dataset.paths);
         wx.navigateTo({
           url: '/pages/pathInfo',
         })
       },
-
       bindDataSetChange(e) {
         console.log(e);
         this.dataSet = this.dataSetList[parseInt(e.detail.value)];
@@ -252,36 +236,21 @@
         }
         this.searchNode(data);
       },
-
-      async scanNode(){
-        try{
+      async scan() {
+        try {
           let res = await wepy.scanCode({
             onlyFromCamera: true,
             scanType: ['qrCode']
           });
-          let node = JSON.parse(res.result);
-          node.img = imgHead + node.img;
-          this.origin = node;
-          this.end = null;
-          this.originSkip = 0;
-          this.endSkip = 0;
-          let data = {
-            name: this.name,
-            skip: 0,
-            limit: this.limit,
+          console.log(res);
+          let result = JSON.parse(res.result);
+
+          if (result.token !== undefined) {
+            this.scanLogin(result);
+          } else if (result.id !== undefined) {
+            this.scanNode(result);
           }
-          if (this.origin !== null) {
-            data.originId = this.origin.id;
-          }
-          else {
-            data.buildingId = this.$parent.globalData.building.id
-          }
-          wx.showToast({
-            title: '识别成功',
-            icon: 'none',
-          })
-          this.searchNode(data);
-        }catch (e){
+        } catch (e) {
           wx.showToast({
             title: '识别失败',
             icon: 'none',
@@ -289,7 +258,6 @@
         }
       }
     }
-
     events = {
       'tap-Node': (node, $event) => {
         if (this.origin === null) {
@@ -301,14 +269,12 @@
           }
           console.log(data);
           this.searchNode(data);
-        }
-        else {
+        } else {
           if (this.origin.id !== node.id) {
             this.end = node;
             this.pathSkip = 0;
             this.searchPath(this.pathSkip);
-          }
-          else {
+          } else {
             wx.showToast({
               title: '起点终点不能相同',
               icon: 'none',
@@ -318,10 +284,67 @@
         //$event.$destroy();
       }
     }
-
+    async scanLogin(data) {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/login/scan',
+          method: "POST",
+          data: {
+            token: data.token,
+            userId: this.$parent.globalData.userInfo
+          }
+        })
+        console.log(res);
+        if (res.data.code === 200) {
+          wx.showToast({
+            title: '登录成功',
+            icon: 'none',
+          })
+        } else {
+          wx.showToast({
+            title: '登录信息失效',
+            icon: 'none',
+          })
+        }
+      } catch (e) {
+        wx.showToast({
+          title: '识别失败',
+          icon: 'none',
+        })
+      }
+    }
+    async scanNode(node) {
+      try {
+        node.img = imgHead + node.img;
+        this.origin = node;
+        this.end = null;
+        this.originSkip = 0;
+        this.endSkip = 0;
+        let data = {
+          name: this.name,
+          skip: 0,
+          limit: this.limit,
+        }
+        if (this.origin !== null) {
+          data.originId = this.origin.id;
+        } else {
+          data.buildingId = this.$parent.globalData.building.id
+        }
+        wx.showToast({
+          title: '识别成功',
+          icon: 'none',
+        })
+        this.searchNode(data);
+      } catch (e) {
+        wx.showToast({
+          title: '识别失败',
+          icon: 'none',
+        })
+      }
+    }
     async searchNode(data) {
       try {
-        if (this.dataSet !== null && data.originId === undefined){
+        if (this.dataSet !== null && data.originId === undefined) {
           data.dataSetId = this.dataSet.id;
         }
         console.log(data);
@@ -332,46 +355,41 @@
         console.log(res.data);
         if (res.data.nodes.length > 0) {
           let nodes = res.data.nodes.map((item) => {
-            return {...item, img: imgHead + item.img}
+            return { ...item,
+              img: imgHead + item.img
+            }
           });
           if (data.originId) {
             if (data.skip === 0) {
               this.endNodes = nodes;
-            }
-            else if (this.endNodes.length === data.skip) {
+            } else if (this.endNodes.length === data.skip) {
               this.endNodes = [...this.endNodes, ...nodes];
             }
             this.endSkip += nodes.length;
-          }
-          else {
+          } else {
             if (data.skip === 0) {
               this.originNodes = nodes;
-            }
-            else if (this.originNodes.length === data.skip) {
+            } else if (this.originNodes.length === data.skip) {
               this.originNodes = [...this.originNodes, ...nodes];
             }
             this.originSkip += nodes.length;
           }
-        }
-        else {
-          if (data.skip === 0)
-          {
+        } else {
+          if (data.skip === 0) {
             if (data.originId) {
               wx.showToast({
                 title: '没有以该点为起点的路线',
                 icon: 'none',
               })
               this.endNodes = [];
-            }
-            else{
+            } else {
               wx.showToast({
                 title: '没有满足条件的点位',
                 icon: 'none',
               })
               this.originNodes = [];
             }
-          }
-          else{
+          } else {
             wx.showToast({
               title: '没有更多了',
               icon: 'none',
@@ -383,7 +401,6 @@
         console.log(e);
       }
     }
-
     async searchPath(skip) {
       try {
         let res = await wepy.request({
@@ -399,22 +416,18 @@
         if (res.data.length > 0) {
           if (skip === 0) {
             this.originToEndList = res.data;
-          }
-          else{
+          } else {
             this.originToEndList = [...this.originToEndList, ...res.data];
           }
           this.pathSkip += res.data.length;
-        }
-        else{
-          if (skip === 0)
-          {
+        } else {
+          if (skip === 0) {
             wx.showToast({
               title: '没有满足条件的路线',
               icon: 'none',
             })
             this.paths = [];
-          }
-          else{
+          } else {
             wx.showToast({
               title: '没有更多了',
               icon: 'none',
@@ -422,14 +435,12 @@
           }
         }
         this.$apply();
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e);
       }
     }
-
     async searchDataSet() {
-      try{
+      try {
         let res = await wepy.request({
           url: httpHead + '/dataset',
           data: {
@@ -437,15 +448,14 @@
             limit: 50,
           }
         })
-        this.dataSetList = res.data.dataSets.filter((item)=>{
+        this.dataSetList = res.data.dataSets.filter((item) => {
           return item.type === 'node';
         });
-        this.dataSetNameList = this.dataSetList.map((item)=>{
+        this.dataSetNameList = this.dataSetList.map((item) => {
           return item.name;
         })
         this.$apply();
-      }catch (e)
-      {
+      } catch (e) {
         console.log(e);
       }
     }

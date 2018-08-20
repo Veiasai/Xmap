@@ -30,7 +30,10 @@ class UserData {
     @observable
     qrNodeList = [{id: "b", name: "1", img: "1"},
         {id: "a", name: "点位一", img: "2"}];
-
+    @observable
+    qrcode = null; // 扫码登录信息
+    @observable
+    qrcodeCount = 0;
     //
     // @action.bound
     // init() {
