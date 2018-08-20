@@ -107,7 +107,7 @@
     }
 
     config = {
-      navigationBarTitleText: "Main",
+      navigationBarTitleText: "首页",
       enablePullDownRefresh: true,
       backgroundColor: "#90b3d0",
       "navigationBarBackgroundColor": "#90b3d0",
@@ -219,8 +219,7 @@
               icon: 'none',
             })
           }
-        }
-        this.$parent.globalData.paths = this.paths;
+        }this.$parent.globalData.paths = this.paths;
         this.$apply();
       }
       catch (e) {

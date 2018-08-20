@@ -7,7 +7,6 @@
   }
 
   .tab{
-    margin-top: 1vh;
     left: 40rpx;
     top: 180rpx;
     width: 600rpx;

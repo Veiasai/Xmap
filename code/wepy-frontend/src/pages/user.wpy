@@ -220,7 +220,7 @@
 
   export default class user extends wepy.page {
     config={
-      navigationBarTitleText: 'User',
+      navigationBarTitleText: '我的',
       backgroundColor: "#90b3d0",
       "navigationBarBackgroundColor": "#90b3d0",
       "navigationBarTextStyle": "white",

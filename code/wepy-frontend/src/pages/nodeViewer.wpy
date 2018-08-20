@@ -151,9 +151,11 @@
     }
 
     config = {
-      navigationBarTitleText: 'NodeView',
-      enablePullDownRefresh: true,
-      backgroundColor: "#f5f5f5"
+      navigationBarTitleText: '点位查找',
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
+      "enablePullDownRefresh": true,
     }
     data = {
       name: "",
