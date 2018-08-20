@@ -2,7 +2,9 @@ package xyz.veiasai.neo4j.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
+import xyz.veiasai.neo4j.result.ApplyResult;
 import xyz.veiasai.neo4j.result.Result;
 import xyz.veiasai.neo4j.service.AuthorService;
 import xyz.veiasai.neo4j.service.BuildingAdminService;
@@ -23,7 +25,7 @@ public class SystemAdminController {
 
 
     @PostMapping("/systemadmin/handleapply")
-    public Result handleApply(@RequestParam String buildingId, @RequestParam String authorId, @RequestParam String _sign, @RequestParam boolean refuse) {
+    public Result handleApply(@RequestParam String buildingId, @RequestParam String authorId, @RequestParam(required=false, defaultValue = "") String _sign, @RequestParam boolean refuse) {
         Result result = new Result();
         if (!_sign.equals("123456")) {
             result.setMessage("无权限访问");
@@ -33,13 +35,13 @@ public class SystemAdminController {
             result.setCode(404);
         } else if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
-            result.setCode(405);
+            result.setCode(404);
         } else if (buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {
             result.setMessage("该用户已为该建筑管理员");
-            result.setCode(406);
+            result.setCode(405);
         } else if (!buildingAdminService.existApplyBuildingAdmin(buildingId, authorId)) {
             result.setMessage("此用户未申请该建筑管理员");
-            result.setCode(403);
+            result.setCode(406);
         } else if (refuse) {
             buildingAdminService.refuseBuildingAdmin(buildingId, authorId);
             result.setCode(201);
@@ -52,8 +54,8 @@ public class SystemAdminController {
         return result;
     }
 
-    @DeleteMapping("/systemadmin/delete/buildingadmin")
-    public Result deleteBuildingAdmin(@RequestParam String buildingId, @RequestParam String authorId, @RequestParam String _sign) {
+    @DeleteMapping("/systemadmin/buildingadmin")
+    public Result deleteBuildingAdmin(@RequestParam String buildingId, @RequestParam String authorId, @RequestParam(required=false, defaultValue = "") String _sign) {
         Result result = new Result();
         if (!_sign.equals("123456")) {
             result.setMessage("无权限访问");
@@ -63,15 +65,29 @@ public class SystemAdminController {
             result.setCode(404);
         } else if (authorService.getAuthorById(authorId) == null) {
             result.setMessage("用户不存在");
-            result.setCode(405);
+            result.setCode(404);
         } else if (!buildingAdminService.existValidBuildingAdmin(buildingId, authorId)) {
             result.setMessage("该用户不是此建筑的管理员");
-            result.setCode(403);
+            result.setCode(405);
         } else {
             buildingAdminService.deleteBuildingAdmin(buildingId, authorId);
             result.setCode(200);
             result.setMessage("删除建筑管理员成功");
         }
         return result;
+    }
+
+    @GetMapping("/systemadmin/apply")
+    public ApplyResult getBuildingAdminApply(@RequestParam(required = false) String BuildingId, @RequestParam(required=false, defaultValue = "0") int skip, @RequestParam(required=false, defaultValue = "5") int limit, @RequestParam(required=false, defaultValue = "") String _sign){
+        ApplyResult result = new ApplyResult();
+        if (!_sign.equals("123456")){
+            result.setMessage("无权限访问");
+            result.setCode(403);
+        } else {
+            result.setApply(buildingAdminService.getApply(BuildingId ,skip, limit));
+            result.setCode(200);
+        }
+        return result;
+
     }
 }

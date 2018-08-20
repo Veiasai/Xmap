@@ -8,6 +8,8 @@ import xyz.veiasai.neo4j.domain.Building;
 import xyz.veiasai.neo4j.domain.CountSum;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 public interface BuildingAdminRepository extends Neo4jRepository<Author, String> {
     @Query("Match (a:Author {id:{authorId}}),(b:Building {id:{buildingId}})" +
@@ -31,15 +33,12 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
     public int countApplyBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
     @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building)  return b")
-
     public Collection<Building> findBuildingByAdmin(@Param("authorId") String authorId);
 
     @Query("Match (a:Author{id:{authorId}})-[r:BUILDINGADMIN {state:1}]-(b:Building) " +
             "return b as building," +
             "size((:Node)-[:BUILDING]-(b)) as nodeSum,size((:Path)-[:BUILDING]-(b)) as pathSum, size((:Message)-[:BUILDING]-(b)) as MessageSum ")
-
     public Collection<CountSum> findBuildingAndCountByAdmin(@Param("authorId") String authorId);
-
 
     @Query("Match (a:Author)-[r:BUILDINGADMIN {state:1}]-(b:Building {id:{buildingId}}) return a")
     public Collection<Author> findAdminByBuildingId(@Param("buildingId") String buildingId);
@@ -52,6 +51,18 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
             "set r.state = 1 ") //1 means success
     public void setBuildingAdmin(@Param("buildingId") String buildingId, @Param("authorId") String authorId);
 
-    @Query("Match (a:Author {id:{authorId}})-[r:BUILDINGADMIN]-(b:Building) return count(r)")
+    @Query("Match (a:Author {id:{authorId}})-[r:BUILDINGADMIN {state: 1}]-(b:Building) return count(r)")
     public int countBuildingByAdmin(@Param("authorId")String authorId);
+
+    @Query("Match r = (:Building)-[:BUILDINGADMIN {state: 0}]-(:Author) return nodes(r) skip{skip} limit{limit}")  // 0 means apply
+    public Set<Map<String, Object>> getApply(@Param("skip") int skip,@Param("limit") int limit);
+
+    @Query("Match r = (:Building {id: {bId}})-[:BUILDINGADMIN {state: 0}]-(:Author) return nodes(r) skip{skip} limit{limit}")  // 0 means apply
+    public Set<Map<String, Object>> getApplyByBuilding(@Param("bId") String BuildingId, @Param("skip") int skip,@Param("limit") int limit);
+
+    @Query("Match r = (:Building)-[:BUILDINGADMIN {state: 1}]-(:Author) return nodes(r) skip{skip} limit{limit}")  // 1 means success
+    public Set<Map<String, Object>> getBuildingAdmin(@Param("skip") int skip,@Param("limit") int limit);
+
+    @Query("Match r = (:Building {id: {bId}})-[:BUILDINGADMIN {state: 1}]-(:Author) return nodes(r) skip{skip} limit{limit}")  // 1 means success
+    public Set<Map<String, Object>> getBuildingAdminByBuilding(@Param("bId") String buildingId, @Param("skip") int skip,@Param("limit") int limit);
 }

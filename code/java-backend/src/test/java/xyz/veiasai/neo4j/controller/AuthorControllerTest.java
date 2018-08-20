@@ -209,9 +209,16 @@ public class AuthorControllerTest extends TestDefault {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(405));
 
-        // ok
+        // has applied
         mvc.perform(MockMvcRequestBuilders.get("/apply/buildingadmin")
                 .param("buildingId", building.getId())
+                .param("authorId", author.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(403));
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.get("/apply/buildingadmin")
+                .param("buildingId", building2.getId())
                 .param("authorId", author.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200));

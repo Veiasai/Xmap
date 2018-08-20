@@ -148,6 +148,8 @@ public class TestDefault {
         buildingAdmin = authorRepository.save(buildingAdmin);
         buildingAdminRepository.applyBuildingAdmin(building.getId(), buildingAdmin.getId());
         buildingAdminRepository.applyBuildingAdmin(building2.getId(), buildingAdmin.getId());
+        buildingAdminRepository.applyBuildingAdmin(building.getId(), author.getId());
+        buildingAdminRepository.applyBuildingAdmin(building2.getId(), author2.getId());
         buildingAdminRepository.setBuildingAdmin(building.getId(), buildingAdmin.getId());
 
         // 初始化message

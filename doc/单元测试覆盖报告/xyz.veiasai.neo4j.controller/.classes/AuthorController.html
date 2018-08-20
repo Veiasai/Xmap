@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    93.5%
+    96.8%
   </span>
   <span class="absValue">
-    (58/ 62)
+    (60/ 62)
   </span>
 </td>
 </tr>
@@ -116,8 +116,8 @@
 <b class="fc"><i>42</i>&nbsp;            result.setMessage(&quot;该用户已为该建筑管理员&quot;);</b>
 <b class="fc"><i>43</i>&nbsp;            result.setCode(405);</b>
 <b class="fc"><i>44</i>&nbsp;        }else if(buildingAdminService.existApplyBuildingAdmin(buildingId, authorId)){</b>
-<b class="nc"><i>45</i>&nbsp;            result.setMessage(&quot;该用户已有待审核的申请&quot;);</b>
-<b class="nc"><i>46</i>&nbsp;            result.setCode(403);</b>
+<b class="fc"><i>45</i>&nbsp;            result.setMessage(&quot;该用户已有待审核的申请&quot;);</b>
+<b class="fc"><i>46</i>&nbsp;            result.setCode(403);</b>
 <i>47</i>&nbsp;        }else {
 <b class="fc"><i>48</i>&nbsp;            buildingAdminService.applyBuildingAdmin(buildingId, authorId);</b>
 <b class="fc"><i>49</i>&nbsp;            result.setMessage(&quot;申请成功&quot;);</b>
@@ -245,7 +245,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2018-08-17 12:05</div>
+    <div style="float:right;">generated on 2018-08-20 10:29</div>
 </div>
 </body>
 </html>
