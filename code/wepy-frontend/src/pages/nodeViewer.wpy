@@ -1,11 +1,11 @@
 <style>
   .searchInput {
-    height: 7vh;
+    height: 6vh;
     width: 600rpx;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
-    background-color: white;
+    background-color: #f2f2f2;
     border-radius: 4vh;
     border: rgb(242, 242, 242);
     border-style: solid;
@@ -13,7 +13,7 @@
   }
   .nodeSelect {
     width: 680 rpx;
-    height: 100rpx;
+    height: 10vh;
     background-color: white;
     display: flex;
     flex-direction: row;
@@ -83,9 +83,9 @@
     </view>
     <!--show the available node-->
     <view wx:if="{{originToEndList === null}}">
-      <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+      <scroll-view style="height: 81vh" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
         <view wx:if="{{origin === null}}">
-          <repeat for="{{originNodes}}" index="index" item="item">
+          <repeat for="{{originNodes}}" index="index" item= "item">
             <oNode :node="item"></oNode>
           </repeat>
         </view>
@@ -97,7 +97,7 @@
       </scroll-view>
     </view>
     <view wx:else>
-      <scroll-view style="height: 60vh;" scroll-y bindscrolltolower="touchLowPath" class="nodeGroup">
+      <scroll-view style="height: 81vh;" scroll-y bindscrolltolower="touchLowPath" class="nodeGroup">
         <repeat for="{{originToEndList}}" index="index" item="item">
           <view class="pathsAvailable" data-paths="{{item.paths}}" @tap="pathView">
             <view style="font-size: 40rpx">路线 {{index+1}}</view>
