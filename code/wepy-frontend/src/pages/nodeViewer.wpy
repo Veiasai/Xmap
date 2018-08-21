@@ -1,7 +1,7 @@
 <style>
   .searchInput {
     height: 7vh;
-    width: 640rpx;
+    width: 600rpx;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
@@ -13,7 +13,7 @@
   }
   .nodeSelect {
     width: 680 rpx;
-    height: 110rpx;
+    height: 100rpx;
     background-color: white;
     display: flex;
     flex-direction: row;
@@ -55,13 +55,13 @@
   <view>
     <!--search input box-->
     <view style="height: 9vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-      <view @tap="scan">
-        <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/qrCode.svg"></image>
+      <view style="width: 70rpx; display: flex;align-items: center;justify-content: center" @tap="scan">
+        <image mode="aspectFill" style="width: 50rpx; height: 50rpx;" src="../icons/qrCode.svg"></image>
       </view>
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息" />
       <picker bindchange="bindDataSetChange" range="{{dataSetNameList}}">
-        <view class="picker">
-          <image mode="aspectFill" style="width: 40rpx; height: 40rpx;" src="../icons/groupSelector.svg"></image>
+        <view style="width: 70rpx; display: flex;align-items: center;justify-content: center" class="picker">
+          <image mode="aspectFill" style="width: 50rpx; height: 50rpx;" src="../icons/groupSelector.svg"></image>
         </view>
       </picker>
     </view>
