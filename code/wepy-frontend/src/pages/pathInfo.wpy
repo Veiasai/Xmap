@@ -1,22 +1,22 @@
 <style lang="less">
-  .swiper{
+  .swiper {
     height: 100vh;
     width: 750rpx;
-    .pathItems{
+    .pathItems {
       background-color: #9BC1DF;
-     }
-    .singleNode{
+    }
+    .singleNode {
       background-color: #91B493;
     }
   }
-  .nodeInfo{
+  .nodeInfo {
     height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  .nodeInfo image{
+  .nodeInfo image {
     width: 600rpx;
     height: 800rpx;
     border-radius: 16rpx;
@@ -28,18 +28,19 @@
     <swiper indicator-dots class="swiper">
       <repeat for="{{originToEnd}}" item="item">
         <swiper-item>
+          <view style="display: flex; display-direction: row; justify-content: center; align-items:center">
+            <view style="fontfont-weight: lighter;font-size:40rpx;">{{item.name}}</view>
+            <Nices :active.sync="favoriteArray[index]" :params.sync="params">
+              <image @tap="like" id="{{index}}" slot="icon" mode="widthFix" style="width: 80rpx;height: 80rpx" src="{{favoriteArray[index] ? '../icons/favorited.svg' : '../icons/favorite.svg'}}" />
+            </Nices>
+          </view>
           <view style="text-align: center" wx:if="{{item.contents !== undefined}}">
-            <view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>
             <view style="height: 80vh">
-              <PathDisplay :pathArray.sync="item.contents"/>
+              <PathDisplay :pathArray.sync="item.contents" />
             </view>
           </view>
           <view class="nodeInfo" wx:else>
-            <view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>
-            <image mode="widthFix" src="{{item.img}}"/>
-          </view>
-          <view style="display: flex;align-items: center;justify-content: center" @tap="like" id="{{index}}">
-            <image id="{{index}}" mode="widthFix" style="width: 80rpx;height: 80rpx" src="{{favoriteArray[index] ?  '../icons/favorited.svg': '../icons/favorite.svg'}}"/>
+            <image mode="widthFix" src="{{item.img}}" />
           </view>
         </swiper-item>
       </repeat>
@@ -49,28 +50,35 @@
 
 <script>
   import wepy from 'wepy';
-  import {httpHead, imgHead} from '../properties/Const';
+  import {
+    httpHead,
+    imgHead
+  } from '../properties/Const';
   import pathDisplay from '../components/pathDisplay';
-
+  import nices from 'wepy-nices'
   export default class Start extends wepy.page {
     components = {
-      PathDisplay: pathDisplay
+      PathDisplay: pathDisplay,
+      Nices: nices
     }
-
     data = {
       originToEnd: [], // 从起点到终点的多段路径数组
-      oteIndex: 0,     // 多段路径索引
+      oteIndex: 0, // 多段路径索引
       favoriteArray: [],
+      params: { //选填    动画效果配置
+        animate: 'bounceIn', //选填    点赞图标动画
+        activeColor: 'yellow', //选填    已点赞图标颜色
+        color: '#000', //选填    未点赞图标颜色
+        enableCancel: true //选填    是否可取消点赞
+      }
     }
-
     methods = {
       async like(e) {
         console.log(e.target)
         try {
           let index = e.target.id;
           let item = this.originToEnd[index];
-          if (this.favoriteArray[index])
-          {
+          if (this.favoriteArray[index]) {
             wepy.request({
               url: httpHead + "/favorite?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + item.id,
               method: "DELETE"
@@ -80,8 +88,7 @@
               title: '取消收藏成功',
               icon: 'none',
             })
-          }
-          else{
+          } else {
             wepy.request({
               url: httpHead + "/favorite?authorId=" + this.$parent.globalData.userInfo + "&favoriteId=" + item.id,
               method: "POST"
@@ -102,18 +109,22 @@
         }
       }
     }
-
     onLoad(params, data) {
       console.log(data.preload.originToEnd);
       this.originToEnd = data.preload.originToEnd.map((item, index) => {
         this.favorExist(item.id, index);
         if (item.contents === undefined) {
-          return { ...item, img: imgHead + item.img };
+          return { ...item,
+            img: imgHead + item.img
+          };
         } else {
           return {
-            ...item, contents: item.contents.map((citem) => {
+            ...item,
+            contents: item.contents.map((citem) => {
               if (citem.type === "img")
-                return { ...citem, message: imgHead + citem.message };
+                return { ...citem,
+                  message: imgHead + citem.message
+                };
               else
                 return citem;
             })
@@ -121,7 +132,6 @@
         }
       });
     }
-
     async favorExist(id, index) {
       try {
         let res = await wepy.request({
@@ -134,10 +144,9 @@
         this.favoriteArray[index] = parseInt(res.data.message);
         this.$apply();
         console.log(this.favoriteArray)
-      }catch (e){
+      } catch (e) {
         console.log(e);
       }
     }
   }
-
 </script>

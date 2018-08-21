@@ -80,7 +80,7 @@
       <view class="tabcontent" wx:if="{{select === '0'}}">
         <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" style="height: 90vh">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
-            <view style="height: 132rpx; margin-top: 1vh; margin-left: -20rpx">
+            <view style="height: 132rpx; margin-top: 1vh;">
               <SwipeDelete :swipeData="item" @delItem.user="handleDelItem">
                 <view  class="node">
                   <view class="nodeimg">
@@ -96,7 +96,7 @@
       <view class="tabcontent" wx:if="{{select === '1'}}">
         <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" style="height: 90vh">
           <repeat for="{{pathList}}" key="index" item="item" index="index">
-            <view style="height: 200rpx; margin-top: 1vh; margin-left: -20rpx">
+            <view style="height: 200rpx; margin-top: 1vh;">
               <SwipeDelete1 :swipeData="item"  @delItem.user="handleDelItem">
                 <view @tap = "tappath" data-path="{{item}}" class="path">
                   <view class="pathimg">
