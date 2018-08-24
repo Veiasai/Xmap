@@ -1,0 +1,36 @@
+<style lang="less">
+
+</style>
+
+
+<template>
+<view></view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class messages extends wepy.page {
+
+    components = {
+    }
+
+    data = {
+      
+
+    };
+
+    methods = {
+
+
+    };
+
+    onLoad() {
+
+    }
+
+    config={
+      navigationBarTitleText: 'messages'
+    }
+  }
+</script>

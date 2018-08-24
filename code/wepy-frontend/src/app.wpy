@@ -30,6 +30,7 @@
         'pages/pathInfo',
         'pages/uploadSelect',
         'pages/collection',
+        'pages/pathsOverview',
       ],
       window: {
         backgroundTextStyle: 'light',

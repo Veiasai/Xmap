@@ -325,7 +325,7 @@
       nodeTouchEnd() {
         this.searchNode(this.nodeSkip);
       },
-    }
+    };
     async searchPath(skip) {
       try {
         let res = await wepy.request({

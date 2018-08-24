@@ -1,45 +1,23 @@
 <style lang="less">
-  .swiper{
-    height: 100vh;
-    width: 750rpx;
-    .pathItems{
-      background-color: #9BC1DF;
-     }
-    .singleNode{
-      background-color: #91B493;
-    }
-  }
-  .nodeInfo{
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .nodeInfo image{
-    width: 600rpx;
-    height: 800rpx;
-    border-radius: 16rpx;
-  }
+
 </style>
 
 <template>
   <view>
-    <repeat for="{{originToEnd}}" key="index" item="item" index="index">
-      <view style="text-align: center" wx:if="{{item.contents !== undefined}}">
-        <view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>
-        <scroll-view scorll-y enable-back-to-top="true" style="height: 80vh">
-          <PathDisplay :pathArray.sync="item.contents"/>
-        </scroll-view>
-      </view>
-      <view class="nodeInfo" wx:else>
-        <view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>
-        <image mode="widthFix" src="{{item.img}}"/>
-      </view>
-      <view style="display: flex;align-items: center;justify-content: center" @tap="like" id="{{index}}">
-        <image id="{{index}}" mode="widthFix" style="width: 80rpx;height: 80rpx" src="{{favoriteArray[index] ?  '../icons/favorited.svg': '../icons/favorite.svg'}}"></image>
-      </view>
-    </repeat>
+      <repeat for="{{originToEnd}}" key="index" item="item" index="index">
+          <view id="{{index}}" @tap="jumpToItem" style="text-align: center" wx:if="{{item.contents !== undefined}}">
+            <Path :path="item"></Path>
+            <!--<view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>-->
+            <!--<view style="height: 80vh">-->
+              <!--<PathDisplay :pathArray.sync="item.contents"/>-->
+            <!--</view>-->
+          </view>
+          <view id="{{index}}" @tap="jumpToItem" wx:else>
+            <Node :node="item"></Node>
+            <!--<view style="fontfont-weight: lighter;font-size:40rpx;height: 10vh;">{{item.name}}</view>-->
+            <!--<image mode="widthFix" src="{{item.img}}"/>-->
+          </view>
+      </repeat>
   </view>
 </template>
 
@@ -47,17 +25,20 @@
   import wepy from 'wepy';
   import {httpHead, imgHead} from '../properties/Const';
   import pathDisplay from '../components/pathDisplay';
+  import path from '../components/path';
+  import node from '../components/node';
 
   export default class Start extends wepy.page {
     components = {
-      PathDisplay: pathDisplay
+      PathDisplay: pathDisplay,
+      Path: path,
+      Node: node
     }
 
     data = {
       originToEnd: [], // 从起点到终点的多段路径数组
       oteIndex: 0,     // 多段路径索引
       favoriteArray: [],
-
     }
 
     methods = {
@@ -98,7 +79,7 @@
           })
         }
       }
-    }
+    };
 
     onLoad(params, data) {
       console.log(data.preload.originToEnd);
@@ -134,6 +115,14 @@
       }catch (e){
         console.log(e);
       }
+    }
+
+    jumpToItem(itemData) {
+      console.log(itemData);
+      this.$preload('originToEnd', [this.originToEnd[itemData.currentTarget.id]]);
+      wx.navigateTo({
+        url: '/pages/pathInfo',
+      })
     }
   }
 

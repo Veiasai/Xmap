@@ -217,7 +217,7 @@
       pathView(e) {
         this.$preload("originToEnd", e.currentTarget.dataset.paths);
         wx.navigateTo({
-          url: '/pages/pathInfo',
+          url: '/pages/pathsOverview',
         })
       },
       bindDataSetChange(e) {
