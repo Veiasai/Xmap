@@ -1,4 +1,4 @@
-<style>
+<style lang="less">
   .test{
     height: 100vh;
     display: flex;
@@ -6,11 +6,34 @@
     align-items: center;
   }
 
+  .arrow{
+    rotation: 0deg;
+  }
+
+  .animation-arrow{
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+  }
+
+  @keyframes rotate {
+    from{
+      rotate: (-90deg);
+    }
+
+    to{
+      rotate: (270deg);
+    }
+  }
+
+
 </style>
 
 <template>
 <view class="test">
-  <PathDisplay :pathArray.sync="pathArray"></PathDisplay>
+  <!--<view class="animation-arrow" @tap="beginRotate">∞</view>-->
 </view>
 </template>
 
@@ -40,6 +63,8 @@
       },
       manage:true,
 
+      playState: 'running',
+
       pathInfo:{
         type:"img",
         message:"../images/test1.jpg"
@@ -60,7 +85,8 @@
 
       ]
 
-    }
+    };
+
     async searchPath(skip) {
       try {
         console.log(data);
@@ -163,8 +189,13 @@
         wx.navigateTo({
           url: '/pages/pathUpload/nodeSelect',
         })
-      }
-    }
+      },
+
+      beginRotate(){
+
+      },
+
+    };
 
     onLoad() {
 

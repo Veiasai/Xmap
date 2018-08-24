@@ -1,11 +1,11 @@
 <style>
   .searchInput{
-    height: 7vh;
+    height: 6vh;
     width: 660rpx;
     font-size: 32rpx;
     font-weight: lighter;
     text-align: center;
-    background-color: white;
+    background-color: #f2f2f2;
     border-radius: 4vh;
     border: rgb(242,242,242);
     border-style: solid;
@@ -16,7 +16,7 @@
 
   .pathGroup {
     width: 700 rpx;
-    height: 62vh;
+    height: 83vh;
     bottom: 0;
   }
 
@@ -54,7 +54,7 @@
 
 <template>
   <view style="display: flex; flex-direction: column; align-items: center">
-    <view style="height: 10vh; display: flex; flex-direction: row; align-items: center; justify-content: center">
+    <view style="height: 9vh; display: flex; flex-direction: row; align-items: center; justify-content: center">
       <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
       <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}" >
         <view class="picker">
