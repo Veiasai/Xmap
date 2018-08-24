@@ -106,6 +106,7 @@ public class LoginController {
                     break;
                 }
             }else{
+                jsonObject = new JSONObject();
                 jsonObject.put("code", 404);
                 break;
             }

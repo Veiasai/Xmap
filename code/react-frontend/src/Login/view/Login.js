@@ -6,6 +6,7 @@ import {inject, observer} from "mobx-react/index";
 import {httpHead} from '../../Consts'
 import Qrcode from 'qrcode.react'
 
+
 const FormItem = Form.Item;
 
 @inject(['UserData'])
@@ -51,12 +52,8 @@ class Login extends Component {
                 return;
             
             if (json.code === 200 && json.state === 1) {
-                this.UserData.userID = json.userId;
-                this.UserData.isLogin = true;
-                message.success('登陆成功');
-                this.getBuildingList({authorId: json.userId});
-                Control.go('/ManageBuildings', {name: 'React-Keeper'})
-            }else{
+                this.UserData.Login({authorId: json.userId});
+            }else if (!this.UserData.isLogin){
                 message.error("登录过时") // 信息失效
                 this.UserData.qrcode = null;
             }
@@ -64,73 +61,6 @@ class Login extends Component {
 
         }
     }
-
-    Login = async (values) => {
-        const url = httpHead + '/building/admin/login?authorId='+values.authorId;
-        let user = {
-            authorId: {},
-        }
-        user = {...values};
-        try {
-            const response = await fetch(url,
-                {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                });
-            const json = await response.json();
-            if (json.code === 200) {
-                this.UserData.userID = values.authorId;
-                this.UserData.isLogin = true;
-                message.success('登陆成功');
-                this.getBuildingList(values);
-                Control.go('/ManageBuildings', {name: 'React-Keeper'})
-            }
-            else if (json.code === 404) {
-                message.error('无效管理员ID')
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-    };
-
-    getBuildingList = async (values) => {
-        const url = httpHead + '/building/admin/buildingandcount?adminId='+values.authorId;
-        try {
-            const response = await fetch(url,
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                if (json.countSums.length === 0){
-                    message.success('您未管理任何建筑');
-                    return;
-                }
-                this.UserData.buildingList = json.countSums.map((item)=>{
-                    let building=  item.building;
-                    delete item.building;
-                    return {...building,...item}
-                });
-                console.log(this.UserData.buildingList.toJS());
-                message.success('获取建筑列表成功')
-                console.log(json.countSums)
-            }
-            else if (json.code === 404) {
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-    };
 
     render() {
         const {getFieldDecorator} = this.props.form;
