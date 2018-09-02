@@ -1,0 +1,11 @@
+.login{
+    background: linear-gradient(to bottom, #2d2d2d, #3f3f3f);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hintMessage{
+    color: #fefefe;
+}

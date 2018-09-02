@@ -9,7 +9,7 @@ class UserData {
     init = false;
 
     @observable
-    isLogin = false;
+    isLogin = true;
     @observable
     userID = 'oEzSZ5RA3PFN5Ho0J0Bz0i66Gp9k';
     @observable

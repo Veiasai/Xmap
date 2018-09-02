@@ -35,18 +35,23 @@ class App extends Component {
     }
     render() {
         if (!this.UserData.isLogin){
-            return <Login/>
+            return(
+                <div className={'App'}>
+                    <Login/>
+                </div>)
         }else{
             return (
-                <Router>
-                    <div>
-                        <Navbar/>
-                        {/* <Route path={"/>"} component={Login}/> */}
-                        <Route path={"/ManageBuildings"} component={ManageBuildings}/>
-                        <Route path={"/Manage"} component={Manage}/>
-                        <Route path={"/ShoppingCart"} component={ShoppingCart}/>
-                    </div>
-                </Router>
+                <div className={'App'}>
+                    <Router>
+                        <div>
+                            <Navbar/>
+                            {/* <Route path={"/>"} component={Login}/> */}
+                            <Route path={"/ManageBuildings"} component={ManageBuildings}/>
+                            <Route path={"/Manage"} component={Manage}/>
+                            <Route path={"/ShoppingCart"} component={ShoppingCart}/>
+                        </div>
+                    </Router>
+                </div>
             );
         }
     }
