@@ -61,11 +61,13 @@
 
     methods = {
       jumpToAddNode(){
+        wx.vibrateShort();
         wx.navigateTo({
           url: '/pages/nodeUpload',
         })
       },
       jumpToAddPath(){
+        wx.vibrateShort();
         wx.navigateTo({
           url: '/pages/pathUpload/nodeSelect',
         })
@@ -81,7 +83,6 @@
       backgroundColor: "#90b3d0",
       "navigationBarBackgroundColor": "#90b3d0",
       "navigationBarTextStyle": "white",
-      "enablePullDownRefresh": true,
     }
   }
 </script>

@@ -191,11 +191,13 @@
     watch = {
       pathArray (newPathArray,oldPathArray){
         this.scrollHeight += 1000;
+        wx.vibrateShort();
       }
     };
 
     methods = {
       record() {
+        wx.vibrateShort();
         if (this.recordButton === "暂停记录") {
           this.recordButton = "继续记录";
           this.xyz = [1, 1];
@@ -211,6 +213,7 @@
       },
 
       async takePhoto() {
+        wx.vibrateShort();
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});
@@ -252,6 +255,7 @@
 
       //点击注释按钮
       comment() {
+        wx.vibrateShort();
         this.recordButton = "开始记录";
         wepy.stopAccelerometer({});
         wepy.stopCompass({});

@@ -25,14 +25,14 @@
 
 <template>
   <view>
-    <swiper indicator-dots class="swiper">
       <repeat for="{{originToEnd}}" item="item">
-        <swiper-item>
-          <view style="display: flex; display-direction: row; justify-content: center; align-items:center">
-            <view style="fontfont-weight: lighter;font-size:40rpx;">{{item.name}}</view>
-            <Nices :active.sync="favoriteArray[index]" :params.sync="params">
-              <image @tap="like" id="{{index}}" slot="icon" mode="widthFix" style="width: 80rpx;height: 80rpx" src="{{favoriteArray[index] ? '../icons/favorited.svg' : '../icons/favorite.svg'}}" />
-            </Nices>
+          <view style="height: 10vh; display: flex; display-direction: row; align-items:center">
+            <view style="font-size:50rpx; margin-left: 35rpx">{{item.name}}  </view>
+            <view style="margin-left:20rpx;height: 10vh; display: flex; display-direction: row; align-items:center">
+              <Nices :active.sync="favoriteArray[index]" :params.sync="params">
+                <image @tap="like" id="{{index}}" slot="icon" mode="widthFix" style="margin-top: 10rpx;width: 50rpx;height: 50rpx" src="{{favoriteArray[index] ? '../icons/favorited.svg' : '../icons/favorite.svg'}}" />
+              </Nices>
+            </view>
           </view>
           <view style="text-align: center" wx:if="{{item.contents !== undefined}}">
             <view style="height: 80vh">
@@ -42,9 +42,7 @@
           <view class="nodeInfo" wx:else>
             <image mode="widthFix" src="{{item.img}}" />
           </view>
-        </swiper-item>
       </repeat>
-    </swiper>
   </view>
 </template>
 
@@ -57,6 +55,14 @@
   import pathDisplay from '../components/pathDisplay';
   import nices from 'wepy-nices'
   export default class Start extends wepy.page {
+    config = {
+      navigationBarTitleText: '详情',
+      enablePullDownRefresh: true,
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
+    };
+
     components = {
       PathDisplay: pathDisplay,
       Nices: nices
@@ -94,6 +100,7 @@
               method: "POST"
             })
             this.favoriteArray[index] = 1;
+            wx.vibrateShort();
             wx.showToast({
               title: '收藏成功',
               icon: 'none',
