@@ -1,18 +1,23 @@
 version: "3"
 services:
-  elk_server:
-    image: lis0x90/efk 
-    container_name: efk_server
+  elasticsearch:
+    image: elasticsearch:2
+    volumes: 
+      - ./data:/usr/share/elasticsearch/data
+      - ./config/jvm.options:/usr/share/elasticsearch/config/jvm.options
+   
+  kibana:
+    image: kibana:4
     ports:
-      - "5601:5601"
-      - "9200:9200"
-      - "24224:24224"
-    volumes:
-      - ./fluent.conf:/etc/fluent/fluent.conf  # ./config/fluent.conf 定义了fluentd服务的配置
-      - ./log:/var/log  # 将fluentd收集的日志映射出来，留一份到本地
-      - /etc/localtime:/etc/localtime  # 同步本地的时间（可有可无）
-    logging:
-      driver: "json-file"
-      options:
-         max-size: "200k"
-         max-file: "10"
+      - 5601:5601
+
+  flentd:
+    build: fluent-es/
+    volumes: 
+      - ./fluentd:/fluentd/log
+      - ./fluent.conf:/fluentd/etc/fluent.conf
+    ports: 
+      - 24224:24224
+      - 24224:24224/udp
+    environment: 
+      - FLUENTD_CONF=fluent.conf

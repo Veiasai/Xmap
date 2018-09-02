@@ -23,6 +23,9 @@ services:
     command: java -jar /xmap.jar --spring.profiles.active=prodC
     networks:
       - neo4j-ha_lan
+    environment: 
+      - FLUENTD_HOST=132.232.35.84
+      - FLUENTD_PORT=24224
 
   node2:
     image: java:jre
@@ -32,6 +35,9 @@ services:
     command: java -jar /xmap.jar --spring.profiles.active=prodC
     networks:
       - neo4j-ha_lan
+    environment: 
+      - FLUENTD_HOST=132.232.35.84
+      - FLUENTD_PORT=24224
 
   node3:
     image: java:jre
@@ -41,6 +47,9 @@ services:
     command: java -jar /xmap.jar --spring.profiles.active=prodC
     networks:
       - neo4j-ha_lan
+    environment: 
+      - FLUENTD_HOST=132.232.35.84
+      - FLUENTD_PORT=24224
     
 networks:
   neo4j-ha_lan:

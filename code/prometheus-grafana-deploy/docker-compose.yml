@@ -1,0 +1,26 @@
+version: "3"
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes: 
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+    ports: 
+      - 9090:9090
+    extra_hosts: 
+      - "dockerhost:$DOCKERHOST"   # 为了能监听主机上的exporter
+
+# export DOCKERHOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)   
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes: 
+      - grafana:/var/lib/grafana
+
+volumes:
+  grafana:
+  prometheus:
+  
+    

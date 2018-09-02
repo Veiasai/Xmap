@@ -22,7 +22,6 @@ class Navbar extends Component {
                     <Menu.Item key="/logout">注销</Menu.Item>
                 </Menu>
             </header>
-
         )
     }
 }

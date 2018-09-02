@@ -9,11 +9,9 @@ services:
     volumes:
       - ./xmap.jar:/xmap.jar
     command: java -jar /xmap.jar --spring.profiles.active=prodB
-    logging: 
-      driver: "fluentd"
-      options: 
-        fluentd-address: localhost:24224
-        tag: xmap-java
+    environment: 
+      - FLUENTD_HOST=132.232.35.84
+      - FLUENTD_PORT=24224
 
   neo:
     image: neo4j:3.1-enterprise
