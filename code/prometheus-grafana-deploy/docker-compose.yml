@@ -19,6 +19,16 @@ services:
     volumes: 
       - grafana:/var/lib/grafana
 
+  node-exporter:
+    image: prom/node-exporter
+    volumes: 
+      - "/proc:/host/proc"
+      - "/sys:/host/sys"
+      - "/:/rootfs"
+    network_mode: host
+  
+# 支持旧版本的node监控模板id 6287
+
 volumes:
   grafana:
   prometheus:
