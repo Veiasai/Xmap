@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    filter: drop-shadow(4rpx 6rpx 10rpx #333333)
+    filter: drop-shadow(0rpx 4rpx 4rpx #333333)
   }
   .avatar {
     margin-left: 20rpx;

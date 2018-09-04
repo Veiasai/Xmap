@@ -66,24 +66,34 @@ class Login extends Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div className={'login'}>
-                <Form onSubmit={this.handleSubmit} className="login-form">
-                    <FormItem>
-                        {getFieldDecorator('authorId', {
-                            rules: [{required: true, message: 'Please input your username!'}],
-                        })(
-                            <Input placeholder="管理员ID"/>
-                        )}
-                    </FormItem>
-                    <FormItem>
-                        <Button type="primary" htmlType="submit" className="login-form-button">
-                            登录
-                        </Button>
-                    </FormItem>
-                </Form>
-                {this.UserData.qrcode === null ? <Button onClick={this.refresh}>刷新</Button> : 
-                    <Qrcode size={300} value={JSON.stringify(this.UserData.qrcode)}/>}
-          
-                
+                {/*<Form onSubmit={this.handleSubmit} className="login-form">*/}
+                    {/*<FormItem>*/}
+                        {/*{getFieldDecorator('authorId', {*/}
+                            {/*rules: [{required: true, message: 'Please input your username!'}],*/}
+                        {/*})(*/}
+                            {/*<Input placeholder="管理员ID"/>*/}
+                        {/*)}*/}
+                    {/*</FormItem>*/}
+                    {/*<FormItem>*/}
+                        {/*<Button type="primary" htmlType="submit" className="login-form-button">*/}
+                            {/*登录*/}
+                        {/*</Button>*/}
+                    {/*</FormItem>*/}
+                {/*</Form>*/}
+                <div>
+                    {this.UserData.qrcode === null ?
+                        (
+                            <div>
+                                <div className={'hintMessage'}>二维码已失效，请点击按钮刷新</div>
+                                <Button onClick={this.refresh}>刷新</Button>
+                            </div>) :
+                        (
+                            <div>
+                                <Qrcode size={300} value={JSON.stringify(this.UserData.qrcode)}/>
+                                <div className={'hintMessage'}>请用小程序扫码登录</div>
+                            </div>)}
+                </div>
+
             </div>
         );
     }

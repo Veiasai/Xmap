@@ -1,10 +1,26 @@
 <style lang="less">
+  .message{
+    width: 700rpx;
+    height: 18vh;
+    background-color: #f6f6f6;
+    border-radius: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 </style>
 
 
 <template>
-<view></view>
+  <view>
+    <repeat for="{{messages.reverse()}}" index="index" item="item">
+      <view class="message">
+        <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
+        <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
+      </view>
+    </repeat>
+  </view>
 </template>
 
 <script>
@@ -13,14 +29,31 @@
   export default class messages extends wepy.page {
 
     components = {
-    }
-
-    data = {
-      
 
     };
 
+    data = {
+      messages: [],
+    };
+
     methods = {
+
+      async searchMessage() {
+        try {
+          let res = await wepy.request({
+            url: httpHead + '/message',
+            data: {
+              buildingId: this.$parent.globalData.building.id,
+            }
+          })
+          console.log(res.data);
+          this.messages = res.data.messages;
+          this.$apply();
+        }
+        catch (e) {
+          console.log(e);
+        }
+      }
 
 
     };

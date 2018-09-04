@@ -23,26 +23,15 @@ class BuildingOverview extends Component {
                         </div>
                     </Row>
                     <Row>
-                        <Col>
-                            <Card
-                                style={{width: 300}}
-                                title={this.props.UserData.currentBuilding.name + '现有路线总数'}
-                                hoverable={true}
-                            >
-                                {this.props.UserData.currentBuilding.pathSum}
-                            </Card>
-                        </Col>
-                        <Col>
-                            <Card
-                                style={{width: 300}}
-                                title={this.props.UserData.currentBuilding.name + '现有点位总数'}
-                                hoverable={true}
-                            >
-                                {this.props.UserData.currentBuilding.nodeSum}
-                            </Card>
-                        </Col>
+                        <div>
+                            {this.props.UserData.currentBuilding.name + '现有路线总数'}
+                            {this.props.UserData.currentBuilding.pathSum}
+                        </div>
+                        <div>
+                            {this.props.UserData.currentBuilding.name + '现有点位总数'}
+                            {this.props.UserData.currentBuilding.nodeSum}
+                        </div>
                     </Row>
-
                 </div>
                 <div className={'sendMessage'}>
                     <SendMessage/>

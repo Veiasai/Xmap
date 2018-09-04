@@ -101,6 +101,7 @@
 
     methods = {
       async choosePhoto() {
+        wx.vibrateShort();
         let res;
         try {
           res = await wepy.chooseImage({
@@ -132,6 +133,7 @@
       },
 
       submit(e) {
+        wx.vibrateShort();
         if (this.src === "") {
           wx.showToast({
             title: '请拍摄照片',
