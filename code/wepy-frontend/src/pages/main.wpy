@@ -77,11 +77,14 @@
         </repeat>
       </swiper>
     </view>
-    <scroll-view  scroll-y bindscrolltolower="touchLow" class="pathGroup">
+    <scroll-view wx:if="{{paths.length !== 0}}"  scroll-y bindscrolltolower="touchLow" class="pathGroup">
       <repeat for="{{paths}}" index="index" item="item">
         <Path :path="item"></Path>
       </repeat>
     </scroll-view>
+    <view wx:if="{{paths.length === 0}}" style="height: 83vh;display: flex;justify-content: center;align-items: center;color: #363636">
+      这栋建筑还没有路线, 快去创建吧！
+    </view>
   </view>
 </template>
 

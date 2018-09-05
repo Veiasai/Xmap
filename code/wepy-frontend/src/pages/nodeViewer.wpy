@@ -36,7 +36,7 @@
     width: 34rpx;
     height: 34rpx;
   }
-  .pathsAvailable {
+  .pathAvailable {
     margin-top: 1vh;
     margin-left: 3%;
     padding-left: 4%;
@@ -82,30 +82,36 @@
       </view>
     </view>
     <!--show the available node-->
-    <view wx:if="{{originToEndList === null}}">
-      <scroll-view style="height: 81vh" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
-        <view wx:if="{{origin === null}}">
-          <repeat for="{{originNodes}}" index="index" item= "item">
-            <oNode :node="item"></oNode>
-          </repeat>
-        </view>
-        <view wx:else>
-          <repeat for="{{endNodes}}" index="index" item="item">
-            <eNode :node="item"></eNode>
-          </repeat>
-        </view>
-      </scroll-view>
-    </view>
-    <view wx:else>
-      <scroll-view style="height: 81vh;" scroll-y bindscrolltolower="touchLowPath" class="nodeGroup">
-        <repeat for="{{originToEndList}}" index="index" item="item">
-          <view class="pathsAvailable" data-paths="{{item.paths}}" @tap="pathView">
-            <view style="font-size: 40rpx">路线 {{index+1}}</view>
-            <view style="font-size: 32rpx;font-weight: lighter;color: #383838">由 {{(item.paths.length-1)/2}} 条路线拼接而成</view>
-            <view style="font-size: 32rpx;font-weight: lighter;color: #383838">共经过 {{(item.paths.length+1)/2}} 个点</view>
+    <view wx:if="{{originNodes.length !== 0}}">
+      <view wx:if="{{originToEndList === null}}">
+        <scroll-view style="height: 81vh" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+          <view wx:if="{{origin === null}}">
+            <repeat for="{{originNodes}}" index="index" item= "item">
+              <oNode :node="item"></oNode>
+            </repeat>
           </view>
-        </repeat>
-      </scroll-view>
+          <view wx:else>
+            <repeat for="{{endNodes}}" index="index" item="item">
+              <eNode :node="item"></eNode>
+            </repeat>
+          </view>
+        </scroll-view>
+      </view>
+      <view wx:else>
+        <scroll-view style="height: 81vh;" scroll-y bindscrolltolower="touchLowPath" class="nodeGroup">
+          <repeat for="{{originToEndList}}" index="index" item="item">
+            <view class="pathAvailable" data-paths="{{item.paths}}" @tap="pathView">
+              <view style="font-size: 40rpx">路线 {{index+1}}</view>
+              <view style="font-size: 32rpx;font-weight: lighter;color: #383838">由 {{(item.paths.length-1)/2}} 条路线拼接而成</view>
+              <view style="font-size: 32rpx;font-weight: lighter;color: #383838">共经过 {{(item.paths.length+1)/2}} 个点</view>
+            </view>
+          </repeat>
+        </scroll-view>
+      </view>
+    </view>
+    <view wx:else style="height: 81vh;display: flex;justify-content: center;align-items: center;color: #2b2b2b">
+      <view>这栋建筑还没有点位, 快去创建吧！</view>
+      <view>按名称查找路线请在首页搜索</view>
     </view>
   </view>
 </template>

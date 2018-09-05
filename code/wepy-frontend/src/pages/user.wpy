@@ -154,7 +154,7 @@
     </view>
     <view>
       <view class="tabcontent" wx:if="{{select === '0'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
+        <scroll-view wx:if="{{nodeList.length !== 0}}" scroll-y enable-back-to-top="true" bindscrolltolower="nodeTouchEnd" class="nodeView">
           <repeat for="{{nodeList}}" key="index" item="item" index="index">
             <view style="height: 140rpx; margin-top: 1vh;">
               <SwipeDelete :swipeData="item" :manage="manage" @delItem.user="handleDelItem" @manItem.user="handleManItem">
@@ -170,9 +170,12 @@
             </view>
           </repeat>
         </scroll-view>
+        <view wx:else style="height: 74vh;display: flex;justify-content: center;align-items: center;color: #363636">
+          你还没有创建点位, 快去创建吧！
+        </view>
       </view>
       <view class="tabcontent" wx:if="{{select === '1'}}">
-        <scroll-view scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
+        <scroll-view wx:if="{{pathList.length !== 0}}" scroll-y enable-back-to-top="true" bindscrolltolower="pathTouchEnd" class="pathView">
           <repeat for="{{pathList}}" key="index" item="item" index="index">
             <view style="height: 200rpx; margin-top: 1vh;">
               <SwipeDelete1 :swipeData="item" @delItem.user="handleDelItem">
@@ -191,6 +194,9 @@
             </view>
           </repeat>
         </scroll-view>
+        <view wx:else style="height: 74vh;display: flex;justify-content: center;align-items: center;color: #363636">
+          你还没有创建路线, 快去创建吧！
+        </view>
       </view>
     </view>
   </view>
