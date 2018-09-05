@@ -51,6 +51,27 @@ public class AuthorController {
         }
         return result;
     }
+    @GetMapping("/check/buildingadmin")
+    public Result checkBuildingAdmin(@RequestParam String buildingId, @RequestParam String authorId){
+        Result result = new Result();if (buildingService.getBuildingById(buildingId) == null) {
+            result.setMessage("建筑不存在");
+            result.setCode(404);
+        } else if (authorService.getAuthorById(authorId) == null) {
+            result.setMessage("用户不存在");
+            result.setCode(404);
+        }else if(buildingAdminService.existValidBuildingAdmin(buildingId, authorId)){
+            result.setMessage("该用户已为该建筑管理员");
+            result.setCode(405);
+        }else if(buildingAdminService.existApplyBuildingAdmin(buildingId, authorId)){
+            result.setMessage("该用户已有待审核的申请");
+            result.setCode(403);
+        }else {
+            result.setMessage("尚未申请");
+            result.setCode(200);
+        }
+        return result;
+    }
+    
     @ApiOperation(value = "收藏", notes = "通过favoriteId收藏（点位，路线，用户，建筑,数据组等;\r\n404:不存在;\r\n200:删除成功")
     @PostMapping("/favorite")
     public Result postFavorite(@RequestParam @ApiParam(name = "authorId", value = "用户的Id") String authorId,

@@ -85,19 +85,8 @@
       console.log(data.preload.originToEnd);
       this.originToEnd = data.preload.originToEnd.map((item, index) => {
         this.favorExist(item.id, index);
-        if (item.contents === undefined) {
-          return { ...item, img: imgHead + item.img };
-        } else {
-          return {
-            ...item, contents: item.contents.map((citem) => {
-              if (citem.type === "img")
-                return { ...citem, message: imgHead + citem.message };
-              else
-                return citem;
-            })
-          }
-        }
-      });
+        return { ...item, img: imgHead + item.img };
+        });
     }
 
     async favorExist(id, index) {

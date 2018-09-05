@@ -48,6 +48,7 @@ public class SystemAdminController {
             result.setMessage("拒绝成功");
         } else {
             buildingAdminService.setBuildingAdmin(buildingId, authorId);
+            
             result.setCode(200);
             result.setMessage("接受申请");
         }

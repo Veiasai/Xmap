@@ -1,16 +1,16 @@
 version: "3"
 services:
   elasticsearch:
-    image: elasticsearch:2
+    image: elasticsearch
     volumes: 
-      - ./data:/usr/share/elasticsearch/data
+      - data:/usr/share/elasticsearch
       - ./config/jvm.options:/usr/share/elasticsearch/config/jvm.options
-   
+    
   kibana:
-    image: kibana:4
+    image: kibana
     ports:
       - 5601:5601
-
+      
   flentd:
     build: fluent-es/
     volumes: 
@@ -21,3 +21,6 @@ services:
       - 24224:24224/udp
     environment: 
       - FLUENTD_CONF=fluent.conf
+
+volumes: 
+  data:

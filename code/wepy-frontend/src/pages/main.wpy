@@ -64,7 +64,7 @@
     </view>
     <view style="height: 8vh; display: flex;justify-content: center;align-items: center">
       <view class="applyAdminButton" @tap="applyAdmin">
-        申请成为管理员
+        {{adminInfo}}
       </view>
     </view>
     <view wx:if="{{messages.length !== 0}}" style="height: 20vh; display: flex;justify-content: center;align-items: center">
@@ -95,6 +95,7 @@
       this.searchPath({skip: this.skip});
       this.searchMessage(0);
       this.searchDataSet();
+      this.adminInfoGet();
     }
 
     onPullDownRefresh(){
@@ -121,7 +122,9 @@
       paths: [],
       name: "",
       skip: 0,
-      limit: 5
+      limit: 5,
+      adminInfo: "申请成为管理员",
+      applyAdmin: false,
     }
     components = {
       Path: path
@@ -146,6 +149,8 @@
       },
 
       async applyAdmin(){
+        if (!this.applyAdmin)
+          return;
         try{
           let res = await wepy.request({
             url: httpHead + "/apply/buildingadmin",
@@ -157,7 +162,10 @@
           wx.showToast({
             title: '已发起申请，等待审核',
             icon: 'none',
-          })
+          });
+          this.applyAdmin=false;
+          this.adminInfo = "管理员申请等待审核中";
+          this.$apply();
         }catch (e){
           wx.showToast({
             title: '网络异常',
@@ -219,7 +227,8 @@
               icon: 'none',
             })
           }
-        }this.$parent.globalData.paths = this.paths;
+        }
+        this.$parent.globalData.paths = this.paths;
         this.$apply();
       }
       catch (e) {
@@ -266,5 +275,31 @@
         console.log(e);
       }
     }
+
+  async adminInfoGet() {
+    try {
+        let res = await wepy.request({
+          url: httpHead + '/check/buildingadmin',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+            authorId: this.$parent.globalData.userInfo,
+          }
+        })
+        console.log(res.data)
+        if (res.data.code === 200){
+          this.applyAdmin = true;
+        }else if (res.data.code === 405){
+          this.adminInfo = "管理员";
+        }else if (res.data.code === 403){
+          this.adminInfo = "申请等待审核中";
+        }else{
+
+        }
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
   }
+}
 </script>

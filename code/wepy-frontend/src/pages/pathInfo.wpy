@@ -121,9 +121,7 @@
       this.originToEnd = data.preload.originToEnd.map((item, index) => {
         this.favorExist(item.id, index);
         if (item.contents === undefined) {
-          return { ...item,
-            img: imgHead + item.img
-          };
+          return { ...item};
         } else {
           return {
             ...item,

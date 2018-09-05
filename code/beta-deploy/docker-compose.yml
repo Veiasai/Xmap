@@ -10,7 +10,7 @@ services:
       - ./xmap.jar:/xmap.jar
     command: java -jar /xmap.jar --spring.profiles.active=prodB
     environment: 
-      - FLUENTD_HOST=132.232.35.84
+      - FLUENTD_HOST=118.24.31.137
       - FLUENTD_PORT=24224
 
   neo:
