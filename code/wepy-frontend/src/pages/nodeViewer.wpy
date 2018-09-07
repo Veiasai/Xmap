@@ -109,7 +109,7 @@
         </scroll-view>
       </view>
     </view>
-    <view wx:else style="height: 81vh;display: flex;justify-content: center;align-items: center;color: #2b2b2b">
+    <view wx:else style="height: 81vh;display: flex;flex-direction:column;justify-content: center;align-items: center;color: #2b2b2b">
       <view>这栋建筑还没有点位, 快去创建吧！</view>
       <view>按名称查找路线请在首页搜索</view>
     </view>
