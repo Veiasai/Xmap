@@ -1,5 +1,5 @@
 <style>
-  .searchInput{
+  .searchInput {
     height: 7vh;
     width: 680rpx;
     margin-top: 2vh;
@@ -9,11 +9,10 @@
     text-align: center;
     background-color: white;
     border-radius: 4vh;
-    border: rgb(242,242,242);
+    border: rgb(242, 242, 242);
     border-style: solid;
     border-width: 4rpx;
   }
-
   .nodeSelect {
     width: 680 rpx;
     height: 110rpx;
@@ -22,24 +21,23 @@
     align-items: center;
     flex-direction: row;
   }
-  .nodeSelectItem{
+  .nodeSelectItem {
     width: 320rpx;
     height: 100rpx;
     border-radius: 16rpx;
     font-size: 28rpx;
     font-weight: lighter;
-    background-color: rgb(242,242,242);
+    background-color: rgb(242, 242, 242);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
   }
-  .cancel{
+  .cancel {
     width: 34rpx;
     height: 34rpx;
   }
-
-  .confirmButton{
+  .confirmButton {
     width: 240rpx;
     height: 90rpx;
     border-radius: 16rpx;
@@ -50,23 +48,20 @@
     align-items: center;
     justify-content: center;
   }
-
-
-
 </style>
 
 <template>
   <view style="background-color #FFFEFE;text-align: center;display: flex;flex-direction: column;align-items: center">
     <!--search input box-->
     <view style="height: 9vh">
-      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息" />
     </view>
     <!--instruction for pick nodes-->
     <view style="margin-top: 1vh;font-size: 32rpx;font-weight: lighter;color: #535353;">——————选择上传路线的起点终点——————</view>
     <!--show the selected start node and end node-->
     <view class="nodeSelect">
       <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
-      <view class="nodeSelectItem"  wx:if="{{origin !== null}}">
+      <view class="nodeSelectItem" wx:if="{{origin !== null}}">
         <view>起点: {{origin.name}} </view>
         <view class="cancel" @tap="nodeCancel" id="1">
           <image id="1" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../../icons/cancel.svg"></image>
@@ -94,14 +89,14 @@
 
 <script>
   import wepy from 'wepy';
-  import {httpHead, imgHead} from '../../properties/Const'
+  import {
+    httpHead,
+    imgHead
+  } from '../../properties/Const'
   import node from '../../components/node'
-
   export default class NodeViewer extends wepy.page {
     onLoad() {
-
     }
-
     onReady() {
       let data = {
         buildingId: this.$parent.globalData.building.id,
@@ -111,12 +106,11 @@
       }
       this.searchNode(data);
     }
-
     config = {
       navigationBarTitleText: 'NodeSelect',
     }
     data = {
-      nodes: [],  // 查找到的点位
+      nodes: [], // 查找到的点位
       origin: null,
       end: null,
       skip: 0,
@@ -126,7 +120,6 @@
     components = {
       Node: node
     }
-
     async searchNode(data) {
       try {
         let res = await wepy.request({
@@ -135,19 +128,19 @@
         })
         console.log(res.data);
         let nodes = res.data.nodes.map((item) => {
-          return {...item, img: imgHead + item.img}
+          return { ...item,
+            img: imgHead + item.img
+          }
         });
         if (nodes.length > 0) {
           if (data.skip === 0) {
             this.nodes = nodes;
-          }
-          else if (this.nodes.length === data.skip) {
+          } else if (this.nodes.length === data.skip) {
             this.nodes = [...this.nodes, ...nodes];
           }
           this.skip += 5;
           this.$apply();
-        }
-        else {
+        } else {
           if (data.skip === 0) {
             wx.showToast({
               title: '没有满足条件的点位',
@@ -155,8 +148,7 @@
             })
             this.nodes = [];
             this.$apply();
-          }
-          else {
+          } else {
             wx.showToast({
               title: '没有更多了',
               icon: 'none',
@@ -167,7 +159,6 @@
         console.log(e);
       }
     }
-
     methods = {
       async confirm() {
         try {
@@ -191,7 +182,6 @@
           console.log(e);
         }
       },
-
       touchLow() {
         let data = {
           buildingId: this.$parent.globalData.building.id,
@@ -213,29 +203,24 @@
         }
         this.searchNode(data);
       },
-
       nodeCancel(e) {
         let id = e.target.id;
         if (id === "1") {
           this.origin = null;
           this.end = null;
-        }
-        else {
+        } else {
           this.end = null;
         }
       }
     }
-
     events = {
       'tap-Node': (node, $event) => {
         if (this.origin === null) {
           this.origin = node;
-        }
-        else {
+        } else {
           if (this.origin.id !== node.id) {
             this.end = node;
-          }
-          else {
+          } else {
             wx.showToast({
               title: '起点终点不能相同',
               icon: 'none',
