@@ -87,6 +87,11 @@ public class BuildingAdminService {
     }
 
     @Transactional(readOnly = true)
+    public Collection<CountSum> findAllBuilding() {   //authorId是否有效可放到controller层
+        return buildingAdminRepository.findAllBuilding();
+    }
+
+    @Transactional(readOnly = true)
     public Collection<Author> findAdminByBuildingId(String buildingId) {
         return buildingAdminRepository.findAdminByBuildingId(buildingId);
     }

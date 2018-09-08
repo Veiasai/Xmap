@@ -2,6 +2,7 @@ package xyz.veiasai.neo4j.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import xyz.veiasai.neo4j.domain.DataSet;
 import xyz.veiasai.neo4j.domain.Node;
@@ -244,13 +245,17 @@ public class BuildingAdminController {
         return result;
     }
     @GetMapping("building/admin/buildingandcount")
-    public CountSumResult getBuildingAndCountByAdminId(@RequestParam String adminId) {
+    public CountSumResult getBuildingAndCountByAdminId(@RequestParam String adminId, @RequestParam Integer system) {
         CountSumResult result = new CountSumResult();
         if (authorService.getAuthorById(adminId) == null) {
             result.setMessage("用户不存在");
             result.setCode(404);
-        } else {
+        } else if (system == 0){
             result.setCountSums(buildingAdminService.findBuildingAndCountByAdmin(adminId));
+            result.setCode(200);
+            result.setMessage("查询成功");
+        } else if (system == 1){
+            result.setCountSums(buildingAdminService.findAllBuilding());
             result.setCode(200);
             result.setMessage("查询成功");
         }

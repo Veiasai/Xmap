@@ -24,7 +24,6 @@ public class AuthorController {
     private BuildingService buildingService;
     @Autowired
     private AuthorService authorService;
-
     @Autowired
     private BuildingAdminService buildingAdminService;
 
@@ -51,6 +50,7 @@ public class AuthorController {
         }
         return result;
     }
+
     @GetMapping("/check/buildingadmin")
     public Result checkBuildingAdmin(@RequestParam String buildingId, @RequestParam String authorId){
         Result result = new Result();if (buildingService.getBuildingById(buildingId) == null) {

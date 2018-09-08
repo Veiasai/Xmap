@@ -19,6 +19,8 @@ public class Author {
     @NotNull
     private String id;
 
+    private Integer state;
+
     @JsonIgnore
     @Relationship(type="AUTHOR")
     private Collection<Node> nodes = new HashSet<>();
@@ -40,6 +42,14 @@ public class Author {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public Collection<Node> getNodes() {

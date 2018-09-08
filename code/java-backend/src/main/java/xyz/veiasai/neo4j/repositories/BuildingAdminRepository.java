@@ -65,4 +65,9 @@ public interface BuildingAdminRepository extends Neo4jRepository<Author, String>
 
     @Query("Match r = (:Building {id: {bId}})-[:BUILDINGADMIN {state: 1}]-(:Author) return nodes(r) skip{skip} limit{limit}")  // 1 means success
     public Set<Map<String, Object>> getBuildingAdminByBuilding(@Param("bId") String buildingId, @Param("skip") int skip,@Param("limit") int limit);
+
+    @Query("Match (b:Building) " +
+            "return b as building," +
+            "size((:Node)-[:BUILDING]-(b)) as nodeSum,size((:Path)-[:BUILDING]-(b)) as pathSum, size((:Message)-[:BUILDING]-(b)) as MessageSum ")
+    public Collection<CountSum> findAllBuilding();
 }

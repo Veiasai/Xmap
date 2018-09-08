@@ -89,6 +89,5 @@ public class SystemAdminController {
             result.setCode(200);
         }
         return result;
-
     }
 }
