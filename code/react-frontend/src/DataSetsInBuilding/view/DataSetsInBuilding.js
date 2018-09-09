@@ -341,11 +341,7 @@ class DataSetsInBuilding extends Component {
                             </List.Item>
                         )}
                     >
-                        {this.state.loading && this.state.hasMore && (
-                            <div className="demo-loading-container">
-                                <Spin indicator={antIcon}/>
-                            </div>
-                        )}
+
                     </List>
                 </InfiniteScroll>
                 <Drawer
@@ -381,11 +377,7 @@ class DataSetsInBuilding extends Component {
                                 </List.Item>
                             )}
                         >
-                            {this.state.loading && this.state.hasMore && (
-                                <div className="demo-loading-container">
-                                    <Spin indicator={antIcon}/>
-                                </div>
-                            )}
+
                         </List>
                         <div
                             style={{

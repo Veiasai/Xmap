@@ -46,7 +46,7 @@ class CreateDataSet extends Component
 
             if (json.code === 200) {
                 message.success('创建成功');
-                this.UserData.currentDataSetList = [...this.UserData.currentDataSetList,json.dataset];
+                this.UserData.currentDataSetList = [...this.UserData.currentDataSetList,json.dataSet];
                 this.props.form.resetFields()
             }
             else{
@@ -64,17 +64,17 @@ class CreateDataSet extends Component
             <div>
                 <Form style={{width: '80%',alignItems:'left'}} onSubmit={this.handleSubmit} className="sendMessageForm">
                     <FormItem>
-                        {getFieldDecorator('title', {
-                            rules: [{required: true, message: '请输入数据组名字'}],
+                        {getFieldDecorator('name', {
+                            rules: [{required: true, message: '请输入数据组名称'}],
                         })(
-                            <Input style={{width: '20%'}} placeholder='名字'/>
+                            <Input style={{width: '20%'}} placeholder='数据组名称'/>
                         )}
                     </FormItem>
                     <FormItem>
-                        {getFieldDecorator('content', {
+                        {getFieldDecorator('type', {
                             rules: [{required: true, message: '请输入类型'}],
                         })(
-                            <TextArea placeholder="请输入类型" minLength={'10'} maxLength={'140'} autosize={{ minRows: 2, maxRows: 3 }} />
+                            <Input style={{width: '20%'}} placeholder='数据组类型'/>
                         )}
                     </FormItem>
                     <FormItem>

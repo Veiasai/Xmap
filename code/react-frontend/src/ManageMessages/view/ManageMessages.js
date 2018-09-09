@@ -154,11 +154,7 @@ class ManageMessages extends Component {
                                 </List.Item>
                             )}
                         >
-                            {this.state.loading && this.state.hasMore && (
-                                <div className="loadingContainer">
-                                    <Spin indicator={antIcon} />
-                                </div>
-                            )}
+
                         </List>
                     </InfiniteScroll>
                 </div>
