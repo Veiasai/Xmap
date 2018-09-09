@@ -23,6 +23,7 @@
         'pages/user',
         'pages/pathUpload/pathUpload',
         'pages/test',
+        'pages/messages',
         'pages/nodeViewer',
         'pages/nodeUpload',
         'pages/pathUpload/nodeSelect',

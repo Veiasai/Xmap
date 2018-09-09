@@ -67,7 +67,7 @@
         {{adminInfo}}
       </view>
     </view>
-    <view wx:if="{{messages.length !== 0}}" style="height: 20vh; display: flex;justify-content: center;align-items: center">
+    <view @tap='goToMessages' wx:if="{{messages.length !== 0}}" style="height: 20vh; display: flex;justify-content: center;align-items: center">
       <swiper class="buildingMessages">
         <repeat for="{{messages.reverse()}}" index="index" item="item">
           <swiper-item style="width: 660rpx">
@@ -135,6 +135,13 @@
     }
 
     methods = {
+      goToMessages(){
+        console.log('go to messages')
+         wx.navigateTo({
+          url: '/pages/messages',
+        })
+      },
+
       searchInput(e) {
         let name = e.detail.value;
         this.name = name;
