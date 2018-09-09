@@ -134,9 +134,7 @@ class NodesInBuilding extends Component {
         message.success('添加成功');
     };
 
-    editNode(item){
 
-    }
 
 
     render() {
@@ -157,7 +155,6 @@ class NodesInBuilding extends Component {
                                 actions={[
                                     <Icon onClick={() => this.showDeleteConfirm(item)} type="delete"/>,
                                     <Icon onClick={() => this.addExportList(item)} type="folder-add"/>,
-                                    <Icon onClick={() => this.editNode(item)} type="edit"/>,
                                 ]}
                             >
                                 <List.Item.Meta
