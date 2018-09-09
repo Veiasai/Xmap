@@ -107,6 +107,7 @@
       this.searchDataSet();
       this.searchPath({skip: this.skip});
       this.searchMessage();
+      this.adminInfoGet();
       wx.stopPullDownRefresh()
     }
 
@@ -167,7 +168,7 @@
             icon: 'none',
           });
           this.applyAdmin=false;
-          this.adminInfo = "管理员申请等待审核中";
+          this.adminInfo = "申请等待审核中";
           this.$apply();
         }catch (e){
           wx.showToast({
