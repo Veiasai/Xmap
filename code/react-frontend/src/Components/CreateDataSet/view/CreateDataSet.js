@@ -32,29 +32,34 @@ class CreateDataSet extends Component
             type: {},
         }
         dataset = {...values};
-        try {
-            const response = await fetch(url,
-                {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    body: JSON.stringify(dataset),
-                });
-            const json = await response.json();
-
-            if (json.code === 200) {
-                message.success('创建成功');
-                this.UserData.currentDataSetList = [...this.UserData.currentDataSetList,json.dataSet];
-                this.props.form.resetFields()
-            }
-            else{
-                message.error('出错了')
-            }
+        if(dataset.type!=='node'&&dataset.type!=='path'){
+            message.error("类型不正确")
         }
-        catch (e) {
-            console.log(e)
+        else{
+            try {
+                const response = await fetch(url,
+                    {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        mode: 'cors',
+                        body: JSON.stringify(dataset),
+                    });
+                const json = await response.json();
+
+                if (json.code === 200) {
+                    message.success('创建成功');
+                    this.UserData.currentDataSetList = [...this.UserData.currentDataSetList,json.dataSet];
+                    this.props.form.resetFields()
+                }
+                else{
+                    message.error('出错了')
+                }
+            }
+            catch (e) {
+                console.log(e)
+            }
         }
     };
     render()
