@@ -23,12 +23,17 @@ class Navbar extends Component {
                     defaultSelectedKeys={[Control.path]}
                     mode="horizontal"
                     style={{lineHeight: '58px'}}
+                    onClick={({ item, key, selectedKeys})=>{
+                        if (key === 'logout'){
+                            this.UserData.logout();
+                        }
+                    }}
                 >
                     <Menu.Item key="/ManageBuildings"><Link to='/ManageBuildings'>我管理的建筑</Link></Menu.Item>
                     <Menu.Item key="/Manage"><Link to='/Manage'>当前建筑信息</Link></Menu.Item>
                     <Menu.Item key="/ShoppingCart"><Link to='/ShoppingCart'><Icon type='shopping-cart'/>批量导出</Link></Menu.Item>
                     {this.UserData.SystemManager ? <Menu.Item key="/System"><Link to='/SystemManage'>系统管理</Link></Menu.Item>: null}
-                    <Menu.Item key="/logout">注销</Menu.Item>
+                    <Menu.Item key="logout">注销</Menu.Item>
                 </Menu>
             </header>
         )

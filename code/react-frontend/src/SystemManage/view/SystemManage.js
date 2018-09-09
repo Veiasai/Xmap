@@ -124,15 +124,15 @@ class SystemManage extends Component
 
     handleAccpet = (key) => {
         const dataSource = [...this.state.dataSource];
-        let item = dataSource[key];
-        let values = {buildingId: item.Building.id, authorId: item.UserId, _sign: '123456', refuse: false}
+        let item = dataSource.filter(item => item.key === key)[0];
+        let values = {buildingId: item.Building.id, authorId: item.UserId, refuse: false}
         this.handleApply(values);
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
     }
 
     handleDelete = (key) => {
         const dataSource = [...this.state.dataSource];
-        let item = dataSource[key];
+        let item = dataSource.filter(item => item.key === key)[0];
         let values = {buildingId: item.Building.id, authorId: item.UserId, refuse: true}
         this.handleApply(values);
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
@@ -140,7 +140,7 @@ class SystemManage extends Component
 
     handleDelete2 = (key) => {
         const admin = [...this.state.admin];
-        let item = admin[key];
+        let item = admin.filter(item => item.key === key)[0];
         let values = {buildingId: this.UserData.currentBuilding.id, authorId: item.UserId}
         this.delete(values);
         this.setState({ admin: admin.filter(item => item.key !== key) });
