@@ -6,6 +6,7 @@ import "./DataSetsInBuilding.css"
 import reqwest from "reqwest";
 import {httpHead, imgHead} from "../../Consts";
 import {Modal} from "antd/lib/index";
+import {view as CreateDataSet} from '../../Components/CreateDataSet'
 
 const confirm = Modal.confirm;
 const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
@@ -266,7 +267,7 @@ class DataSetsInBuilding extends Component {
         let temp =this.UserData.qrNodeList;
         console.log(temp);
         this.UserData.qrNodeList =[...temp,...this.UserData.currentDataSetDetail];
-        message.success("添加成功")
+        message.success("添加成功yar n")
 
     }
     onChildrenDrawerClose = () => {
@@ -471,6 +472,7 @@ class DataSetsInBuilding extends Component {
                         </div>
                     </Drawer>
                 </Drawer>
+                <CreateDataSet/>
             </div>
         )
     }

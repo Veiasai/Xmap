@@ -19,7 +19,7 @@ class Navbar extends Component {
                     <Menu.Item key="/ManageBuildings"><Link to='/ManageBuildings'>我管理的建筑</Link></Menu.Item>
                     <Menu.Item key="/Manage"><Link to='/Manage'>当前建筑信息</Link></Menu.Item>
                     <Menu.Item key="/ShoppingCart"><Link to='/ShoppingCart'><Icon type='shopping-cart'/>批量导出</Link></Menu.Item>
-                    <Menu.Item key="/logout">注销</Menu.Item>
+                    <Menu.Item key="/logout" >注销</Menu.Item>
                 </Menu>
             </header>
         )
