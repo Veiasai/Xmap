@@ -11,6 +11,7 @@ import {view as Manage} from './Manage';
 import {view as ShoppingCart} from "./ShoppingCart"
 import {view as Navbar} from "./Navbar";
 import {view as SendMessage} from "./Components/SendMessage";
+import {view as SystemManage} from "./SystemManage"
 
 @inject(['UserData'])
 @observer
@@ -49,6 +50,7 @@ class App extends Component {
                             <Route path={"/ManageBuildings"} component={ManageBuildings}/>
                             <Route path={"/Manage"} component={Manage}/>
                             <Route path={"/ShoppingCart"} component={ShoppingCart}/>
+                            <Route path={"/SystemManage"} component={SystemManage} />
                         </div>
                     </Router>
                 </div>

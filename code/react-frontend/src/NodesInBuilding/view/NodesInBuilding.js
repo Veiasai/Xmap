@@ -121,10 +121,17 @@ class NodesInBuilding extends Component {
     };
 
     addExportList(item){
-      let temp = this.UserData.qrNodeList;
-      temp.push(item);
-      this.UserData.qrNodeList = temp;
-      message.success('添加成功');
+        let temp = this.UserData.qrNodeList;
+        let len = this.UserData.qrNodeList.length;
+        for (let i=0;i<len;i++){
+            if (temp[i].id === item.id){
+                message.error('已经加入');
+                return;
+            }
+        }
+        temp.push(item);
+        this.UserData.qrNodeList = temp;
+        message.success('添加成功');
     };
 
     editNode(item){

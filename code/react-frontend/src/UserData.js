@@ -29,12 +29,13 @@ class UserData {
     @observable
     dataSetRestDetail=[];
     @observable
-    qrNodeList = [{id: "b", name: "1", img: "1"},
-        {id: "a", name: "点位一", img: "2"}];
+    qrNodeList = [];
     @observable
     qrcode = null; // 扫码登录信息
     @observable
     qrcodeCount = 0;
+    @observable
+    SystemManager = false;
 
     @action
     Login = async (values) => {
@@ -76,13 +77,18 @@ class UserData {
         window.localStorage.setItem("date", date);
         this.isLogin = true;
         message.success('登陆成功');
+        values.system = 0;
+        if (this.userID === "oEzSZ5SSno_wfs3QZO8-9exppN6o"){
+            this.SystemManager = true;
+            values.system = 1;
+        }
         this.getBuildingList(values);
         Control.go('/ManageBuildings', {name: 'React-Keeper'})
     };
 
     @action
     getBuildingList = async (values) => {
-        const url = httpHead + '/building/admin/buildingandcount?adminId='+values.authorId;
+        let url = httpHead + '/building/admin/buildingandcount?adminId='+values.authorId+'&system='+values.system;
         try {
             const response = await fetch(url,
                 {

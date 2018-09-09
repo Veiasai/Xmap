@@ -360,13 +360,9 @@
             title: '上传成功',
             icon: 'none',
           });
-          this.pathArray = [];
-          this.imgArray = [];
-          this.steps = 0;
-          this.direction = null;
-          this.curves = 0;
-          this.allsteps = 0;
-          this.$apply();
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
         } catch (e) {
           console.log(e);
           wx.hideLoading();
@@ -398,6 +394,9 @@
     }
 
     onReady() {
+      if (!this.$parent.globalData.firstInPathUpload)
+        return;
+      this.$parent.globalData.firstInPathUpload = false;
       wepy.onAccelerometerChange((res) => {
         let first = this.xyz[0];
         let second = this.xyz[1];
@@ -408,6 +407,7 @@
         }
         this.xyz = [second, third];
         this.$apply();
+        console.log(this.xyz);
       })
       wepy.onCompassChange((res) => {
         let direction = this.direction;
@@ -470,6 +470,10 @@
       {
         console.log(e);
       }
+    }
+    onUnload(){
+      wepy.stopAccelerometer({});
+      wepy.stopCompass({});
     }
   }
 </script>

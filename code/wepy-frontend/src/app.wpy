@@ -76,6 +76,7 @@
       }, //wx.chooselocation返回的buidling对象
       userInfo: null,
       paths: [], // main页面的path记录
+      firstInPathUpload: true,
     };
     constructor() {
       super()
