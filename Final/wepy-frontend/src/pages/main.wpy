@@ -1,0 +1,309 @@
+<style>
+  .searchInput{
+    height: 6vh;
+    width: 660rpx;
+    font-size: 32rpx;
+    font-weight: lighter;
+    text-align: center;
+    background-color: #f2f2f2;
+    border-radius: 4vh;
+    border: rgb(242,242,242);
+    border-style: solid;
+    border-width: 4rpx;
+    align-items: center;
+    justify-content: center
+  }
+
+  .pathGroup {
+    width: 700 rpx;
+    height: 83vh;
+    bottom: 0;
+  }
+
+  .picker{
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center
+  }
+
+  .applyAdminButton{
+    width:320rpx;
+    height:70rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color:white;
+    background-color: #90b3d0;
+    border-radius: 40rpx;
+  }
+
+  .buildingMessages{
+    width: 700rpx;
+    height: 18vh;
+    background-color: #f6f6f6;
+    border-radius: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+</style>
+
+<template>
+  <view style="display: flex; flex-direction: column; align-items: center">
+    <view style="height: 9vh; display: flex; flex-direction: row; align-items: center; justify-content: center">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息"/>
+      <picker bindchange="bindDataSetChange"  range="{{dataSetNameList}}" >
+        <view class="picker">
+          <image mode="aspectFill" style="width: 50rpx; height: 50rpx;" src="../icons/groupSelector.svg"></image>
+        </view>
+      </picker>
+    </view>
+    <view style="height: 8vh; display: flex;justify-content: center;align-items: center">
+      <view class="applyAdminButton" @tap="applyAdmin">
+        {{adminInfo}}
+      </view>
+    </view>
+    <view wx:if="{{messages.length !== 0}}" style="height: 20vh; display: flex;justify-content: center;align-items: center">
+      <swiper class="buildingMessages">
+        <repeat for="{{messages.reverse()}}" index="index" item="item">
+          <swiper-item style="width: 660rpx">
+            <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
+            <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
+          </swiper-item>
+        </repeat>
+      </swiper>
+    </view>
+    <scroll-view wx:if="{{paths.length !== 0}}"  scroll-y bindscrolltolower="touchLow" class="pathGroup">
+      <repeat for="{{paths}}" index="index" item="item">
+        <Path :path="item"></Path>
+      </repeat>
+    </scroll-view>
+    <view wx:if="{{paths.length === 0}}" style="height: 83vh;display: flex;justify-content: center;align-items: center;color: #363636">
+      这栋建筑还没有路线, 快去创建吧！
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {httpHead, imgHead} from '../properties/Const'
+  import path from '../components/path'
+
+  export default class Main extends wepy.page {
+    onLoad() {
+      this.searchPath({skip: this.skip});
+      this.searchMessage(0);
+      this.searchDataSet();
+      this.adminInfoGet();
+    }
+
+    onPullDownRefresh(){
+      this.dataSet = null;
+      this.skip = 0;
+      this.searchDataSet();
+      this.searchPath({skip: this.skip});
+      this.searchMessage();
+      this.adminInfoGet();
+      wx.stopPullDownRefresh()
+    }
+
+    config = {
+      navigationBarTitleText: "首页",
+      enablePullDownRefresh: true,
+      backgroundColor: "#90b3d0",
+      "navigationBarBackgroundColor": "#90b3d0",
+      "navigationBarTextStyle": "white",
+    };
+    data = {
+      dataSet: null,
+      dataSetList: [],
+      dataSetNameList: ["1","1","1","1","1","1","1","1","1","1","1",],
+      messages: [],
+      paths: [],
+      name: "",
+      skip: 0,
+      limit: 5,
+      adminInfo: "申请成为管理员",
+      applyAdmin: false,
+    }
+    components = {
+      Path: path
+    }
+
+    methods = {
+      searchInput(e) {
+        let name = e.detail.value;
+        this.name = name;
+        this.skip = 0;
+        this.searchPath({name: name, skip: 0});
+      },
+
+      touchLow() {
+        this.searchPath({name: this.name, skip: this.skip});
+      },
+
+      bindDataSetChange(e){
+        this.dataSet = this.dataSetList[parseInt(e.detail.value)];
+        this.skip = 0;
+        this.searchPath({skip: 0});
+      },
+
+      async applyAdmin(){
+        if (!this.applyAdmin)
+          return;
+        try{
+          let res = await wepy.request({
+            url: httpHead + "/apply/buildingadmin",
+            data: {
+              authorId: this.$parent.globalData.userInfo,
+              buildingId: this.$parent.globalData.building.id,
+            }
+          })
+          wx.showToast({
+            title: '已发起申请，等待审核',
+            icon: 'none',
+          });
+          this.applyAdmin=false;
+          this.adminInfo = "申请等待审核中";
+          this.$apply();
+        }catch (e){
+          wx.showToast({
+            title: '网络异常',
+            icon: 'none',
+          })
+          console.log(e);
+        }
+      }
+    }
+
+    events = {
+      'tap-path': (path, $event) => {
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
+        this.$preload('originToEnd', [path]);
+        wx.navigateTo({
+          url: '/pages/pathInfo',
+        })
+      }
+    };
+
+    async searchPath(data) {
+      try {
+        if (this.dataSet !== null){
+          data.dataSetId = this.dataSet.id;
+        }
+        console.log(data);
+        let res = await wepy.request({
+          url: httpHead + '/paths',
+          data: {
+            ...data,
+            buildingId: this.$parent.globalData.building.id,
+            limit: this.limit,
+          }
+        })
+        console.log(res.data);
+        let paths = res.data.paths.map((item) => {
+          return {...item, img: imgHead + item.img}
+        });
+        if (paths.length > 0) {
+          if (data.skip === 0) {
+            this.paths = paths;
+          }
+          else {
+            this.paths = [...this.paths, ...paths];
+          }
+          this.skip += this.limit;
+        }
+        else {
+          if (this.skip === 0) {
+            this.paths = [];
+            wx.showToast({
+              title: '没有满足条件的路径',
+              icon: 'none',
+            })
+          }
+          else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+        this.$parent.globalData.paths = this.paths;
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
+
+    async searchMessage() {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/message',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+          }
+        })
+        console.log(res.data);
+        this.messages = res.data.messages;
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
+
+    async searchDataSet(){
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/dataset',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+            limit: 50,
+          }
+        })
+        console.log(res.data);
+        this.dataSetList = res.data.dataSets.filter((item)=>{
+          return item.type === 'path';
+        });
+        this.dataSetNameList = this.dataSetList.map((item)=>{
+          return item.name;
+        })
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
+
+  async adminInfoGet() {
+    try {
+        let res = await wepy.request({
+          url: httpHead + '/check/buildingadmin',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+            authorId: this.$parent.globalData.userInfo,
+          }
+        })
+        console.log(res.data)
+        if (res.data.code === 200){
+          this.applyAdmin = true;
+        }else if (res.data.code === 405){
+          this.adminInfo = "管理员";
+        }else if (res.data.code === 403){
+          this.adminInfo = "申请等待审核中";
+        }else{
+
+        }
+        this.$apply();
+      }
+      catch (e) {
+        console.log(e);
+      }
+  }
+}
+</script>

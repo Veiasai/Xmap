@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <property name="FLUENTD_HOST" value="${FLUENTD_HOST:-${DOCKER_HOST:-localhost}}"/>
+    <property name="FLUENTD_PORT" value="${FLUENTD_PORT:-24224}"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date - %level - [%thread] - %logger - [%file:%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FLUENT_TEXT" class="ch.qos.logback.more.appenders.DataFluentAppender">
+        <tag>dab</tag>
+        <label>normal</label>
+        <remoteHost>${FLUENTD_HOST}</remoteHost>
+        <port>${FLUENTD_PORT}</port>
+        <maxQueueSize>20</maxQueueSize>
+    </appender>
+
+    <logger name="org.com" level="DEBUG"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FLUENT_TEXT" />
+    </root>
+</configuration>

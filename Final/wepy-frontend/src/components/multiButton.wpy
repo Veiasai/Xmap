@@ -1,0 +1,29 @@
+<style type="less">
+
+
+</style>
+<template>
+  <view class="multiButton">
+    <button>
+
+    </button>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class MultiButton extends wepy.component {
+    props = {
+
+    }
+    data = {
+
+    }
+    methods = {
+      tap () {
+        this.gitem.childname = `Child Random(${Math.random()})`
+        console.log(`Clicked Group ${this.$parent.$index}. Item ${this.$index}, ID is ${this.gitem.childid}`)
+      }
+    }
+  }
+</script>

@@ -1,0 +1,34 @@
+<style>
+  .display {
+    height: 100%;
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+
+<template>
+  <view class="display">
+    <repeat for="{{pathArray}}" key="index" index="index" item="item">
+      <PathItem id="item{{key}}" :item="item"></PathItem>
+    </repeat>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import pathItem from './pathItem'
+  export default class PathUpload extends wepy.component {
+    props = {
+      pathArray:{
+        type: Array,
+        default:[]
+      }
+    };
+    components = {
+      PathItem: pathItem
+    }
+  }
+</script>

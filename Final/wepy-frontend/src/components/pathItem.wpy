@@ -1,0 +1,104 @@
+<style lang="less">
+  .img{
+    width: 680rpx;
+    height: 680rpx;
+    border-radius: 16rpx;
+  }
+
+  .item{
+    width: 680rpx;
+    height: 150rpx;
+    border-radius: 16rpx;
+    background-color: #F2F2F2;
+    font-size: 40rpx;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    &.action{
+      display: flex;
+      flex-direction: row;
+
+    }
+  }
+
+  .icon{
+    margin-left: 11rpx;
+    background-color: #FEFEFE;
+    width: 128rpx;
+    height: 128rpx;
+    border-radius: 50%;
+    align-items: center;
+  }
+
+  .icon image{
+    padding-top: 15rpx;
+    width: 90rpx;
+    height: 90rpx;
+
+  }
+
+
+
+</style>
+
+<template>
+  <view>
+    <image class="img" wx:if="{{item.type==='img'}}" lazy-load mode='aspectFill' src="{{item.message}}"></image>
+    <view wx:elif="{{item.type==='actionS'}}" class='item action'>
+      <view class="icon">
+        <image mode="aspectFill" src = "../icons/straight.svg"></image>
+      </view>
+      <view style="margin-left: 33rpx;">直行 {{item.message}} 步 </view>
+    </view>
+    <view wx:elif="{{item.type==='actionL'}}" class='item action'>
+      <view class="icon">
+        <image mode="aspectFill" src = "../icons/left.png"></image>
+      </view>
+      <view style="margin-left: 33rpx;">{{item.message}} 步后 </view>
+      <view style="margin-left: 33rpx">左转</view>
+    </view>
+    <view wx:elif="{{item.type==='actionR'}}" class='item action'>
+      <view class="icon">
+        <image mode="aspectFill" src = "../icons/right.png"></image>
+      </view>
+      <view style="margin-left: 33rpx;">{{item.message}} 步后 </view>
+      <view style="margin-left: 33rpx">右转</view>
+    </view>
+    <view wx:elif="{{item.type==='comment'}}" class='item'>
+      <view style="margin-left: 5%">{{item.message}}</view>
+    </view>
+    <view style="height: 1vh"> </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class PathItem extends wepy.component {
+    props = {
+      item:{
+        // twoWay:true,
+        type:Object
+      }
+    }
+
+    onReady (){
+      // console.log(e);
+      // if(this.item.type === 'action')
+      // {
+      //   let mes = this.item.message.split(",",2);
+      //   this.item.steps = mes[0];
+      //   this.item.turn = mes[1];
+      //   if(mes[1]==='left')
+      //     this.item.turntext = "左转"
+      //   else if(mes[1]==='right')
+      //     this.tiem.turntext = "右转"
+      //   else
+      //     this.tiem.turntext = "无效"
+      //   console.log(this.item.steps);
+      //   console.log(this.item.turntext)
+      // }
+  }
+
+  }
+</script>

@@ -1,0 +1,35 @@
+<style lang="less">
+
+
+</style>
+
+<template>
+  <view>
+      <repeat for="{{nodeList}}" item="item">
+        <Node :node="item"></Node>
+      </repeat>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {httpHead} from '../properties/Const'
+  import Node from './node'
+
+  export default class NodeList extends wepy.component {
+    onLoad() {
+
+    }
+
+    components = {
+      Node: Node
+    }
+
+    props = {
+      nodeList: {
+        type: Array,
+        default: []
+      }
+    }
+  }
+</script>

@@ -1,0 +1,46 @@
+<style>
+
+</style>
+
+<template>
+  <view>
+    <input type='text' placeholder="名字：" auto-focus bindinput="nameInput" />
+    <picker bindchange="bindTypeChange" value="{{index}}" range="{{typeArray}}">
+      <view class="picker">
+        数据组存放数据类型：{{array[index]}}
+      </view>
+    </picker>
+    <view>建筑：{{this.$parent.globalData.building.name}}</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {
+    httpHead,
+    imgHead
+  } from '../properties/Const'
+  export default class AddDataSet extends wepy.page {
+    onLoad() {
+    }
+    config = {
+      navigationBarTitleText: 'AddDataSet',
+    }
+    data = {}
+    methods = {
+      addDataSet() {
+        wx.navigateTo({
+          url: '/pages/addDataSet',
+        })
+      }
+    }
+    async addDataSet() {
+      try {
+        let res = await wepy.request({
+          url: httpHead + "/"
+        })
+      } catch (e) {
+      }
+    }
+  }
+</script>

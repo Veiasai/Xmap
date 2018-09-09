@@ -1,0 +1,84 @@
+
+<style lang="less">
+  .path{
+    width: 700rpx;
+    height: 200rpx;
+    border-radius:16rpx;
+    background-color: #e5edf4;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+
+  .pathimg{
+    margin-left: 25rpx;
+    position:relative;
+    width:150rpx;
+    height:150rpx;
+    overflow:hidden;
+    border-radius:50%;
+  }
+
+  .pathimg image{
+    width:150rpx;
+    height:150rpx;
+  }
+
+  .pathContent{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 40rpx;
+  }
+  .pathname{
+    font-size: 36rpx;
+    color: #111111;
+  }
+  .pathdetail{
+    font-size: 16px;
+    font-weight: lighter;
+    color: #222222;
+  }
+</style>
+
+<template>
+  <view style="display: flex; width: 750rpx;justify-content: center;margin-top: 1vh">
+    <view @tap = "notifi" class="path">
+      <view class="pathimg">
+        <image mode="aspectFill" src="{{path.img}}" />
+      </view>
+      <view class="pathContent">
+        <view class="pathname">{{path.name}}</view>
+        <view class="pathdetail">步数：{{path.steps}}  转弯数：{{path.curves}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {imgHead} from "../properties/Const"
+  export default class Path extends wepy.component {
+    props = {
+      path:{
+        type:Object,
+        default:{
+          contents:[],
+          img:"",
+          name:"",
+          steps:0,
+          curves:0
+        }
+      }
+    }
+
+    methods = {
+      notifi () {
+        this.$emit('tap-path',this.path)
+      }
+    }
+  }
+</script>

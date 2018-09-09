@@ -1,0 +1,69 @@
+<style lang="less">
+  .node{
+    width: 700rpx;
+    height: 140rpx;
+    border-radius: 16rpx;
+    background-color: #e5edf4;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .nodeimg{
+    margin-left: 20rpx;
+    position:relative;
+    width:100rpx;
+    height:100rpx;
+    overflow:hidden;
+    border-radius:50%;
+  }
+
+  .nodeimg image{
+    width:100rpx;
+    height:100rpx;
+  }
+
+  .nodename{
+    margin-left: 20rpx;
+    font-size: 18px;
+    color: #111111;
+  }
+
+
+</style>
+
+<template>
+  <view style="display: flex; width: 750rpx;justify-content: center;margin-top: 1vh">
+    <view @tap="tapNode" class="node">
+      <view class="nodeimg">
+        <image mode="aspectFill" src="{{node.img}}" />
+      </view>
+      <view class="nodename" >{{node.name}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {imgHead} from '../properties/Const';
+
+  export default class Node extends wepy.component {
+    props = {
+      node:{
+        type:Object,
+        default:{
+          id:"",
+          img:"",
+          name:""
+        }
+      },
+    }
+
+    methods = {
+      tapNode () {
+        this.$emit('tap-Node',this.node)
+      }
+    }
+  }
+</script>

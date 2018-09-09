@@ -1,0 +1,211 @@
+<style type="less">
+  .point {
+    width: 750 rpx;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .display {
+    margin-top: 3vh;
+    height: 800rpx;
+    width: 600rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-style: solid;
+    border-radius: 16rpx;
+    border-width: 2rpx;
+    border-color: #d6d6d6;
+  }
+  .display image{
+    height: 800rpx;
+    width: 600rpx;
+    border-radius: 16rpx;
+  }
+
+
+  .buttonView {
+    margin-top: 4vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .addImage{
+    width: 110rpx;
+    height: 110rpx;
+    border-radius: 50%;
+    background-color: #305690;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .submitButton{
+    margin-top: 2vh;
+    width: 240rpx;
+    height: 90rpx;
+    border-radius: 16rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #9BC1DF;
+    color: #FEFEFE;
+  }
+
+  .input {
+    margin-top: 3vh;
+    width: 600 rpx;
+    border-style: solid;
+  }
+
+</style>
+<template>
+  <view class="point">
+    <view class="display">
+      <image class='img' src="{{src}}"></image>
+    </view>
+    <view class="buttonView">
+      <view class="addImage" @tap="choosePhoto">
+        <view>
+          <image mode="widthFix" style="margin-top:5rpx;width: 60rpx;height: 60rpx" src="../icons/camera.svg"></image>
+        </view>
+      </view>
+      <view class="submitButton" @tap="submit">提交点位</view>
+    </view>
+
+    <modal hidden="{{hiddenNodeName}}" title="请输入点位名字" confirm-text="提交" cancel-text="取消" bindcancel="nodeNameCancel"
+           bindconfirm="nodeNameConfirm">
+      <input value="{{nodeName}}" bindinput="bindNodeNameInput" type='text' placeholder="请输入内容"/>
+    </modal>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import {httpHead} from '../properties/Const';
+
+  export default class NodeUpload extends wepy.page {
+    data = {
+      src: "../icons/image.svg",
+      cloudsrc: "",
+      hiddenNodeName: true,
+      nodeName: "",
+    }
+
+    methods = {
+      async choosePhoto() {
+        wx.vibrateShort();
+        let res;
+        try {
+          res = await wepy.chooseImage({
+            count: 1,
+            sizeType: ['compressed'],
+            sourceType: ['camera','album ']
+          })
+
+          console.log("ok", res);
+          this.src = res.tempFilePaths[0];
+          this.$apply();
+          res = await wepy.uploadFile({
+            url: httpHead + '/upload',
+            filePath: this.src,
+            name: 'file',
+            formData: {
+              'user': 'woshiqiangmima'
+            }
+          })
+          let data = JSON.parse(res.data);
+          if (data.code === 200) {
+            this.cloudsrc = data.message;
+            this.$apply();
+          }
+          console.log(data);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+
+      submit(e) {
+        wx.vibrateShort();
+        if (this.src === "") {
+          wx.showToast({
+            title: '请拍摄照片',
+            icon: 'none',
+          })
+          return;
+        }
+        this.hiddenNodeName = false;
+      },
+
+
+      //监听点位名字输入
+      bindNodeNameInput(e) {
+        this.nodeName = e.detail.value;
+      },
+
+      //取消点位名字输入（取消上传）
+      nodeNameCancel() {
+        this.hiddenNodeName = true;
+        this.nodeName = "";
+      },
+
+      //提交点位名字
+      async nodeNameConfirm() {
+        let nodeName = this.nodeName;
+        if (nodeName === "") {
+          wx.showToast({
+            title: '名字不能为空',
+            icon: 'none',
+          });
+          return;
+        }
+        this.hiddenNodeName = true;
+        this.nodeName = "";
+        wx.showLoading({
+          title: '上传中',
+        })
+
+        if (this.cloudsrc === "") {
+          wx.hideLoading();
+          wx.showToast({
+            title: '网络请求失败',
+            icon: 'none',
+          });
+          return;
+        }
+        try {
+          let res = await wepy.request({
+            url: httpHead + '/node' + '?author=' + this.$parent.globalData.userInfo
+            + '&buildingId=' + this.$parent.globalData.building.id,
+            method: 'POST',
+            header: {
+              'content-type': 'application/json'
+            },
+            data: {name: nodeName, img: this.cloudsrc}
+          })
+          wx.hideLoading();
+          wx.showToast({
+            title: '上传成功',
+            icon: 'none',
+          });
+          this.src = "";
+          this.cloudsrc = "";
+        } catch (e) {
+          console.log(e);
+          wx.hideLoading();
+          wx.showToast({
+            title: '网络异常',
+            icon: 'none',
+          });
+        }
+      }
+    }
+  }
+</script>

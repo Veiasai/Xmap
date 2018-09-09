@@ -1,0 +1,236 @@
+<style>
+  .searchInput {
+    height: 7vh;
+    width: 680rpx;
+    margin-top: 2vh;
+    margin-left: 35rpx;
+    font-size: 32rpx;
+    font-weight: lighter;
+    text-align: center;
+    background-color: white;
+    border-radius: 4vh;
+    border: rgb(242, 242, 242);
+    border-style: solid;
+    border-width: 4rpx;
+  }
+  .nodeSelect {
+    width: 680 rpx;
+    height: 110rpx;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  .nodeSelectItem {
+    width: 320rpx;
+    height: 100rpx;
+    border-radius: 16rpx;
+    font-size: 28rpx;
+    font-weight: lighter;
+    background-color: rgb(242, 242, 242);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .cancel {
+    width: 34rpx;
+    height: 34rpx;
+  }
+  .confirmButton {
+    width: 240rpx;
+    height: 90rpx;
+    border-radius: 16rpx;
+    color: #FEFEFE;
+    background-color: #9BC1DF;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<template>
+  <view style="background-color #FFFEFE;text-align: center;display: flex;flex-direction: column;align-items: center">
+    <!--search input box-->
+    <view style="height: 9vh">
+      <input class="searchInput" bindinput="searchInput" name="input" placeholder="输入搜索信息" />
+    </view>
+    <!--instruction for pick nodes-->
+    <view style="margin-top: 1vh;font-size: 32rpx;font-weight: lighter;color: #535353;">——————选择上传路线的起点终点——————</view>
+    <!--show the selected start node and end node-->
+    <view class="nodeSelect">
+      <view style="background-color: white;color: white;z-index: -1;height: 100rpx;width: 1rpx">xx</view>
+      <view class="nodeSelectItem" wx:if="{{origin !== null}}">
+        <view>起点: {{origin.name}} </view>
+        <view class="cancel" @tap="nodeCancel" id="1">
+          <image id="1" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../../icons/cancel.svg"></image>
+        </view>
+      </view>
+      <view class="nodeSelectItem" style="margin-left: 40rpx" wx:if="{{end !== null}}">
+        <view>终点: {{end.name}} </view>
+        <view class="cancel" @tap="nodeCancel" id="2">
+          <image id="2" style="width: 34rpx; height: 34rpx" mode="aspectFill" src="../../icons/cancel.svg"></image>
+        </view>
+      </view>
+    </view>
+    <scroll-view style="height: 750rpx" scroll-y bindscrolltolower="touchLow" class="nodeGroup">
+      <repeat for="{{nodes}}" index="index" item="item">
+        <Node :node="item"></Node>
+      </repeat>
+    </scroll-view>
+    <view class="confirmButton" @tap="confirm">
+      <view wx:if="{{origin !== null}}">确认选择</view>
+      <view style="font-size: 32rpx" wx:if="{{origin === null}}">直接创建路线</view>
+    </view>
+    <view wx:if="{{origin === null}}" style="margin-top: 0.5vh;font-size: 28rpx;font-weight: lighter;color: #535353;">推荐绑定点位</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {
+    httpHead,
+    imgHead
+  } from '../../properties/Const'
+  import node from '../../components/node'
+  export default class NodeViewer extends wepy.page {
+    onLoad() {
+    }
+    onReady() {
+      let data = {
+        buildingId: this.$parent.globalData.building.id,
+        name: "",
+        skip: 0,
+        limit: 5,
+      }
+      this.searchNode(data);
+    }
+    config = {
+      navigationBarTitleText: 'NodeSelect',
+    }
+    data = {
+      nodes: [], // 查找到的点位
+      origin: null,
+      end: null,
+      skip: 0,
+      limit: 5,
+      name: "",
+    }
+    components = {
+      Node: node
+    }
+    async searchNode(data) {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/nodes',
+          data: data
+        })
+        console.log(res.data);
+        let nodes = res.data.nodes.map((item) => {
+          return { ...item,
+            img: imgHead + item.img
+          }
+        });
+        if (nodes.length > 0) {
+          if (data.skip === 0) {
+            this.nodes = nodes;
+          } else if (this.nodes.length === data.skip) {
+            this.nodes = [...this.nodes, ...nodes];
+          }
+          this.skip += 5;
+          this.$apply();
+        } else {
+          if (data.skip === 0) {
+            wx.showToast({
+              title: '没有满足条件的点位',
+              icon: 'none',
+            })
+            this.nodes = [];
+            this.$apply();
+          } else {
+            wx.showToast({
+              title: '没有更多了',
+              icon: 'none',
+            })
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    methods = {
+      async confirm() {
+        try {
+          wx.showToast({
+            title: '拍摄路线照片',
+            icon: 'none',
+          });
+          let res = await wepy.chooseImage({
+            count: 1,
+            sizeType: ['compressed'],
+            sourceType: ['camera']
+          })
+          console.log("ok", res);
+          this.$preload("img", res.tempFilePaths[0]);
+          this.$preload("origin", this.origin);
+          this.$preload("end", this.end);
+          wx.navigateTo({
+            url: '/pages/pathUpload/pathUpload',
+          })
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      touchLow() {
+        let data = {
+          buildingId: this.$parent.globalData.building.id,
+          name: this.name,
+          skip: this.skip,
+          limit: this.limit,
+        }
+        this.searchNode(data);
+      },
+      searchInput(e) {
+        let value = e.detail.value;
+        this.name = value;
+        this.skip = 0;
+        let data = {
+          buildingId: this.$parent.globalData.building.id,
+          name: value,
+          skip: this.skip,
+          limit: this.limit,
+        }
+        this.searchNode(data);
+      },
+      nodeCancel(e) {
+        let id = e.target.id;
+        if (id === "1") {
+          this.origin = null;
+          this.end = null;
+        } else {
+          this.end = null;
+        }
+      }
+    }
+    events = {
+      'tap-Node': (node, $event) => {
+        if (this.origin === null) {
+          this.origin = node;
+        } else {
+          if (this.origin.id !== node.id) {
+            this.end = node;
+          } else {
+            wx.showToast({
+              title: '起点终点不能相同',
+              icon: 'none',
+            })
+          }
+        }
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
+        console.log("node", node);
+        //$event.$destroy();
+      }
+    }
+  }
+</script>

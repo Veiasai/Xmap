@@ -1,0 +1,37 @@
+<style lang="less">
+  .path {
+    margin-top: 1vh;
+  }
+
+</style>
+
+<template>
+  <view>
+      <repeat for="{{pathList}}" item="item">
+          <Path :path="item"></Path>
+      </repeat>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Path from './path'
+
+  export default class Pathlist extends wepy.component {
+    props = {
+      pathList: {
+        type: Array,
+        default: []
+      }
+    }
+
+    components = {
+      Path: Path
+    }
+
+    methods = {
+
+    }
+
+  }
+</script>
