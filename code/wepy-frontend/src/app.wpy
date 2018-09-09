@@ -71,9 +71,7 @@
       }
     };
     globalData = {
-      building: {
-        id: 'be2102f9-20ae-47cc-bc76-ecef4d58164a'
-      }, //wx.chooselocation返回的buidling对象
+      building: {}, //wx.chooselocation返回的buidling对象
       userInfo: null,
       paths: [], // main页面的path记录
       firstInPathUpload: true,

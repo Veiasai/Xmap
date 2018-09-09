@@ -258,8 +258,8 @@
       limit: 5,
       user: {
         index: 0,
-        img: "../images/test1.jpg",
-        name: '吴志文'
+        img: "",
+        name: '---'
       },
       pathList: [],
       nodeList: [],
