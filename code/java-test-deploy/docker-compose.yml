@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  javaproxy:
+    image: nginx:stable
+    container_name: xmap-java-proxy
+    ports: 
+      - "8085:80"
+    volumes: 
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on: 
+      - node1
+      - node2
+      - node3
+
+  node1:
+    image: java:jre
+    container_name: xmap-java-1
+    volumes:
+      - ./xmap.jar:/xmap.jar
+    command: java -jar /xmap.jar --spring.profiles.active=prodT
+
+  node2:
+    image: java:jre
+    container_name: xmap-java-2
+    volumes:
+      - ./xmap.jar:/xmap.jar
+    command: java -jar /xmap.jar --spring.profiles.active=prodT
+
+  node3:
+    image: java:jre
+    container_name: xmap-java-3
+    volumes:
+      - ./xmap.jar:/xmap.jar
+    command: java -jar /xmap.jar --spring.profiles.active=prodT 
+    
+  neo:
+    image: neo4j:3.1-enterprise
+    container_name: xmap-neo
+    volumes: 
+      - ./data:/data
+    environment:
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_dbms_memory_pagecache_size=100M
+      - NEO4J_dbms_memory_heap_initial__size=256M
+      - NEO4J_AUTH=neo4j/neo
+  
+
