@@ -1,21 +1,23 @@
 <style lang="less">
-  .message{
+  .message {
     width: 700rpx;
     height: 18vh;
     background-color: #f6f6f6;
     border-radius: 16rpx;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-left: 25rpx;
+    margin-top: 20rpx;
   }
-
 </style>
 
 <template>
   <view>
-    <repeat for="{{messages.reverse()}}" index="index" item="item">
+    <repeat for="{{messages}}" index="index" item="item">
       <view class="message">
-        <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
+        <view style="margin-left:40rpx;font-size: 45rpx">{{item.title}}</view>
         <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
       </view>
     </repeat>
@@ -24,44 +26,36 @@
 
 <script>
   import wepy from 'wepy';
+  import {httpHead, imgHead} from '../properties/Const'
 
   export default class messages extends wepy.page {
-
     components = {
-
     };
-
     data = {
       messages: [],
     };
-
     methods = {
-
-      async searchMessage() {
-        try {
-          let res = await wepy.request({
-            url: httpHead + '/message',
-            data: {
-              buildingId: this.$parent.globalData.building.id,
-            }
-          })
-          console.log(res.data);
-          this.messages = res.data.messages;
-          this.$apply();
-        }
-        catch (e) {
-          console.log(e);
-        }
-      }
-
-
     };
-
     onLoad() {
-
+      this.searchMessage()
     }
-
-    config={
+    async searchMessage() {
+      try {
+        let res = await wepy.request({
+          url: httpHead + '/message',
+          data: {
+            buildingId: this.$parent.globalData.building.id,
+          }
+        })
+        console.log(res.data);
+        this.messages = res.data.messages;
+        this.messages.reverse();
+        this.$apply();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    config = {
       navigationBarTitleText: 'messages'
     }
   }

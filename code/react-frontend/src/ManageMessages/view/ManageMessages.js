@@ -103,7 +103,7 @@ class ManageMessages extends Component {
                 this.setState({skip: this.UserData.currentMessageList.length});
 
             }
-            else if (json.code === 401) {
+            else if (json.code === 403) {
                 message.warning('无法删除其他管理员发布的消息！')
             }
         }

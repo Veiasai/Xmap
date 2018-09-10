@@ -65,6 +65,13 @@
         try {
           let building = await wepy.chooseLocation();
           console.log("b", building)
+          if (building.name.length < 1){
+            wx.showToast({
+            title: '请勾选具体建筑',
+            icon: 'none',
+          });
+            return;
+          }
           this.$parent.globalData.building = building;
           let res = await wepy.request({
             url: httpHead + '/building' + '?address=' + building.address,

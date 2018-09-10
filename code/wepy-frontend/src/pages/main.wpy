@@ -69,7 +69,7 @@
     </view>
     <view @tap='goToMessages' wx:if="{{messages.length !== 0}}" style="height: 20vh; display: flex;justify-content: center;align-items: center">
       <swiper class="buildingMessages">
-        <repeat for="{{messages.reverse()}}" index="index" item="item">
+        <repeat for="{{messages}}" index="index" item="item">
           <swiper-item style="width: 660rpx">
             <view style="margin-left:40rpx;margin-top:1vh;font-size: 45rpx">{{item.title}}</view>
             <view style="margin-left:40rpx;margin-top:0.5vh;font-size: 30rpx">{{item.content}}</view>
@@ -253,10 +253,12 @@
           url: httpHead + '/message',
           data: {
             buildingId: this.$parent.globalData.building.id,
+            limit: 5
           }
         })
         console.log(res.data);
         this.messages = res.data.messages;
+        this.messages.reverse()
         this.$apply();
       }
       catch (e) {
